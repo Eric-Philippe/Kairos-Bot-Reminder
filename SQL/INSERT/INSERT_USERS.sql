@@ -1,0 +1,1 @@
+INSERT INTO Users SET id_user=?

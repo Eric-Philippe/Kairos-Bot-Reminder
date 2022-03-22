@@ -1,0 +1,9 @@
+{
+  "COLOR": {
+    "MAIN_COLOR": "#C60800",
+    "SECOND_COLOR": ["#2548a8", "#69a825"]
+  },
+  "IMG": {
+    "REMINDER_LOGO": "https://cdn.discordapp.com/attachments/911765013423878215/911768975862558740/rappel.png"
+  }
+}

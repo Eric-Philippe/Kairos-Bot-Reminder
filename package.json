@@ -1,0 +1,16 @@
+{
+  "name": "reminderbot",
+  "version": "1.0.0",
+  "description": "A Discord Bot to make easy reminder",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ericp",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^13.6.0",
+    "mysql": "^2.18.1",
+    "require-sql": "^1.0.0"
+  }
+}
