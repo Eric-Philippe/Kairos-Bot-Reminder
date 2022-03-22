@@ -7,6 +7,7 @@ const Reminder = require("./remindMe");
 
 client.on("ready", () => {
   console.log(`Well connected to ${client.user.username}`);
+  client.user.setActivity("Time is Meaningless");
 
   con.connect(function (err) {
     if (err) console.log(err);
