@@ -1,5 +1,5 @@
 const { client } = require("./utils/client");
-const { con } = require("./utils/mysql"); // Database Connexion
+const { con } = require("./utils/mysql");
 
 const { TOKEN } = require("./config.json");
 
