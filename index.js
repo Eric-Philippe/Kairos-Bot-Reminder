@@ -3,7 +3,7 @@ const { con } = require("./utils/mysql");
 
 const { TOKEN } = require("./config.json");
 
-const Reminder = require("./remindMe"); // RemindMe SelfIncrement
+const Reminder = require("./remindMe");
 
 client.on("ready", () => {
   console.log(`Well connected to ${client.user.username}`);
