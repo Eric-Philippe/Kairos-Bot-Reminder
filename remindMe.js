@@ -272,10 +272,60 @@ module.exports = class createReminderObject {
         .setTitle("Mes Reminders en cours : ")
         .setColor("BLURPLE")
         .setTimestamp();
+      let new_text = "";
       for (let i = 0; i < reminders.length; i++) {
+        new_text +=
+          `**- ${reminders[i].remind}** \n ${createReminderObject.dateToString(
+            reminders[i].date_t
+          )} \n` +
+          "``" +
+          createReminderObject.buildTimeLeft(reminders[i].date) +
+          "``";
         embed.addField(reminders[i].remind, reminders[i].t_date);
       }
       msg.channel.send({ embeds: [embed] });
     });
+  }
+
+  /**
+   *
+   * @param {Date} currentDate
+   */
+  static buildTimeLeft(targetDate) {
+    let emotes = ["⬜", "⬛"];
+    let currentDateMi = new Date().getTime();
+    let target_dateMi = targetDate.getTime();
+    let produit_croix = (currentDateMi * 100) / target_dateMi;
+    Math.round(produit_croix);
+
+    let finalText = "";
+    let emotesLeft = 10 - produit_croix;
+
+    for (let i = 0; i < produit_croix; i++) {
+      finalText += emotes[0];
+    }
+    for (let i = 0; i < emotesLeft; i++) {
+      finalText += emotes[1];
+    }
+
+    return finalText;
+  }
+
+  /**
+   *
+   * @param {Date} d
+   */
+  static dateToString(d) {
+    let finalText;
+    finalText = d.getDay() + "/" + d.getMonth() + "/" + d.getFullYear() + " ";
+    let hours, minutes;
+    hours = d.getHours();
+    minutes = d.getMinutes();
+    if (hours === "0") hours = "00";
+    if (minutes === "0") minutes = "00";
+
+    finalText += hours + "h" + minutes;
+
+    return finalText;
   }
 };

@@ -20,7 +20,7 @@ client.on("messageCreate", (msg) => {
   if (msg.content.startsWith("!remindme")) {
     Reminder.remindMe(msg);
   }
-  if (msg.content.startsWith("!myReminder")) {
+  if (msg.content.startsWith("!myReminders")) {
     Reminder.myReminder(msg);
   }
 });
