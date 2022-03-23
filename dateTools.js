@@ -19,11 +19,11 @@ const buildTimeLeft = function (targetDate, launchDate) {
   let emotesLeft = 10 - produit_croix; // Black emotes
 
   // White squares
-  for (let i = 1; i < produit_croix; i++) {
+  for (let i = 1; i <= produit_croix; i++) {
     finalText = finalText + emotes[0];
   }
   // Black squares
-  for (let i = 1; i < emotesLeft; i++) {
+  for (let i = 1; i <= emotesLeft; i++) {
     finalText = finalText + emotes[1];
   }
   // Return the final text
