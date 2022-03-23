@@ -279,7 +279,7 @@ module.exports = class createReminderObject {
             new Date(reminders[i].date_t)
           )} \n` +
           "``" +
-          createReminderObject.buildTimeLeft(reminders[i].date) +
+          createReminderObject.buildTimeLeft(new Date(reminders[i].date)) +
           "``";
         embed.addField(reminders[i].remind, reminders[i].t_date);
       }
