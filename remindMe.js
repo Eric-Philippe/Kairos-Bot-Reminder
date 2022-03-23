@@ -281,8 +281,8 @@ module.exports = class createReminderObject {
           "``" +
           createReminderObject.buildTimeLeft(new Date(reminders[i].date)) +
           "``";
-        embed.addField(reminders[i].remind, reminders[i].t_date);
       }
+      embed.setDescription(new_text);
       msg.channel.send({ embeds: [embed] });
     });
   }
