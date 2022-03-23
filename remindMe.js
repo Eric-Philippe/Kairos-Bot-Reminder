@@ -11,6 +11,7 @@ const { con } = require("./utils/mysql"); // Get the mysql connexioon object
 const query_Reminder = require("./SQL/READ/SELECT_REMINDER.sql");
 const query_Users = require("./SQL/READ/SELECT_USERS.sql");
 const query_userHAS = require("./SQL/READ/USER_HAS_REMINDER");
+const query_Find = require("./SQL/READ/SELECT_ALL_USERS_REMINDER.sql");
 
 /** All the DELETE SQL request needed */
 const query_clear_user = require("./SQL/DELETE/CLEAR_USERS.sql");
@@ -22,7 +23,7 @@ const { client } = require("./utils/client"); // Get Discord Client
 /**
  * remindMe Class
  *
- * @author: Zaorhion
+ * @author Zaorhion
  */
 module.exports = class createReminderObject {
   /**
@@ -36,11 +37,8 @@ module.exports = class createReminderObject {
 
   /**
    * Input Reminder
-   *
    * @param {Discord.Message} msg
-   *
    * @return {ReminderObject} The object with all the reminder's information
-   * @public
    */
   static async remindMe(msg) {
     let args = msg.content.split(" ");
@@ -252,5 +250,32 @@ module.exports = class createReminderObject {
       );
       createReminderObject.remindCheck(); // Recursive Function
     }, 60 * 1000); // Check every minutes
+  }
+
+  /**
+   * Display all the reminders from the message author
+   * @param {Discord.Message} msg
+   */
+  static myReminder(msg) {
+    let id_user = msg.author.id;
+    let reminders;
+
+    con.query(query_Find, [id_user], async function (err, results, fields) {
+      if (err) return msg.reply("Une erreur est survenue !");
+
+      reminders = JSON.parse(JSON.stringify(results));
+
+      if (reminders.length == 0)
+        return msg.reply("Vous n'avez aucun reminder !");
+
+      let embed = new Discord.MessageEmbed()
+        .setTitle("Mes Reminders en cours : ")
+        .setColor("BLURPLE")
+        .setTimestamp();
+      for (let i = 0; i < reminders.length; i++) {
+        embed.addField(reminders[i].remind, reminders[i].t_date);
+      }
+      msg.channel.send({ embeds: [embed] });
+    });
   }
 };
