@@ -276,7 +276,7 @@ module.exports = class createReminderObject {
       for (let i = 0; i < reminders.length; i++) {
         new_text +=
           `**- ${reminders[i].remind}** \n ${createReminderObject.dateToString(
-            reminders[i].date_t
+            new Date(reminders[i].date_t)
           )} \n` +
           "``" +
           createReminderObject.buildTimeLeft(reminders[i].date) +
