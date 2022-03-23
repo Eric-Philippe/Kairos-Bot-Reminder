@@ -4,7 +4,7 @@ require("require-sql"); // Package needed
 const { COLOR, IMG } = require("./ressources.json"); // Ressources required for the system
 
 const { insertSQL } = require("./SQL/INSERT/insertSQL"); // Get the SQL insert function for the Reminder obj
-
+const { dateToString, buildTimeLeft, timeLeft } = require("./dateTools");
 const { con } = require("./utils/mysql"); // Get the mysql connexioon object
 
 /** All the READ/SELECT SQL request needed */
@@ -275,57 +275,20 @@ module.exports = class createReminderObject {
       let new_text = "";
       for (let i = 0; i < reminders.length; i++) {
         new_text +=
-          `**- ${reminders[i].remind}** \n ${createReminderObject.dateToString(
-            new Date(reminders[i].date_t)
+          `**- ${reminders[i].remind}** \n ${dateToString(
+            new Date(reminders[i].t_date)
           )} \n` +
           "``" +
-          createReminderObject.buildTimeLeft(new Date(reminders[i].date)) +
-          "``";
+          buildTimeLeft(
+            new Date(reminders[i].t_date),
+            new Date(reminders[i].c_date)
+          ) +
+          "``" +
+          timeLeft(new Date(reminders[i].t_date).getTime()) +
+          "\n";
       }
       embed.setDescription(new_text);
       msg.channel.send({ embeds: [embed] });
     });
-  }
-
-  /**
-   *
-   * @param {Date} currentDate
-   */
-  static buildTimeLeft(targetDate) {
-    let emotes = ["⬜", "⬛"];
-    let currentDateMi = new Date().getTime();
-    let target_dateMi = targetDate.getTime();
-    let produit_croix = (currentDateMi * 100) / target_dateMi;
-    Math.round(produit_croix);
-
-    let finalText = "";
-    let emotesLeft = 10 - produit_croix;
-
-    for (let i = 0; i < produit_croix; i++) {
-      finalText += emotes[0];
-    }
-    for (let i = 0; i < emotesLeft; i++) {
-      finalText += emotes[1];
-    }
-
-    return finalText;
-  }
-
-  /**
-   *
-   * @param {Date} d
-   */
-  static dateToString(d) {
-    let finalText;
-    finalText = d.getDay() + "/" + d.getMonth() + "/" + d.getFullYear() + " ";
-    let hours, minutes;
-    hours = d.getHours();
-    minutes = d.getMinutes();
-    if (hours === "0") hours = "00";
-    if (minutes === "0") minutes = "00";
-
-    finalText += hours + "h" + minutes;
-
-    return finalText;
   }
 };
