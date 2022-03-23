@@ -1,43 +1,49 @@
 /**
- *
+ * Build the time left counter with white and black emotes
  * @param {Date} targetDate
+ * @return {String}
  */
 const buildTimeLeft = function (targetDate, launchDate) {
-  let emotes = ["⬜", "⬛"];
-  let currentDateMi = new Date().getTime();
-  let target_dateMi = targetDate.getTime();
-  let launch_dateMi = launchDate.getTime();
+  let emotes = ["⬜", "⬛"]; // Default Emote
+  let currentDateMi = new Date().getTime(); // Current Date in milliseconde
+  let target_dateMi = targetDate.getTime(); // Target reminder date in milliseconde
+  let launch_dateMi = launchDate.getTime(); // Launch reminder date in milliseconde
 
-  let total_time = target_dateMi - launch_dateMi;
-  let elasped_time = currentDateMi - launch_dateMi;
-  let produit_croix = (elasped_time * 10) / total_time;
-  Math.round(produit_croix);
+  let total_time = target_dateMi - launch_dateMi; // Time beteween, the target and launch date
+  let elasped_time = currentDateMi - launch_dateMi; // Time elapsed between the current and launch date
+  let produit_croix = (elasped_time * 10) / total_time; // Find the number of white square needed
+  Math.round(produit_croix); // Need an integer
+  if (produit_croix == 10) produit_croix = 9;
 
-  let finalText = "";
-  let emotesLeft = 10 - produit_croix;
+  let finalText = ""; // Empty text
+  let emotesLeft = 10 - produit_croix; // Black emotes
 
-  for (let i = 2; i < produit_croix; i++) {
+  // White squares
+  for (let i = 1; i < produit_croix; i++) {
     finalText = finalText + emotes[0];
   }
-  for (let i = 0; i < emotesLeft; i++) {
+  // Black squares
+  for (let i = 1; i < emotesLeft; i++) {
     finalText = finalText + emotes[1];
   }
+  // Return the final text
   return finalText;
 };
 
 /**
- *
+ * [EN] date to [FR] date
  * @param {Date} d
  */
 const dateToString = function (d) {
-  let finalText;
-  finalText =
+  let finalText = // [First] - 01/01/1999
     d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear() + " ";
-  let hours, minutes;
-  hours = d.getHours();
-  minutes = d.getMinutes();
-  if (hours === 0) hours = "00";
-  if (minutes === 0) minutes = "00";
+
+  let hours = d.getHours();
+  let minutes = d.getMinutes();
+
+  // Add the additional zero to the
+  if (hours === "0") hours = "00";
+  if (minutes === "0") minutes = "00";
 
   finalText = finalText + hours + "h" + minutes;
 
