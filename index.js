@@ -26,6 +26,9 @@ client.on("messageCreate", (msg) => {
   if (msg.content.startsWith("!delReminder")) {
     Reminder.deleteReminder(msg);
   }
+  if (msg.content.startsWith("!help reminder")) {
+    Reminder.helpReminder(msg);
+  }
 });
 
 client.login(TOKEN);

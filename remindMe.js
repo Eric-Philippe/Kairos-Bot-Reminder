@@ -147,7 +147,7 @@ module.exports = class createReminderObject {
     // Validation Embed
     let embed = new Discord.MessageEmbed()
       .setTitle("⚙️ | Your reminder has been added !")
-      .setColor(COLOR.MAIN_COLOR)
+      .setColor("#03fcd3")
       .setFooter({
         text: `Asked by : ${msg.author.tag}`,
         iconURL: msg.author.avatarURL(),
@@ -182,7 +182,7 @@ module.exports = class createReminderObject {
 
             let embedReminder = new Discord.MessageEmbed() // Embed Reminder Constructor
               .setTitle("You have a reminder !")
-              .setColor("RANDOM")
+              .setColor("#03fcd3")
               .addField("🗨️ | Reminder Label : ", REMINDER[i].remind)
               .addField(
                 "🕔 | Reminder Date : ",
@@ -270,7 +270,7 @@ module.exports = class createReminderObject {
 
       let embed = new Discord.MessageEmbed()
         .setTitle("My ongoing reminders : ")
-        .setColor("DARK_BUT_NOT_BLACK")
+        .setColor("#ff00ea")
         .setFooter({ text: "Provided by Kairos | Reminder Bot" })
         .setTimestamp();
       let new_text = "";
@@ -310,7 +310,7 @@ module.exports = class createReminderObject {
 
       let embed = new Discord.MessageEmbed()
         .setTitle("My ongoing Reminders : ")
-        .setColor("DARK_RED")
+        .setColor("#03fcd3")
         .setFooter({ text: "Provided by Kairos | Reminder Bot" })
         .setTimestamp();
       let final_text = "";
@@ -330,6 +330,9 @@ module.exports = class createReminderObject {
         };
       }
 
+      final_text =
+        final_text +
+        "\n **Please send the __index__ corresponding to the reminder you wish to delete !**";
       embed.setDescription(final_text);
 
       let msg_embed = await msg.channel.send({ embeds: [embed] });
@@ -393,5 +396,34 @@ module.exports = class createReminderObject {
     });
   }
 
-  static clearReminder(id_reminder) {}
+  /**
+   *
+   * @param {Discord.Message} msg
+   */
+  static helpReminder(msg) {
+    let embed = new Discord.MessageEmbed()
+      .setTitle("!remindme")
+      .setColor("#ff00ea")
+      .addField(
+        "***Examples : ***",
+        "``!remindme 01/01/2022 14h35 Sleep`` \n" +
+          "Will setup a reminder at this given date with the label ``Sleep`` \n" +
+          "``!myReminders`` \n" +
+          "Display all your ongoing reminders \n" +
+          "``!delReminder`` Pick and delete one of your ongoing reminders",
+        true
+      )
+      .addField(
+        "***Usages : ***",
+        "``!remindme < [01 day] / [01 month] / [2022 year] > < [00 hour] h [00 minutes] > | !myReminders | !delReminder => [1 index]``",
+        true
+      )
+      .setThumbnail(IMG.REMINDER_LOGO)
+      .setFooter({
+        text: `Asked by : ${msg.author.username}`,
+        iconURL: msg.author.avatarURL(),
+      });
+
+    msg.channel.send({ embeds: [embed] });
+  }
 };
