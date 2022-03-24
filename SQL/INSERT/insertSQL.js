@@ -13,17 +13,19 @@ const query_Users_READ = require("../READ/USER_ID_FILTER.sql");
  *
  * @param {Object} reminder
  */
-exports.insertSQL = async function (reminder) {
+const insertSQL = async function (reminder) {
+  // Find if the user already has a reminder
+  // One user can have 1 at n Reminder
+  // One Reminder can concern 1 at n User
   con.query(
-    query_Users_READ, // We don't add user if the user already got a Reminder
-    // One user can have 1 at n Reminder
-    // One Reminder can concern 1 at n User
+    query_Users_READ,
     [reminder.users_id[0]],
     function (err, result, fields) {
       if (err) throw err;
       if (result.length === 0) {
+        // Add the User at the DB
         con.query(
-          query_Users, // ADD ONE
+          query_Users,
           [reminder.users_id[0]],
           function (err, result, fields) {
             if (err) throw err;
@@ -33,12 +35,14 @@ exports.insertSQL = async function (reminder) {
     }
   );
 
+  // Add Reminder
   await con.query(
-    query_Reminder, // ADD REMINDER
+    query_Reminder,
     [reminder.current_date, reminder.target_date, reminder.remind],
     async function (err, result, fields) {
       if (err) throw err;
       insertID = await result.insertId;
+      // Add the Concerner obj
       await con.query(
         query_Concerner,
         [insertID, reminder.users_id[0]],
@@ -49,3 +53,5 @@ exports.insertSQL = async function (reminder) {
     }
   );
 };
+
+exports.insertSQL = insertSQL;

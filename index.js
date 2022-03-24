@@ -1,22 +1,26 @@
-const { client } = require("./utils/client");
-const { con } = require("./utils/mysql");
+const { client } = require("./utils/client"); // Discord Bot
+const { con } = require("./utils/mysql"); // SQL Connexion
 
-const { TOKEN } = require("./config.json");
+const { TOKEN } = require("./config.json"); // Token
 
-const Reminder = require("./remindMe");
+const Reminder = require("./remindMe"); // Reminder Class
 
+// When Client's ready
 client.on("ready", () => {
   console.log(`Well connected to ${client.user.username}`);
   client.user.setActivity("Time is Meaningless");
 
+  // Database connexion
   con.connect(function (err) {
     if (err) console.log(err);
     console.log("Connected to database as ID : " + con.threadId);
-    Reminder.remindCheck();
+    Reminder.remindCheck(); // New Reminder to send auto Check (Recursive)
   });
 });
 
+// When new Message
 client.on("messageCreate", (msg) => {
+  // Commands Input
   if (msg.content.startsWith("!remindme")) {
     Reminder.remindMe(msg);
   }
@@ -31,4 +35,5 @@ client.on("messageCreate", (msg) => {
   }
 });
 
+// Client Connexion
 client.login(TOKEN);

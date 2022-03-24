@@ -45,29 +45,44 @@ const dateToString = function (d) {
   if (hours === "0") hours = "00";
   if (minutes === "0") minutes = "00";
 
+  // Add the hour to the final String
   finalText = finalText + hours + "h" + minutes;
 
   return finalText;
 };
 
+/**
+ * Convert the time left in ms into a valid String
+ * @param {Number} target_mi
+ * @return {String} Time Left
+ */
 const timeLeft = function (target_mi) {
-  let current_mi = new Date().getTime();
-  let different = new Date().getTimezoneOffset();
-  let left_s = target_mi - current_mi;
-  left_s = left_s + different * 60 * 1000;
-  let textTimeLeft = left_s + "s";
+  let current_mi = new Date().getTime(); // Current time in ms
+  let different = new Date().getTimezoneOffset(); // Difference with the TimeZoneOffSet in ms
+
+  let left_s = target_mi - current_mi; // Time left between the target time and the current time
+  left_s = left_s + different * 60 * 1000; // Add the difference at the final time left and put it in second
+
+  let textTimeLeft = left_s + "s"; // Convert into String
+
+  // If Time Left is greater than a week
   if (left_s >= 6.048 * 10 ** 8) {
+    // Format for weeks remaining
     textTimeLeft =
       " " +
       Math.round((left_s / (6.048 * 10 ** 8)) * 10) / 10 +
       " week(s) remaining";
+    // If the time if greater than a day
   } else if (left_s >= 8.64 * 10 ** 7) {
+    // Format for days remaining
     textTimeLeft =
       " " +
       Math.round((left_s / (8.64 * 10 ** 7)) * 10) / 10 +
       " day(s) remaining";
   } else {
+    // Create a new date Object witg the time left
     let d = new Date(left_s);
+    // " 00h00min00sec remaining"
     textTimeLeft =
       " " +
       d.getHours() +
@@ -78,9 +93,11 @@ const timeLeft = function (target_mi) {
       " sec remaining";
   }
 
+  // Return the final Text
   return textTimeLeft;
 };
 
+// EXPORTS
 exports.buildTimeLeft = buildTimeLeft;
 exports.dateToString = dateToString;
 exports.timeLeft = timeLeft;
