@@ -44,15 +44,15 @@ module.exports = class createReminderObject {
     let args = msg.content.split(" ");
     //*  Checking & validation of the arguments |BEGINING]*/
     //  Check if all argument exists
-    if (!args[1]) return msg.reply("Merci d'entrer une date !");
-    if (!args[2]) return msg.reply("Merci d'entrer une heure !");
-    if (!args[3]) return msg.reply("Merci d'entrer un intitulé !");
+    if (!args[1]) return msg.reply("Please enter a date !");
+    if (!args[2]) return msg.reply("Please enter a time !");
+    if (!args[3]) return msg.reply("Please enter a label !");
 
     // === Date verification ===
     let date = args[1];
     let date_array = date.split("/");
 
-    if (!date_array[1]) return msg.reply("Merci d'entrer un mois !");
+    if (!date_array[1]) return msg.reply("Please enter a month !");
     // Check if all the date input are valid numbers
     let result_test = true;
     for (let i = 0; i < date_array.length; i++) {
@@ -62,7 +62,7 @@ module.exports = class createReminderObject {
     }
     // If input value are not valid numbers
     if (!result_test)
-      return msg.reply("Merci d'entrer des valeurs numériques pour la date !");
+      return msg.reply("Please enter numeric values ​​for the date !");
 
     let day = date_array[0]; //Get day
     let splited_day = day.split(""); //Get divided day numbers
@@ -85,13 +85,13 @@ module.exports = class createReminderObject {
     let day_byMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; // Day by month
     // Month Field overrun
     if (month > 12 || month < 1)
-      return msg.reply("Merci d'entrer un mois valide !");
+      return msg.reply("Please enter a valid month !");
     // Day Field overrun depending on the month
     if (day > day_byMonth[month - 1])
-      return msg.reply("Merci d'entrer un jour valide !");
+      return msg.reply("Please enter a valid day !");
     // Year Field overrun
     if (year < current_year || year > current_year + 2)
-      return msg.reply("Merci d'entrer une année valide !");
+      return msg.reply("Please enter a valid year !");
 
     // === Time verification ===
     let time = args[2];
@@ -107,7 +107,7 @@ module.exports = class createReminderObject {
       }
     }
     if (!result_test)
-      return msg.reply("Merci d'entrer des valeurs numériques pour l'heure !");
+      return msg.reply("Please enter numeric values ​​for time !");
 
     let hour = time_array[0]; // Get hour
     let splited_hour = hour.split(""); // Get spilted hour numbers
@@ -125,18 +125,17 @@ module.exports = class createReminderObject {
     }
 
     // Hour Field overrun
-    if (hour > 23 || hour < 0)
-      return msg.reply("Merci d'entrer une heure valide !");
+    if (hour > 23 || hour < 0) return msg.reply("Please enter valid hours !");
     // Minutes Field overrun
     if (minute > 59 || minute < 0)
-      return msg.reply("Merci d'entrer des minutes valides !");
+      return msg.reply("Please enter valid minutes!");
 
     // Formated date
     let target_date = new Date(`${year}-${month}-${day}T${hour}:${minute}:00`);
 
     // Check if date is before the current date
     if (target_date < current_date)
-      return msg.reply("Merci d'entrer une date future !");
+      return msg.reply("Please enter a future date !");
     //*  Checking & validation of the arguments |END]*/
 
     let remind = args.slice(3).join(" "); // Reminder title
@@ -147,9 +146,12 @@ module.exports = class createReminderObject {
 
     // Validation Embed
     let embed = new Discord.MessageEmbed()
-      .setTitle("⚙️ | Votre rappel a bien été ajouté !")
+      .setTitle("⚙️ | Your reminder has been added !")
       .setColor(COLOR.MAIN_COLOR)
-      .setFooter(`Demandé par : ${msg.author.tag}`, msg.author.avatarURL())
+      .setFooter({
+        text: `Asked by : ${msg.author.tag}`,
+        iconURL: msg.author.avatarURL(),
+      })
       .setTimestamp()
       .setThumbnail(IMG.REMINDER_LOGO);
 
@@ -179,21 +181,21 @@ module.exports = class createReminderObject {
             // Loop on all the valid reminder
 
             let embedReminder = new Discord.MessageEmbed() // Embed Reminder Constructor
-              .setTitle("Vous avez un rappel !")
+              .setTitle("You have a reminder !")
               .setColor("RANDOM")
-              .addField("🗨️ | Intitulé du rappel : ", REMINDER[i].remind)
+              .addField("🗨️ | Reminder Label : ", REMINDER[i].remind)
               .addField(
-                "🕔 | Date de la demande : ",
+                "🕔 | Reminder Date : ",
                 "``" + REMINDER[i].c_date + "``",
                 true
               )
               .addField(
-                "🕣 | Date visée  : ",
+                "🕣 | Reminder Target Date  : ",
                 "``" + REMINDER[i].t_date + "``",
                 true
               )
-              .addField("#️⃣ | ID du rappel : ", `#${REMINDER[i].id_reminder}`)
-              .setFooter("Provided by Cril Bot")
+              .addField("#️⃣ | Reminder ID : ", `#${REMINDER[i].id_reminder}`)
+              .setFooter({ text: "Provided by Kairos | Reminder Bot" })
               .setThumbnail(IMG.REMINDER_LOGO);
 
             let USER;
@@ -258,19 +260,18 @@ module.exports = class createReminderObject {
    */
   static myReminder(msg) {
     let id_user = msg.author.id;
-    let reminders;
 
     con.query(query_Find, [id_user], async function (err, results, fields) {
-      if (err) return msg.reply("Une erreur est survenue !");
+      if (err) return msg.reply("An error has occurred !");
 
-      reminders = JSON.parse(JSON.stringify(results));
+      let reminders = JSON.parse(JSON.stringify(results));
 
-      if (reminders.length == 0)
-        return msg.reply("Vous n'avez aucun reminder !");
+      if (reminders.length == 0) return msg.reply("You have no reminder !");
 
       let embed = new Discord.MessageEmbed()
-        .setTitle("Mes Reminders en cours : ")
-        .setColor("BLURPLE")
+        .setTitle("My ongoing reminders : ")
+        .setColor("DARK_BUT_NOT_BLACK")
+        .setFooter({ text: "Provided by Kairos | Reminder Bot" })
         .setTimestamp();
       let new_text = "";
       for (let i = 0; i < reminders.length; i++) {
@@ -291,4 +292,106 @@ module.exports = class createReminderObject {
       msg.channel.send({ embeds: [embed] });
     });
   }
+
+  /**
+   *
+   * @param {Discord.Message} msg
+   */
+  static deleteReminder(msg) {
+    let id_user = msg.author.id;
+
+    con.query(query_Find, [id_user], async function (err, results, fields) {
+      if (err) return msg.reply("An error has occurred !");
+
+      let reminders = JSON.parse(JSON.stringify(results));
+
+      if (reminders.length == 0)
+        return msg.reply("You have no reminder to delete !");
+
+      let embed = new Discord.MessageEmbed()
+        .setTitle("My ongoing Reminders : ")
+        .setColor("DARK_RED")
+        .setFooter({ text: "Provided by Kairos | Reminder Bot" })
+        .setTimestamp();
+      let final_text = "";
+      let reminders_objects = [];
+
+      for (let i = 0; i < reminders.length; i++) {
+        final_text =
+          final_text +
+          `**- [${i + 1}] ${reminders[i].remind}** \n` +
+          "``" +
+          `${dateToString(new Date(reminders[i].t_date))}` +
+          "``\n\n";
+
+        reminders_objects[i] = {
+          remind: reminders[i].remind,
+          id_reminder: reminders[i].id_reminder,
+        };
+      }
+
+      embed.setDescription(final_text);
+
+      let msg_embed = await msg.channel.send({ embeds: [embed] });
+
+      const filter = (m) => {
+        if (!isNaN(Number(m.content))) {
+          if (Number(m.content) <= reminders.length && Number(m.content >= 1)) {
+            return true;
+          }
+        }
+      };
+
+      const collector = msg.channel.createMessageCollector({
+        filter: filter,
+        max: 1,
+        time: 1000 * 60 * 10,
+        errors: ["time"],
+      });
+
+      collector.on("collect", async (m) => {
+        let target_reminder = reminders_objects[Number(m.content) - 1];
+        let id_reminder = target_reminder.id_reminder;
+
+        try {
+          await con.query(
+            query_clear_concerner,
+            [id_reminder],
+            function (err, result, fileds) {
+              con.query(
+                query_userHAS,
+                [id_user],
+                function (err, result, fields) {
+                  if (result.length === 0) {
+                    // If user got another reminder, don't erase it
+                    con.query(query_clear_user, [id_user]);
+                  }
+                }
+              );
+            }
+          );
+
+          await con.query(
+            // Clear the Reminder Object from de Database
+            query_clear_reminder,
+            [id_reminder],
+            function (err, result, fields) {
+              if (err) throw err;
+            }
+          );
+
+          await msg.reply(
+            `Reminder number ${m.content} has been successfully deleted !`
+          );
+          await m.delete();
+          await msg_embed.delete();
+        } catch (err) {
+          console.log(err);
+          msg.reply("An error has occurred !");
+        }
+      });
+    });
+  }
+
+  static clearReminder(id_reminder) {}
 };
