@@ -87,4 +87,4 @@ This Discord Bot is licensed under the GPL 3.0 license. See the file `LICENSE` f
 ## Thanks
 
 > Thanks for checking out the ReadMe !
-> Contact Sunrise#1318 If you
+> Contact Sunrise#1318 If you need anything !
