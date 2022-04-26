@@ -35,12 +35,12 @@ const buildTimeLeft = function (targetDate, launchDate) {
  * @param {Date} d
  */
 const dateToString = function (d) {
-  let finalText = // [First] - 01/01/1999
-    d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear() + " ";
+  let month = d.getMonth() + 1;
+  if (month < 10) month = "0" + month;
+  let finalText = d.getDate() + "/" + month + "/" + d.getFullYear() + " "; // [First] - 01/01/1999
 
   let hours = d.getHours();
   let minutes = d.getMinutes();
-  console.log(hours, minutes);
 
   // Add the additional zero to the
   if (hours === 0) hours = "00";
