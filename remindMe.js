@@ -48,7 +48,7 @@ module.exports = class createReminderObject {
     // Check if all argument exist
     if (!args[1]) return msg.reply("Please enter a date !");
     if (!args[2]) return msg.reply("Please enter a time !");
-    if (!args[3] && args[2].split(" ").length <= 1)
+    if (!args[3] && args[2].split(" ").length < 1)
       return msg.reply("Please enter a label !");
 
     // === Date verification ===
