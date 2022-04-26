@@ -24,82 +24,83 @@ module.exports = class createRemindUsObject {
    */
   static getRemindUsObject(msg) {
     // Check if the user has Admin permission
-    if (!msg.member.permissionsIn(msg.channel).has("ADMINISTRATOR"))
+    if (!msg.member.hasPermission("ADMINISTRATOR"))
       return msg.channel.send(
         "You don't have the permission to use this command"
       );
+    // Ask for the date
+    const date = this.inputDate(msg);
+    // Ask for the time
+    const time = this.inputTime(msg);
+    // Build the full date
+    const full_date = new Date(`${date} ${time}`);
+    console.log(full_date);
+  }
 
-    // Ask the user to input a date
-    msg.channel.send("Please input a date");
-    const filter = (m) => m.author.id === msg.author.id;
+  /**
+   * Input of the full date and time
+   * @param {Discord.Message} msg
+   * @return {Date}
+   */
+  static inputDate(msg) {
+    msg.channel.send("Please enter the date.");
+    const filter = (m) =>
+      m.author.id === msg.author.id && isValidDate(m.content);
     msg.channel
       .awaitMessages(filter, { max: 1, time: 60000, errors: ["time"] })
       .then((collected) => {
-        // Get the date
-        let date = collected.first().content;
-        // Check if the date is valid
-        if (!createRemindUsObject.isValidDate(date))
-          return msg.channel.send("The date is not valid");
-        // Get the remind
-        msg.channel.send("Please input the remind");
-        msg.channel
-          .awaitMessages(filter, { max: 1, time: 60000, errors: ["time"] })
-          .then((collected) => {
-            // Get the remind
-            let remind = collected.first().content;
-            // Get the channel
-            msg.channel.send("Please input the channel");
-            msg.channel
-              .awaitMessages(filter, { max: 1, time: 60000, errors: ["time"] })
-              .then((collected) => {
-                // Get the channel
-                let channel = collected.first().content;
-                // Get the notification
-                msg.channel.send("Do you want to receive a notification?");
-                msg.channel
-                  .awaitMessages(filter, {
-                    max: 1,
-                    time: 60000,
-                    errors: ["time"],
-                  })
-                  .then((collected) => {
-                    // Get the notification
-                    let notif = collected.first().content;
-                    // Get the recurrence
-                    msg.channel.send("Do you want to set a recurrence?");
-                    msg.channel
-                      .awaitMessages(filter, {
-                        max: 1,
-                        time: 60000,
-                        errors: ["time"],
-                      })
-                      .then((collected) => {
-                        // Get the recurrence
-                        let recurrence = collected.first().content;
-                        // Create the remind
-                        let remindUsObject = {
-                          target_date: new Date(date),
-                          entry_date: new Date(),
-                          remind: remind,
-                          channel_id: channel,
-                          notif: notif,
-                          recurrence: recurrence,
-                        };
-                        console.log(remindUsObject);
-                      });
-                  });
-              });
-          });
+        const date = collected.first().content;
+        return date;
       });
   }
 
+  /**
+   * Check if the given string is a valid date
+   * @param {String} date
+   * @return {Boolean}
+   */
   static isValidDate(date) {
-    // Check if the date is valid
-    let reg = /^\d{4}-\d{2}-\d{2}$/;
-    if (!reg.test(date)) return false;
-    // Check if the date is valid
-    let d = new Date(date);
-    if (!d.getTime()) return false;
-    return d.toISOString().slice(0, 10) === date;
+    const date_array = date.split("/");
+    const day = date_array[0];
+    const month = date_array[1];
+    const year = date_array[2];
+    const date_object = new Date(year, month, day);
+    return date_object.getDate() === day && date_object.getMonth() === month;
+  }
+
+  /**
+   * Input of the time
+   * @param {Discord.Message} msg
+   * @return {String}
+   */
+  static inputTime(msg) {
+    msg.channel.send("Please enter the time.");
+    const filter = (m) =>
+      m.author.id === msg.author.id && isValidTime(m.content);
+    msg.channel
+      .awaitMessages(filter, { max: 1, time: 60000, errors: ["time"] })
+      .then((collected) => {
+        const time = collected.first().content;
+        return time;
+      });
+  }
+
+  /**
+   * Check if the given string is a valid time
+   * @param {String} time
+   * @return {Boolean}
+   * @example
+   * isValidTime("12h00"); // true
+   * isValidTime("12H00"); // true
+   * isValidTime("salut"); // false
+   */
+  static isValidTime(time) {
+    const time_array = time.split("h");
+    const hour = time_array[0];
+    const minutes = time_array[1];
+    const time_object = new Date(0, 0, 0, hour, minutes);
+    return (
+      time_object.getHours() === hour && time_object.getMinutes() === minutes
+    );
   }
 };
