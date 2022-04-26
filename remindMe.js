@@ -48,7 +48,8 @@ module.exports = class createReminderObject {
     // Check if all argument exist
     if (!args[1]) return msg.reply("Please enter a date !");
     if (!args[2]) return msg.reply("Please enter a time !");
-    if (!args[3]) return msg.reply("Please enter a label !");
+    if (!args[3] && args[2].split(" ").length <= 1)
+      return msg.reply("Please enter a label !");
 
     // === Date verification ===
     let date = args[1];
@@ -103,7 +104,7 @@ module.exports = class createReminderObject {
     console.log(time_array);
     if (time_array.length == 1 && time_array[0].includes("H")) {
       time_array = time.split("H");
-      if (!time_array.length) {
+      if (time_array.length) {
         time_array = ["00", "00"];
       }
     }
@@ -121,7 +122,7 @@ module.exports = class createReminderObject {
     }
     // Missing time arguments handler
     if (!result_test)
-      return msg.reply("Please enter numeric values ​​for time !");
+      return msg.reply("Please enter numeric values for time !");
 
     let hour = time_array[0]; // Get hour
     let splited_hour = hour.split(""); // Get spilted hour numbers
@@ -152,7 +153,11 @@ module.exports = class createReminderObject {
       return msg.reply("Please enter a future date !");
     //*  Checking & validation of the arguments |END]*/
 
-    let remind = args.slice(3).join(" "); // Reminder title
+    let index = 3;
+    if (!args[3] && args[2].split(" ").length >= 1) {
+      index--;
+    }
+    let remind = args.slice(index).join(" "); // Reminder title
 
     let users_id = [msg.author.id]; // Array of user who'll receive the reminder
 
