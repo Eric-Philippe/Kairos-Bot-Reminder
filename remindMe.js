@@ -100,13 +100,13 @@ module.exports = class createReminderObject {
 
     // === Time verification ===
     let time = args[2];
-    let time_array = time.split("h");
-    console.log(time_array);
+    let time_array;
+    if (args[2].split("h").length < 2 || args[2].split("H".length < 2)) {
+      time = "00h00";
+    }
+    time_array = time.split("h");
     if (time_array.length == 1 && time_array[0].includes("H")) {
       time_array = time.split("H");
-      if (time_array.length) {
-        time_array = ["00", "00"];
-      }
     }
 
     // Check if minutes input exit
