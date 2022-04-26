@@ -109,6 +109,8 @@ module.exports = class createReminderObject {
       time_array = time.split("H");
     }
 
+    console.log(time);
+
     // Check if minutes input exit
     if (!time_array[1]) time_array[1] = "00";
     // Check if all time input are number
