@@ -85,7 +85,7 @@ module.exports = class createRemindUsObject {
                           notif: notif,
                           recurrence: recurrence,
                         };
-                        return remindUsObject;
+                        console.log(remindUsObject);
                       });
                   });
               });
