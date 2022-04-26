@@ -101,7 +101,7 @@ module.exports = class createReminderObject {
     let time = args[2];
     let time_array = time.split("h");
     console.log(time_array);
-    if (!time_array.length) {
+    if (time_array.length == 1 && time_array[0].includes("H")) {
       time_array = time.split("H");
       if (!time_array.length) {
         time_array = ["00", "00"];
