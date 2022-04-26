@@ -36,6 +36,8 @@ const buildTimeLeft = function (targetDate, launchDate) {
  */
 const dateToString = function (d) {
   let month = d.getMonth() + 1;
+  console.log(month);
+  console.log("0" + month);
   if (month < 10) month = "0" + month;
   let finalText = d.getDate() + "/" + month + "/" + d.getFullYear() + " "; // [First] - 01/01/1999
 
