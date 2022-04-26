@@ -100,8 +100,8 @@ module.exports = class createReminderObject {
     // === Time verification ===
     let time = args[2];
     let time_array = time.split("h");
+    console.log(time_array);
     if (!time_array.length) {
-      msg.channel.send("?");
       time_array = time.split("H");
       if (!time_array.length) {
         time_array = ["00", "00"];
