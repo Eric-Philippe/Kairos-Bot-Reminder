@@ -40,6 +40,7 @@ const dateToString = function (d) {
 
   let hours = d.getHours();
   let minutes = d.getMinutes();
+  console.log(hours, minutes);
 
   // Add the additional zero to the
   if (hours === "0") hours = "00";

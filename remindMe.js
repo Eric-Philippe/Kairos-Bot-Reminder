@@ -109,8 +109,6 @@ module.exports = class createReminderObject {
       time_array = time.split("H");
     }
 
-    console.log(time);
-
     // Check if minutes input exit
     if (!time_array[1]) time_array[1] = "00";
     // Check if all time input are number
@@ -304,9 +302,8 @@ module.exports = class createReminderObject {
       // Loop all around the list of ongoing reminders
       for (let i = 0; i < reminders.length; i++) {
         new_text +=
-          `**- ${reminders[i].remind}** \n ${dateToString(
-            new Date(reminders[i].t_date)
-          )} \n` +
+          `**- ${reminders[i].remind}** \n 
+          ${dateToString(new Date(reminders[i].t_date))} \n` +
           "``" +
           buildTimeLeft(
             new Date(reminders[i].t_date),
