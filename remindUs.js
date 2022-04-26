@@ -24,7 +24,7 @@ module.exports = class createRemindUsObject {
    */
   static getRemindUsObject(msg) {
     // Check if the user has Admin permission
-    if (!msg.member.hasPermission("ADMINISTRATOR"))
+    if (!msg.member.permissionsIn(msg.channel).has("ADMINISTRATOR"))
       return msg.channel.send(
         "You don't have the permission to use this command"
       );
