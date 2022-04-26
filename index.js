@@ -35,7 +35,7 @@ client.on("messageCreate", (msg) => {
     Reminder.helpReminder(msg);
   }
   if (msg.content.startsWith("!remindUs")) {
-    RemindUs.remindUs(msg);
+    RemindUs.getRemindUsObject(msg);
   }
 });
 
