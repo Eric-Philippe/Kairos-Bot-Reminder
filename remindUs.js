@@ -92,4 +92,14 @@ module.exports = class createRemindUsObject {
           });
       });
   }
+
+  static isValidDate(date) {
+    // Check if the date is valid
+    let reg = /^\d{4}-\d{2}-\d{2}$/;
+    if (!reg.test(date)) return false;
+    // Check if the date is valid
+    let d = new Date(date);
+    if (!d.getTime()) return false;
+    return d.toISOString().slice(0, 10) === date;
+  }
 };
