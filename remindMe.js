@@ -302,8 +302,9 @@ module.exports = class createReminderObject {
       // Loop all around the list of ongoing reminders
       for (let i = 0; i < reminders.length; i++) {
         new_text +=
-          `**- ${reminders[i].remind}** \n 
-          ${dateToString(new Date(reminders[i].t_date))} \n` +
+          `**- ${reminders[i].remind}** \n ${dateToString(
+            new Date(reminders[i].t_date)
+          )} \n` +
           "``" +
           buildTimeLeft(
             new Date(reminders[i].t_date),
