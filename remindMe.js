@@ -25,22 +25,21 @@ const { client } = require("./utils/client"); // Get Discord Client
  * remindMe Class
  *
  * @public
- * @author Zaorhion
+ * @author EricP
  */
 module.exports = class createReminderObject {
   /**
-   * Object that contains all the requiered parameters
+   * Object wich contains all the requiered parameters
    * @typedef {Object} ReminderObject
    * @property {Date} target_date
    * @property {Date} entry_date
    * @property {String} remind
-   * @property {Array.<Discord.User>} users_id   *
+   * @property {Array.<Discord.User>} users_id
    */
 
   /**
    * Input Reminder
    * @param {Discord.Message} msg
-   * @return {ReminderObject} The object with all the reminder's information
    */
   static async remindMe(msg) {
     let args = msg.content.split(" ");

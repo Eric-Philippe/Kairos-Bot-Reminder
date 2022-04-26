@@ -4,6 +4,7 @@ const { con } = require("./utils/mysql"); // SQL Connexion
 const { TOKEN } = require("./config.json"); // Token
 
 const Reminder = require("./remindMe"); // Reminder Class
+const RemindUs = require("./remindUs"); // RemindUs Class
 
 // When Client's ready
 client.on("ready", () => {
@@ -32,6 +33,9 @@ client.on("messageCreate", (msg) => {
   }
   if (msg.content.startsWith("!help reminder")) {
     Reminder.helpReminder(msg);
+  }
+  if (msg.content.startsWith("!remindUs")) {
+    RemindUs.remindUs(msg);
   }
 });
 
