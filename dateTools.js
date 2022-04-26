@@ -43,8 +43,8 @@ const dateToString = function (d) {
   console.log(hours, minutes);
 
   // Add the additional zero to the
-  if (hours === "0") hours = "00";
-  if (minutes === "0") minutes = "00";
+  if (hours === 0) hours = "00";
+  if (minutes === 0) minutes = "00";
 
   // Add the hour to the final String
   finalText = finalText + hours + "h" + minutes;
