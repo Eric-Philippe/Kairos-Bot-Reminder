@@ -4,7 +4,8 @@ CREATE TABLE Reminder_Us(
    t_date TEXT,
    remind TEXT,
    channel_id TEXT,
-   notif BOOLEAN,
-   recurrence BOOLEAN,
+   server_id TEXT,
+   notif TEXT,
+   recurrence TEXT,
    PRIMARY KEY(id_reminder)
 );

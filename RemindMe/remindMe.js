@@ -1,25 +1,25 @@
 const Discord = require("discord.js"); // Main library
 require("require-sql"); // .sql file reader
 
-const { IMG } = require("./ressources.json"); // Ressources required for the system
+const { IMG } = require("../ressources.json"); // Ressources required for the system
 
 /** All the function needed */
-const { insertSQL } = require("./SQL/INSERT/insertSQL"); // Get the SQL insert function for the Reminder obj
-const { dateToString, buildTimeLeft, timeLeft } = require("./dateTools"); // ToolBox to work with date format
-const { con } = require("./utils/mysql"); // Get the mysql connexion object
+const { insertSQL } = require("../SQL/INSERT/insertSQL"); // Get the SQL insert function for the Reminder obj
+const { dateToString, buildTimeLeft, timeLeft } = require("../dateTools"); // ToolBox to work with date format
+const { con } = require("../utils/mysql"); // Get the mysql connexion object
 
 /** All the READ/SELECT SQL request needed */
-const query_Reminder = require("./SQL/READ/SELECT_REMINDER.sql");
-const query_Users = require("./SQL/READ/SELECT_USERS.sql");
-const query_userHAS = require("./SQL/READ/USER_HAS_REMINDER");
-const query_Find = require("./SQL/READ/SELECT_ALL_USERS_REMINDER.sql");
+const query_Reminder = require("../SQL/READ/SELECT_REMINDER.sql");
+const query_Users = require("../SQL/READ/SELECT_USERS.sql");
+const query_userHAS = require("../SQL/READ/USER_HAS_REMINDER");
+const query_Find = require("../SQL/READ/SELECT_ALL_USERS_REMINDER.sql");
 
 /** All the DELETE SQL request needed */
-const query_clear_user = require("./SQL/DELETE/CLEAR_USERS.sql");
-const query_clear_concerner = require("./SQL/DELETE/CLEAR_CONCERNER.sql");
-const query_clear_reminder = require("./SQL/DELETE/CLEAR_REMINDER.sql");
+const query_clear_user = require("../SQL/DELETE/CLEAR_USERS.sql");
+const query_clear_concerner = require("../SQL/DELETE/CLEAR_CONCERNER.sql");
+const query_clear_reminder = require("../SQL/DELETE/CLEAR_REMINDER.sql");
 
-const { client } = require("./utils/client"); // Get Discord Client
+const { client } = require("../utils/client"); // Get Discord Client
 
 /**
  * remindMe Class
@@ -455,12 +455,18 @@ module.exports = class createReminderObject {
           "Will setup a reminder at this given date with the label ``Sleep`` \n" +
           "``!myReminders`` \n" +
           "Display all your ongoing reminders \n" +
-          "``!delReminder`` Pick and delete one of your ongoing reminders",
+          "``!delReminder`` Pick and delete one of your ongoing reminders \n" +
+          "``!remindUs`` \n" +
+          "Display the system to create a server Reminder \n" +
+          "``!myRemindUs`` \n" +
+          "Display all your ongoing server reminders \n" +
+          "``!delRemindUs`` \n" +
+          "Delete one of your ongoing server reminders",
         true
       )
       .addField(
         "***Usages : ***",
-        "``!remindme < [01 day] / [01 month] / [2022 year] > < [00 hour] h [00 minutes] > | !myReminders | !delReminder => [1 index]``",
+        "``!remindme < [01 day] / [01 month] / [2022 year] > < [00 hour] h [00 minutes] > | !myReminders | !delReminder => [1 index] | !remindUs | !myRemindUs | !delRemindUs => [1 index]``",
         true
       )
       .setThumbnail(IMG.REMINDER_LOGO)

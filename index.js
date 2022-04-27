@@ -3,8 +3,11 @@ const { con } = require("./utils/mysql"); // SQL Connexion
 
 const { TOKEN } = require("./config.json"); // Token
 
-const Reminder = require("./remindMe"); // Reminder Class
-const RemindUs = require("./remindUs"); // RemindUs Class
+const Reminder = require("./RemindMe/remindMe"); // Reminder Class
+const { remindUsCheck } = require("./RemindUs/checkRemindUs"); // RemindUs Checker
+const RemindUs = require("./RemindUs/inputRemindUs"); // RemindUs Class
+const { myRemindUs } = require("./RemindUs/myRemindUs"); // RemindUs Class
+const { deleteRemindUs } = require("./RemindUs/deleteRemindUs"); // RemindUs Class
 
 // When Client's ready
 client.on("ready", () => {
@@ -15,6 +18,7 @@ client.on("ready", () => {
   con.connect(function (err) {
     if (err) console.log(err);
     console.log("Connected to database as ID : " + con.threadId);
+    remindUsCheck();
     Reminder.remindCheck(); // New Reminder to send auto Check (Recursive)
   });
 });
@@ -35,7 +39,13 @@ client.on("messageCreate", (msg) => {
     Reminder.helpReminder(msg);
   }
   if (msg.content.startsWith("!remindUs")) {
-    RemindUs.getRemindUsObject(msg);
+    new RemindUs(msg);
+  }
+  if (msg.content.startsWith("!myRemindUs")) {
+    myRemindUs(msg);
+  }
+  if (msg.content.startsWith("!delRemindUs")) {
+    deleteRemindUs(msg);
   }
 });
 
