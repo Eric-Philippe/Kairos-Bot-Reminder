@@ -38,14 +38,17 @@ client.on("messageCreate", (msg) => {
   if (msg.content.startsWith("!help reminder")) {
     Reminder.helpReminder(msg);
   }
-  if (msg.content.startsWith("!remindUs")) {
-    new RemindUs(msg);
-  }
-  if (msg.content.startsWith("!myRemindUs")) {
-    myRemindUs(msg);
-  }
-  if (msg.content.startsWith("!delRemindUs")) {
-    deleteRemindUs(msg);
+  // Check if the user is on dm
+  if (msg.channel.type != "DM") {
+    if (msg.content.startsWith("!remindUs")) {
+      new RemindUs(msg);
+    }
+    if (msg.content.startsWith("!myRemindUs")) {
+      myRemindUs(msg);
+    }
+    if (msg.content.startsWith("!delRemindUs")) {
+      deleteRemindUs(msg);
+    }
   }
 });
 

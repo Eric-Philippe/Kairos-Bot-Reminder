@@ -192,7 +192,7 @@ module.exports = class RemindUsInput {
     this.currentButtonsCollector =
       this.embedMessage.createMessageComponentCollector({
         componentType: "BUTTON",
-        time: 45 * 1000, // 45 seconds
+        time: 60 * 1000, // 60 seconds
       });
     // On Button Click
     this.currentButtonsCollector.on("collect", async (i) => {
@@ -332,7 +332,7 @@ module.exports = class RemindUsInput {
     // Setup the Message Collector
     this.currentMessageCollector =
       this.embedMessage.channel.createMessageCollector({
-        time: 30 * 1000, // 30 seconds
+        time: 60 * 1000, // 60 seconds
         maxMatches: 1,
         maxMatchesPerUser: 1,
       });
@@ -356,7 +356,7 @@ module.exports = class RemindUsInput {
     // Setup the Message Collector
     this.currentMessageCollector =
       this.embedMessage.channel.createMessageCollector({
-        time: 30 * 1000, // 30 seconds
+        time: 60 * 1000, // 60 seconds
         maxMatches: 1,
         maxMatchesPerUser: 1,
       });
@@ -380,7 +380,7 @@ module.exports = class RemindUsInput {
     // Setup the Message Collector
     this.currentMessageCollector =
       this.embedMessage.channel.createMessageCollector({
-        time: 30 * 1000, // 30 seconds
+        time: 60 * 1000, // 60 seconds
         maxMatches: 1,
         maxMatchesPerUser: 1,
       });
@@ -401,7 +401,7 @@ module.exports = class RemindUsInput {
     // Setup the Message Collector
     this.currentMessageCollector =
       this.embedMessage.channel.createMessageCollector({
-        time: 30 * 1000, // 30 seconds
+        time: 60 * 1000, // 60 seconds
         maxMatches: 1,
         maxMatchesPerUser: 1,
       });
