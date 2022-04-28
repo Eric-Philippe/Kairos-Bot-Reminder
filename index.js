@@ -6,7 +6,7 @@ const { TOKEN } = require("./config.json"); // Token
 const Reminder = require("./RemindMe/remindMe"); // Reminder Class
 const { remindUsCheck } = require("./RemindUs/checkRemindUs"); // RemindUs Checker
 const RemindUs = require("./RemindUs/inputRemindUs"); // RemindUs Class
-const { myRemindUs } = require("./RemindUs/myRemindUs"); // RemindUs Class
+const ListRemindUs = require("./RemindUs/myRemindUs"); // RemindUs Class
 const { deleteRemindUs } = require("./RemindUs/deleteRemindUs"); // RemindUs Class
 
 // When Client's ready
@@ -45,7 +45,7 @@ client.on("messageCreate", (msg) => {
       new RemindUs(msg);
     }
     if (msg.content.startsWith("!myRemindUs")) {
-      myRemindUs(msg);
+      new ListRemindUs(msg);
     }
     if (msg.content.startsWith("!delRemindUs")) {
       deleteRemindUs(msg);

@@ -31,8 +31,8 @@ const notification_types = ["None", "@everyone", "@here", "@ROLE"];
  * @property {String} remind
  * @property {String} channel_id
  * @property {String} server_id
- * @property {Boolean} notif
- * @property {Boolean} recurrence
+ * @property {String} notif
+ * @property {String} recurrence
  */
 /**
  * Class to manage the input of the remindUs command
