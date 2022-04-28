@@ -8,24 +8,22 @@ const { dateToString } = require("../dateTools");
 
 const { IMG } = require("../ressources.json"); // Ressources required for the system
 
-const MOVE_AMOUNT = 3;
+const MOVE_AMOUNT = 8;
 const query = util.promisify(con.query).bind(con);
 
 /**
  * Interface wich contains all the required parameters
- * @typedef {Object} RemindUsObject
- * @property {Date} target_date
+ * @typedef {Object} RemindMeObject
+ * @property {String} id_user
  * @property {Date} entry_date
+ * @property {Date} target_date
  * @property {String} remind
- * @property {String} channel_id
- * @property {String} server_id
- * @property {String} notif
  * @property {String} recurrence
  */
 /**
- * Display in an "infinite scroll" style the reminder from the server
+ * Display in an "infinite scroll" style the reminder from the user
  */
-module.exports = class ListRemindUs {
+module.exports = class ListRemindMe {
   /**
    * @param {Discord.Message} msg
    */
@@ -34,20 +32,19 @@ module.exports = class ListRemindUs {
     /** @type {Discord.MessageEmbed} */
     this.msgEmbed = null;
     /** @type {String} */
-    this.server_id = msg.guild.id;
+    this.user_id = msg.author.id;
     /** @type {Number} */
     this.current_index = 0;
     /** @type {String} */
     this.description = "";
-    /** @type {Array<RemindUsObject>} */
+    /** @type {Array<RemindMeObject>} */
     this.results = null;
     this.__init__();
   }
 
   async __init__() {
     this.results = await this.generateResults();
-    if (this.results.length === 0)
-      return this.msg.channel.send("No reminders for this server");
+    if (this.results.length === 0) return this.msg.channel.send("No reminders");
     await this.generateDescription();
     this.msgEmbed = await this.msg.channel.send({
       embeds: [this.generateEmbed()],
@@ -63,7 +60,7 @@ module.exports = class ListRemindUs {
         : this.results.length
     } / ${this.results.length} reminders displayed`;
     let embed = new Discord.MessageEmbed()
-      .setTitle(`Reminders for the server ${this.msg.guild.name}`)
+      .setTitle(`Reminders for the user ${this.msg.author.username}`)
       .setColor("#03fcd3")
       .setThumbnail(IMG.REMINDER_LOGO)
       .setFooter({
@@ -105,17 +102,13 @@ module.exports = class ListRemindUs {
         "\n``" +
         "🕐" +
         "``" +
-        `- *Recurrence* : ${this.results[i].recurrence}` +
-        "\n``" +
-        "🔔" +
-        "``" +
-        `- *Notification* : ${this.results[i].notif} \n\n`;
+        `- *Recurrence* : ${this.results[i].recurrence} \n\n`;
       i++;
     }
   }
 
   async generateResults() {
-    let sql = `SELECT * FROM Reminder_Us WHERE server_id = "${this.server_id}" ORDER BY t_date ASC`;
+    let sql = `SELECT * FROM Reminder_Me WHERE id_user = "${this.user_id}" ORDER BY t_date ASC`;
     let results = await query(sql);
     return results;
   }

@@ -7,38 +7,25 @@ const {
   isValidTime,
   buildDate,
   isNotPast,
-  isValidChannel,
-  isValidRole,
 } = require("../checkValidInput"); // Check Valid Input
 // Labels given for the differents inputs steps
-const steps_labels = [
-  "Date",
-  "Time",
-  "Content",
-  "Channel",
-  "Notification",
-  "Recurrence",
-];
+const steps_labels = ["Date", "Time", "Content", "Recurrence"];
 // Labels given for the differents recurrence possibilities
 const recurrence_types = ["None", "Daily", "Weekly", "Monthly", "Yearly"];
-// Labels given for the differents notification possibilities
-const notification_types = ["None", "@everyone", "@here", "@ROLE"];
 /**
  * Interface wich contains all the required parameters
- * @typedef {Object} RemindUsObject
- * @property {Date} target_date
+ * @typedef {Object} RemindMeObject
+ * @property {String} id_user
  * @property {Date} entry_date
+ * @property {Date} target_date
  * @property {String} remind
- * @property {String} channel_id
- * @property {String} server_id
- * @property {String} notif
  * @property {String} recurrence
  */
 /**
- * Class to manage the input of the remindUs command
+ * Class to manage the input of the remindMe command
  * @class
  */
-module.exports = class RemindUsInput {
+module.exports = class RemindMeInput {
   /**
    * @param {Discord.Message} msg
    */
@@ -48,8 +35,6 @@ module.exports = class RemindUsInput {
     /** @type {String} */
     this.remind = "Empty";
     /** @type {String} */
-    this.channel_id = "ID of the announce channel";
-    /** @type {String} */
     this.date = "Format DD/MM/YYYY";
     /** @type {String} */
     this.time = "00:00";
@@ -57,10 +42,6 @@ module.exports = class RemindUsInput {
     this.step = 0;
     /** @type {Number} */
     this.step_recurrence = 0;
-    /** @type {Number} */
-    this.step_notif = 0;
-    /** @type {String} */
-    this.notif = notification_types[0];
     /** @type {String} */
     this.recurrence = recurrence_types[0];
     /** @type {Discord.MessageCollector} */
@@ -69,22 +50,8 @@ module.exports = class RemindUsInput {
     this.currentButtonsCollector = null;
     /** @type {Discord.MessageEmbed} */
     this.embedMessage = null;
-    this.isAdmin();
+    this.sendEmbed();
   }
-  /**
-   * Check if the user is an admin
-   * @returns {Boolean}
-   */
-  isAdmin() {
-    if (
-      this.msg.member.permissions.has([Discord.Permissions.FLAGS.ADMINISTRATOR])
-    ) {
-      this.sendEmbed();
-    } else {
-      this.msg.reply("You need to be an admin to use this command");
-    }
-  }
-
   /**
    * Generate the Embed General Information Message
    * @returns {Discord.MessageEmbed}
@@ -92,13 +59,11 @@ module.exports = class RemindUsInput {
   generateEmbed() {
     const embed = new Discord.MessageEmbed()
       .setColor("#0099ff")
-      .setTitle("RemindUs")
+      .setTitle("RemindMe")
       .setDescription(`Please enter the __**${steps_labels[this.step]}**__`)
       .addField("Date", this.date, true)
       .addField("Time", this.time, true)
       .addField("Content", this.remind, true)
-      .addField("Channel", this.channel_id, true)
-      .addField("Notification", this.notif, true)
       .addField("Recurrence", this.recurrence, true);
     return embed;
   }
@@ -163,11 +128,6 @@ module.exports = class RemindUsInput {
       .setCustomId("recurrence")
       .setLabel("Change Recurrence Type")
       .setStyle("PRIMARY");
-    // Notification Button
-    const button_change_notif = new Discord.MessageButton()
-      .setCustomId("notif")
-      .setLabel("Change Notification Type")
-      .setStyle("PRIMARY");
     // Build the basics Buttons Array
     const buttons = [
       button_previous,
@@ -176,12 +136,8 @@ module.exports = class RemindUsInput {
       button_validate,
     ];
     // Add the Recurrence Button if the step is the Recurrence one
-    if (this.step === 5) {
+    if (this.step === 3) {
       buttons.push(button_change_recurrence);
-    }
-    // Add the Notification Button if the step is the Notification one
-    if (this.step === 4) {
-      buttons.push(button_change_notif);
     }
     // Build the Message Action Row
     const row = new Discord.MessageActionRow().addComponents(buttons);
@@ -228,10 +184,6 @@ module.exports = class RemindUsInput {
           case "recurrence":
             if (!i.deferred) i.deferUpdate();
             this.changeRecurrenceState(); // Change the Recurrence State
-            break;
-          case "notif":
-            if (!i.deferred) i.deferUpdate();
-            this.changeNotifState(); // Change the Notification State
             break;
         }
       } else {
@@ -281,14 +233,14 @@ module.exports = class RemindUsInput {
    */
   async validate(i) {
     // Check if all the fields are filled
-    if (this.date && this.remind && this.channel_id && this.notif != "@ROLE") {
+    if (this.date && this.remind) {
       // Check if the reminder is in the future
       if (isNotPast(this.date + " " + this.time)) {
         await this.currentButtonsCollector.stop("time"); // Kill the Buttons Collector
         await this.currentMessageCollector.stop("time"); // Kill the Message Collector
         try {
           // Create the reminder
-          await this.insertRemindUs(this.buildFinalObject()); // SQL Insert
+          await this.insertRemindMe(this.buildFinalObject()); // SQL Insert
           i.editReply("Reminder created!"); // Reply
         } catch (err) {
           i.editReply("Error while inserting the remind, call the admin"); // Error Reply
@@ -317,12 +269,6 @@ module.exports = class RemindUsInput {
         break;
       case 2:
         this.setRemind();
-        break;
-      case 3:
-        this.setChannel();
-        break;
-      // Default
-      default:
         break;
     }
   }
@@ -396,54 +342,6 @@ module.exports = class RemindUsInput {
     });
   }
   /**
-   * Input of the Channel ID
-   */
-  setChannel() {
-    // Setup the Message Collector
-    this.currentMessageCollector =
-      this.embedMessage.channel.createMessageCollector({
-        time: 5 * 60 * 1000, // 5 minutes
-        maxMatches: 1,
-        maxMatchesPerUser: 1,
-      });
-    // Launch the Message Collector
-    this.currentMessageCollector.on("collect", async (m) => {
-      // Only if the user is the same as the author
-      if (m.author.id === this.msg.author.id) {
-        // Check if the message is a valid channel and if the bot has the right to send messages in it
-        if (isValidChannel(m.content)) {
-          this.channel_id = m.content; // Set the channel
-          this.nextStep(); // Go to the next step
-        }
-        m.delete(); // Clean the message
-      }
-    });
-  }
-  /**
-   * Input the Role ID
-   */
-  setRole() {
-    // Setup the Message Collector
-    this.currentMessageCollector =
-      this.embedMessage.channel.createMessageCollector({
-        time: 5 * 60 * 1000, // 5 minutes
-        maxMatches: 1,
-        maxMatchesPerUser: 1,
-      });
-    // Launch the Message Collector
-    this.currentMessageCollector.on("collect", async (m) => {
-      // Only if the user is the same as the author
-      if (m.author.id === this.msg.author.id) {
-        // Check if the message is a valid role
-        if (isValidRole(m.guild, m.content)) {
-          this.notif = m.content; // Set the role
-          this.nextStep(); // Go to the next step
-        }
-        m.delete(); // Clean the message
-      }
-    });
-  }
-  /**
    * Change the recurrence state between "daily", "weekly", "monthly", "yearly" and "None"
    */
   changeRecurrenceState() {
@@ -457,68 +355,32 @@ module.exports = class RemindUsInput {
     this.editEmbed(); // Edit the embed
   }
   /**
-   * Change the recurrence state between "@everyone", "@here" and "None"
-   */
-  changeNotifState() {
-    // Check if the notification step isnt the last one
-    if (this.step_notif >= notification_types.length - 1) {
-      this.step_notif = 0; // Reset
-    } else {
-      this.step_notif++; // +1
-    }
-    this.notif = notification_types[this.step_notif]; // Set the notification
-
-    this.editEmbed(); // Edit the embed
-
-    // Check if the step notif is on the last element
-    if (this.step_notif === notification_types.length - 1) {
-      this.setRole();
-    }
-  }
-  /**
    * Build the final reminder Object to insert in the database
-   * @returns {RemindUsObject}
+   * @returns {RemindMeObject}
    */
   buildFinalObject() {
     const myObj = {
+      id_user: this.msg.author.id,
       target_date: buildDate(this.date + " " + this.time),
       entry_date: new Date(),
       remind: this.remind,
-      channel_id: this.channel_id,
-      server_id: this.msg.guild.id,
       recurrence: this.recurrence,
-      notif: this.notif,
     };
     // Return the object
     return myObj;
   }
   /**
-   * Insert the given RemindUsObject into the database
-   * @param {RemindUsObject} remindUsObject
+   * Insert the given RemindMeObject into the database
+   * @param {RemindMeObject} remindMeObject
    * @returns {Promise<void>}
    */
-  async insertRemindUs(remindUsObject) {
-    const {
-      target_date,
-      entry_date,
-      remind,
-      channel_id,
-      server_id,
-      notif,
-      recurrence,
-    } = remindUsObject; // Destructuring
+  async insertRemindMe(remindMeObject) {
+    const { id_user, target_date, entry_date, remind, recurrence } =
+      remindMeObject; // Destructuring
     // SQL Query
-    const sql = `INSERT INTO Reminder_Us (t_date, c_date, remind, channel_id, server_id, notif, recurrence) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+    const sql = `INSERT INTO Reminder_Me (t_date, c_date, remind, id_user, recurrence) VALUES (?, ?, ?, ?, ?)`;
     // SQL Values
-    const values = [
-      target_date,
-      entry_date,
-      remind,
-      channel_id,
-      server_id,
-      notif,
-      recurrence,
-    ];
+    const values = [target_date, entry_date, remind, id_user, recurrence];
     // SQL Query Command (Insert)
     con.query(sql, values, (err, result) => {
       if (err) throw err;

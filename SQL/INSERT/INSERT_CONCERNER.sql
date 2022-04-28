@@ -1,1 +1,0 @@
-INSERT INTO Concerner SET id_reminder=?, id_user=?
