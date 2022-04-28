@@ -68,6 +68,8 @@ module.exports = class RemindUsInput {
     this.currentButtonsCollector = null;
     /** @type {Discord.MessageEmbed} */
     this.embedMessage = null;
+    /** @type {Boolean} */
+    this.end = false;
     this.isAdmin();
   }
   /**
@@ -97,7 +99,7 @@ module.exports = class RemindUsInput {
       .addField("Time", this.time, true)
       .addField("Content", this.remind, true)
       .addField("Channel", this.channel_id, true)
-      .addField("Notification (@everyone)", this.notif, true)
+      .addField("Notification", this.notif, true)
       .addField("Recurrence", this.recurrence, true);
     return embed;
   }
@@ -219,18 +221,17 @@ module.exports = class RemindUsInput {
             this.cancel(); // Leave the system
             break;
           case "validate":
+            this.end = true; // End the system
             await i.deferReply();
             await this.validate(i); // Validate the reminder
+            break;
           case "recurrence":
-            if (!i.deferred) i.deferUpdate();
+            if (!this.end) i.deferUpdate();
             this.changeRecurrenceState(); // Change the Recurrence State
             break;
           case "notif":
-            if (!i.deferred) i.deferUpdate();
+            if (!this.end) i.deferUpdate();
             this.changeNotifState(); // Change the Notification State
-            break;
-          // Default
-          default:
             break;
         }
       } else {
@@ -288,12 +289,12 @@ module.exports = class RemindUsInput {
         try {
           // Create the reminder
           await this.insertRemindUs(this.buildFinalObject()); // SQL Insert
-          await i.editReply("Remind Setup !"); // Success Reply
+          i.editReply("Reminder created!"); // Reply
         } catch (err) {
           i.editReply("Error while inserting the remind, call the admin"); // Error Reply
         }
       } else {
-        i.editReply("The date is in the past!"); // Past Reply
+        i.editReply("Please enter a date in the future!"); // Past Reply
       }
     } else {
       i.editReply("Please fill all the required fields!"); // Empty Reply

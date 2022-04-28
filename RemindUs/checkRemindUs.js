@@ -53,7 +53,8 @@ const checkRemindUs = async () => {
         if (results[i].recurrence != "None") {
           const sql = `UPDATE Reminder_Us SET t_date = ? WHERE id_reminder = ?`; // SQL Update
           let values; // Values to send to the SQL
-          let temp = new Date(results[i].t_date); // Create a new date with the past current date
+          let current_date = new Date(results[i].t_date); // Create a new date with the past current date
+          let new_date; // New date to send to the SQL
           // Switch between all the recurrents
           switch (results[i].recurrence) {
             /**
@@ -63,20 +64,28 @@ const checkRemindUs = async () => {
              * break;
              */
             case "Daily":
-              temp.setDate(temp.getDate() + 1);
-              values = [temp, results[i].id_reminder];
+              new_date = new Date(
+                current_date.setDate(current_date.getDate() + 1)
+              );
+              values = [new_date, results[i].id_reminder];
               break;
             case "Weekly":
-              temp.setDate(temp.getDate() + 7);
-              values = [temp, results[i].id_reminder];
+              new_date = new Date(
+                current_date.setDate(current_date.getDate() + 7)
+              );
+              values = [new_date, results[i].id_reminder];
               break;
             case "Monthly":
-              temp.setMonth(temp.getMonth() + 1);
-              values = [temp, results[i].id_reminder];
+              new_date = new Date(
+                current_date.setMonth(current_date.getMonth() + 1)
+              );
+              values = [new_date, results[i].id_reminder];
               break;
             case "Yearly":
-              temp.setFullYear(temp.getFullYear() + 1);
-              values = [temp, results[i].id_reminder];
+              new_date = new Date(
+                current_date.setFullYear(current_date.getFullYear() + 1)
+              );
+              values = [new_date, results[i].id_reminder];
               break;
             // Default
             default:

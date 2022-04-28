@@ -11,6 +11,7 @@ const { deleteRemindUs } = require("./RemindUs/deleteRemindUs"); // RemindUs Cla
 
 // When Client's ready
 client.on("ready", () => {
+  let temps = new Date(); // Create a new date
   console.log(`Well connected to ${client.user.username}`);
   client.user.setActivity("Time is Meaningless");
 
