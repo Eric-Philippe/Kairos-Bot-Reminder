@@ -22,7 +22,7 @@ const steps_labels = [
 // Labels given for the differents recurrence possibilities
 const recurrence_types = ["None", "Daily", "Weekly", "Monthly", "Yearly"];
 // Labels given for the differents notification possibilities
-const notification_types = ["None", "@everyone", "@here", "ROLE_ID"];
+const notification_types = ["None", "@everyone", "@here", "@ROLE"];
 /**
  * Interface wich contains all the required parameters
  * @typedef {Object} RemindUsObject
@@ -284,12 +284,7 @@ module.exports = class RemindUsInput {
    */
   async validate(i) {
     // Check if all the fields are filled
-    if (
-      this.date &&
-      this.remind &&
-      this.channel_id &&
-      this.notif != "ROLE_ID"
-    ) {
+    if (this.date && this.remind && this.channel_id && this.notif != "@ROLE") {
       // Check if the reminder is in the future
       if (isNotPast(this.date + " " + this.time)) {
         await this.currentButtonsCollector.stop("time"); // Kill the Buttons Collector
