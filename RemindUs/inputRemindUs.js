@@ -8,6 +8,7 @@ const {
   buildDate,
   isNotPast,
   isValidChannel,
+  isValidRole,
 } = require("../checkValidInput"); // Check Valid Input
 // Labels given for the differents inputs steps
 const steps_labels = [
@@ -21,7 +22,7 @@ const steps_labels = [
 // Labels given for the differents recurrence possibilities
 const recurrence_types = ["None", "Daily", "Weekly", "Monthly", "Yearly"];
 // Labels given for the differents notification possibilities
-const notification_types = ["None", "@everyone", "@here"];
+const notification_types = ["None", "@everyone", "@here", "ROLE_ID"];
 /**
  * Interface wich contains all the required parameters
  * @typedef {Object} RemindUsObject
@@ -122,6 +123,8 @@ module.exports = class RemindUsInput {
    * Edit the Embed Message with the new properties
    */
   editEmbed() {
+    if (!this.embedMessage) return; // Simple check if the message is not null
+    if (!this.msg) return;
     this.embedMessage.edit({
       embeds: [this.generateEmbed()], // Generate the new Embed Message
       components: [this.generateButtons()], // Generate the new Buttons
@@ -281,7 +284,12 @@ module.exports = class RemindUsInput {
    */
   async validate(i) {
     // Check if all the fields are filled
-    if (this.date && this.remind && this.channel_id) {
+    if (
+      this.date &&
+      this.remind &&
+      this.channel_id &&
+      this.notif != "ROLE_ID"
+    ) {
       // Check if the reminder is in the future
       if (isNotPast(this.date + " " + this.time)) {
         await this.currentButtonsCollector.stop("time"); // Kill the Buttons Collector
@@ -420,6 +428,30 @@ module.exports = class RemindUsInput {
     });
   }
   /**
+   * Input the Role ID
+   */
+  setRole() {
+    // Setup the Message Collector
+    this.currentMessageCollector =
+      this.embedMessage.channel.createMessageCollector({
+        time: 5 * 60 * 1000, // 5 minutes
+        maxMatches: 1,
+        maxMatchesPerUser: 1,
+      });
+    // Launch the Message Collector
+    this.currentMessageCollector.on("collect", async (m) => {
+      // Only if the user is the same as the author
+      if (m.author.id === this.msg.author.id) {
+        // Check if the message is a valid role
+        if (isValidRole(m.guild, m.content)) {
+          this.notif = m.content; // Set the role
+          this.nextStep(); // Go to the next step
+        }
+      }
+      m.delete(); // Clean the message
+    });
+  }
+  /**
    * Change the recurrence state between "daily", "weekly", "monthly", "yearly" and "None"
    */
   changeRecurrenceState() {
@@ -443,7 +475,13 @@ module.exports = class RemindUsInput {
       this.step_notif++; // +1
     }
     this.notif = notification_types[this.step_notif]; // Set the notification
+
     this.editEmbed(); // Edit the embed
+
+    // Check if the step notif is on the last element
+    if (this.step_notif === notification_types.length - 1) {
+      this.setRole();
+    }
   }
   /**
    * Build the final reminder Object to insert in the database

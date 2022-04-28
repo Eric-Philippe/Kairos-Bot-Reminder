@@ -1,4 +1,5 @@
 const Discord = require("discord.js");
+
 const { client } = require("./utils/client"); // Discord Bot
 
 module.exports = class CheckInput {
@@ -18,7 +19,6 @@ module.exports = class CheckInput {
       date.getFullYear() === parseInt(args[2])
     );
   }
-
   /**
    * Check if the given string is a valid time
    * @param {String} str
@@ -34,7 +34,6 @@ module.exports = class CheckInput {
       date.getMinutes() === parseInt(args[1])
     );
   }
-
   static buildDate(str) {
     let args = str.split("/");
     const date = new Date(args[2].split(" ")[0], args[1] - 1, args[0]);
@@ -43,7 +42,6 @@ module.exports = class CheckInput {
     date.setMinutes(time[1]);
     return date;
   }
-
   /**
    * Check if the given string (DD/MM/YYYY HH:MM) is not in the past
    * @param {String} str
@@ -52,7 +50,6 @@ module.exports = class CheckInput {
   static isNotPast(str) {
     return CheckInput.buildDate(str) > new Date();
   }
-
   /**
    * Check if the given string is a valid ID channel and if the bot has the permission to send a message
    * @param {String} str
@@ -65,5 +62,19 @@ module.exports = class CheckInput {
       channel.type === "GUILD_TEXT" &&
       channel.permissionsFor(client.user).has("SEND_MESSAGES")
     );
+  }
+  /**
+   * Check if the given string is a valid ID role
+   * @param {String} str
+   * @param {Discord.Guild} guild
+   * @returns {Boolean}
+   */
+  static isValidRole(guild, str) {
+    const role_id = str.match(/<@&(\d+)>/);
+    if (!role_id) return false;
+    if (!role_id[1]) return false;
+    const role = client.guilds.cache.get(guild.id).roles.cache.get(role_id[1]);
+    if (!role) return false;
+    return true;
   }
 };

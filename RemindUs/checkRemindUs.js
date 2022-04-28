@@ -45,6 +45,8 @@ const checkRemindUs = async () => {
           // @here
         } else if (results[i].notif === "@here") {
           channel.send("||@here||");
+        } else if (results[i].notif != "None") {
+          channel.send(`||${results[i].notif}||`);
         }
         // Send the Main Embed
         channel.send({ embeds: [embedReminder] });
