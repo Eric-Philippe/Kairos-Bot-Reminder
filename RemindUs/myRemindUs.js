@@ -32,7 +32,7 @@ const myRemindUs = async (msg) => {
           )}\n` +
           "``Recurrence :`` " +
           results[i].recurrence +
-          "| ``Notification :`` " +
+          " | ``Notification :`` " +
           results[i].notif;
       }
       let embed = new Discord.MessageEmbed()
