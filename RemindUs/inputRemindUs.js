@@ -394,8 +394,8 @@ module.exports = class RemindUsInput {
       if (m.author.id === this.msg.author.id) {
         this.remind = m.content; // Set the remind
         this.nextStep(); // Go to the next step
+        m.delete(); // Clean the message
       }
-      m.delete(); // Clean the message
     });
   }
   /**
@@ -418,8 +418,8 @@ module.exports = class RemindUsInput {
           this.channel_id = m.content; // Set the channel
           this.nextStep(); // Go to the next step
         }
+        m.delete(); // Clean the message
       }
-      m.delete(); // Clean the message
     });
   }
   /**
@@ -442,8 +442,8 @@ module.exports = class RemindUsInput {
           this.notif = m.content; // Set the role
           this.nextStep(); // Go to the next step
         }
+        m.delete(); // Clean the message
       }
-      m.delete(); // Clean the message
     });
   }
   /**

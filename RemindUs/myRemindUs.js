@@ -30,9 +30,10 @@ const myRemindUs = async (msg) => {
           `\n\n**# ${results[i].remind}** \n => ${dateToString(
             new Date(results[i].t_date)
           )}\n` +
-          "``" +
-          `Recurrence : ${results[i].recurrence} | Notification : ${results[i].notif}` +
-          "``";
+          "``Recurrence :`` " +
+          results[i].recurrence +
+          "| ``Notification :`` " +
+          results[i].notif;
       }
       let embed = new Discord.MessageEmbed()
         .setTitle(`Reminder List of the server ${msg.guild.name}`)
