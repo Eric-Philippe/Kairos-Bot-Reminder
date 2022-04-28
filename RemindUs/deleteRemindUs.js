@@ -79,6 +79,7 @@ const deleteRemindUs = async (msg) => {
           // Send the SQL to the database
           await con.query(sql, values, (err, rslts) => {
             if (err) throw err;
+            collector.stop("time");
             msg.channel.send("Reminder deleted !"); // Success Message
             msg_embed.delete(); // Delete the Embed
             msg_instruction.delete(); // Delete the Instruction
