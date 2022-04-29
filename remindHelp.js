@@ -1,9 +1,11 @@
-const Discord = require("discord.js");
+const Discord = require("discord.js"); // Discord.js API
 
 const { client } = require("./utils/client"); // Discord Bot
 
-const { IMG } = require("./ressources.json");
-
+const { IMG } = require("./ressources.json"); // Ressources
+/**
+ * Class for displaying all the commands
+ */
 module.exports = class ReminderHelp {
   /** @param {Discord.Message} msg */
   constructor(msg) {
@@ -18,22 +20,29 @@ module.exports = class ReminderHelp {
     this.currentSecondDisplay = null;
     this.sendMainEmbed();
   }
-
+  /**
+   * Will send the main embed with all the commands
+   */
   async sendMainEmbed() {
     // Send the Embed
     this.msgEmbed = await this.msg.channel.send({
       embeds: [this.generateEmbed()],
       components: [this.generateRow()],
     });
+    // Launch the listener
     await this.buttonCollector();
   }
-
+  /**
+   * Will send the second embed with all the explication of the command for a given category
+   */
   async sendSecondEmbed() {
     this.msgSecondEmbed = await this.msg.channel.send({
       embeds: [this.secondEmbed],
     });
   }
-
+  /**
+   * Edit the second embed with all the explication of the command for a given category
+   */
   editSecondEmbed() {
     try {
       this.msgSecondEmbed.edit({
@@ -43,7 +52,10 @@ module.exports = class ReminderHelp {
       throw error;
     }
   }
-
+  /**
+   * Generate the main embed with all the commands
+   * @returns {Discord.MessageEmbed}
+   */
   generateEmbed() {
     let embed = new Discord.MessageEmbed()
       .setTitle("Reminder Help - Commands")
@@ -76,7 +88,10 @@ module.exports = class ReminderHelp {
       });
     return embed;
   }
-
+  /**
+   * Build all the buttons for the main embed
+   * @returns {Discord.MessageActionRow}
+   */
   generateRow() {
     // RemindMe
     const button_remindMe = new Discord.MessageButton()
@@ -100,26 +115,28 @@ module.exports = class ReminderHelp {
     ]);
     return row;
   }
-
+  /**
+   * Will listen to the buttons of the user
+   */
   buttonCollector() {
-    console.log(this.msgEmbed);
-    this.currentButtonsCollector =
-      this.msgEmbed.createMessageComponentCollector({
+    // Button Collector Builder
+    let currentButtonsCollector = this.msgEmbed.createMessageComponentCollector(
+      {
         componentType: "BUTTON",
         time: 5 * 60 * 1000, // 5 minutes
-      });
+      }
+    );
     // On Button Click
-    this.currentButtonsCollector.on("collect", async (i) => {
+    currentButtonsCollector.on("collect", async (i) => {
       // Only if the user is the same as the author
       if (i.user.id === this.msg.author.id) {
+        // If the button clicked doesn't redirect to the same page as before
         if (i.customId != this.currentSecondDisplay) {
           // Process of the Buttons
           switch (i.customId) {
             /**
              * case "customId":
-             * Check if the interaction has already been processed
-             * If not defer it
-             * Do something
+             * Set the secondEmbed
              */
             case "me":
               this.secondEmbed = this.generateMeEmbed();
@@ -131,17 +148,22 @@ module.exports = class ReminderHelp {
               this.secondEmbed = this.generateGroupEmbed();
               break;
           }
+          // If the secondEmbed message is not null
           if (this.msgSecondEmbed) {
             this.editSecondEmbed();
           } else {
             this.sendSecondEmbed();
           }
+          // Set the new second display with the customId from the button clicked
           this.currentSecondDisplay = i.customId;
         } else {
+          // Delete the past secondEmbed
           if (this.msgSecondEmbed) this.msgSecondEmbed.delete();
+          // Reset all the components of the secondEmbed
           this.msgSecondEmbed = null;
           this.currentSecondDisplay = null;
         }
+        // Answer for the interaction
         if (!i.deferred) i.deferUpdate();
       } else {
         i.reply({
@@ -151,9 +173,12 @@ module.exports = class ReminderHelp {
       }
     });
     // At the end of the Collector
-    this.currentButtonsCollector.on("end", (collected) => {});
+    currentButtonsCollector.on("end", (collected) => {});
   }
-
+  /**
+   * Generate the embed for the Me button
+   * @returns {Discord.MessageEmbed}
+   */
   generateMeEmbed() {
     const newLocal =
       "``💡`` **・ RemindMe Commands Format** \n\n" +
@@ -188,7 +213,10 @@ module.exports = class ReminderHelp {
       });
     return embed;
   }
-
+  /**
+   * Generate the embed for the Us button
+   * @returns {Discord.MessageEmbed}
+   */
   generateUsEmbed() {
     let embed = new Discord.MessageEmbed()
       .setTitle("Remind Help - RemindUs")
@@ -225,7 +253,10 @@ module.exports = class ReminderHelp {
       });
     return embed;
   }
-
+  /**
+   * Generate the embed for the Group button
+   * @returns {Discord.MessageEmbed}
+   */
   generateGroupEmbed() {
     let embed = new Discord.MessageEmbed()
       .setTitle("Remind Help - Group")
