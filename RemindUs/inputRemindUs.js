@@ -1,7 +1,11 @@
+// ========================= MODULE IMPORT =========================
 const Discord = require("discord.js"); // Discord API
-
+// ======================= CONNEXION IMPORT ========================
 const { con } = require("../utils/mysql"); // SQL Connexion
-
+// ========================== UTILS IMPORT =========================
+const CategoryManager = require("./categoryManager"); // Category Manager
+const { isAdmin } = require("../utils/isAdmin"); // Admin Perm Check
+// Valid Input Check
 const {
   isValidDate,
   isValidTime,
@@ -9,7 +13,8 @@ const {
   isNotPast,
   isValidChannel,
   isValidRole,
-} = require("../checkValidInput"); // Check Valid Input
+} = require("../checkValidInput");
+// ======================= RESSOURCES DEFINITION ==================
 // Labels given for the differents inputs steps
 const steps_labels = [
   "Date",
@@ -18,11 +23,14 @@ const steps_labels = [
   "Channel",
   "Notification",
   "Recurrence",
+  "Category",
 ];
 // Labels given for the differents recurrence possibilities
 const recurrence_types = ["None", "Daily", "Weekly", "Monthly", "Yearly"];
 // Labels given for the differents notification possibilities
 const notification_types = ["None", "@everyone", "@here", "@ROLE"];
+// Labels given for the differents category possibilities
+const category_types = ["None", "Birthday", "Meeting"];
 /**
  * Interface wich contains all the required parameters
  * @typedef {Object} RemindUsObject
@@ -33,6 +41,7 @@ const notification_types = ["None", "@everyone", "@here", "@ROLE"];
  * @property {String} server_id
  * @property {String} notif
  * @property {String} recurrence
+ * @property {String} category
  */
 /**
  * Class to manage the input of the remindUs command
@@ -59,32 +68,35 @@ module.exports = class RemindUsInput {
     this.step_recurrence = 0;
     /** @type {Number} */
     this.step_notif = 0;
+    /** @type {Number} */
+    this.step_category = 0;
     /** @type {String} */
     this.notif = notification_types[0];
     /** @type {String} */
     this.recurrence = recurrence_types[0];
+    /** @type {String} */
+    this.category = category_types[0];
+    /** @type {Array<String>} */
+    this.category_types = category_types;
     /** @type {Discord.MessageCollector} */
     this.currentMessageCollector = null;
     /** @type {Discord.InteractionCollector} */
     this.currentButtonsCollector = null;
     /** @type {Discord.MessageEmbed} */
     this.embedMessage = null;
-    this.isAdmin();
+    this.permCheck();
   }
   /**
    * Check if the user is an admin
    * @returns {Boolean}
    */
-  isAdmin() {
-    if (
-      this.msg.member.permissions.has([Discord.Permissions.FLAGS.ADMINISTRATOR])
-    ) {
+  permCheck() {
+    if (isAdmin(this.msg)) {
       this.sendEmbed();
     } else {
-      this.msg.reply("You need to be an admin to use this command");
+      this.msg.reply("``❌`` - You need to be an admin to use this command");
     }
   }
-
   /**
    * Generate the Embed General Information Message
    * @returns {Discord.MessageEmbed}
@@ -99,13 +111,22 @@ module.exports = class RemindUsInput {
       .addField("Content", this.remind, true)
       .addField("Channel", this.channel_id, true)
       .addField("Notification", this.notif, true)
-      .addField("Recurrence", this.recurrence, true);
+      .addField("Recurrence", this.recurrence, true)
+      .addField("Category", this.category, true);
     return embed;
   }
   /**
    * Send the Embed Message
    **/
-  sendEmbed() {
+  async sendEmbed() {
+    let myCategories = await CategoryManager.getCategories(this.msg);
+    // Concatenate the categories
+    if (myCategories.length != 0) {
+      // Add the categories to the category_types array
+      for (let i = 0; i < myCategories.length; i++) {
+        this.category_types.push(myCategories[i].label);
+      }
+    }
     this.msg.channel
       .send({
         embeds: [this.generateEmbed()], // Generate the Embed Message
@@ -168,6 +189,11 @@ module.exports = class RemindUsInput {
       .setCustomId("notif")
       .setLabel("Change Notification Type")
       .setStyle("PRIMARY");
+    // Category Button
+    const button_change_category = new Discord.MessageButton()
+      .setCustomId("category")
+      .setLabel("Change Category Type")
+      .setStyle("PRIMARY");
     // Build the basics Buttons Array
     const buttons = [
       button_previous,
@@ -175,6 +201,10 @@ module.exports = class RemindUsInput {
       button_cancel,
       button_validate,
     ];
+    // Add the Category Button if the step is the category step
+    if (this.step === 6) {
+      buttons.push(button_change_category);
+    }
     // Add the Recurrence Button if the step is the Recurrence one
     if (this.step === 5) {
       buttons.push(button_change_recurrence);
@@ -218,7 +248,7 @@ module.exports = class RemindUsInput {
             this.previousStep(); // Step -1
             break;
           case "cancel":
-            i.reply("Canceled");
+            i.reply("``🙆‍♂️`` - Canceled");
             this.cancel(); // Leave the system
             break;
           case "validate":
@@ -233,11 +263,15 @@ module.exports = class RemindUsInput {
             if (!i.deferred) i.deferUpdate();
             this.changeNotifState(); // Change the Notification State
             break;
+          case "category":
+            if (!i.deferred) i.deferUpdate();
+            this.changeCategoryState(); // Change the Category State
+            break;
         }
       } else {
         // If the user is not the same as the author
         i.reply({
-          content: `These buttons aren't for you!`,
+          content: ```🙆‍♂️`` - These buttons aren't for you!`,
           ephemeral: true, // Only the user can see it
         });
       }
@@ -289,15 +323,17 @@ module.exports = class RemindUsInput {
         try {
           // Create the reminder
           await this.insertRemindUs(this.buildFinalObject()); // SQL Insert
-          i.editReply("Reminder created!"); // Reply
+          i.editReply("``🙆‍♂️`` - Reminder created!"); // Reply
         } catch (err) {
-          i.editReply("Error while inserting the remind, call the admin"); // Error Reply
+          i.editReply(
+            "``❌`` - Error while inserting the remind, call the admin"
+          ); // Error Reply
         }
       } else {
-        i.editReply("Please enter a date in the future!"); // Past Reply
+        i.editReply("``❌`` - Please enter a date in the future!"); // Past Reply
       }
     } else {
-      i.editReply("Please fill all the required fields!"); // Empty Reply
+      i.editReply("``❌`` - Please fill all the required fields!"); // Empty Reply
     }
   }
   /**
@@ -472,8 +508,22 @@ module.exports = class RemindUsInput {
 
     // Check if the step notif is on the last element
     if (this.step_notif === notification_types.length - 1) {
+      // If the state of the notif requires to input a role
       this.setRole();
     }
+  }
+  /**
+   * Change the category state between "None" and the category name
+   */
+  changeCategoryState() {
+    // Check if the category step isnt the last one
+    if (this.step_category >= this.category_types.length - 1) {
+      this.step_category = 0; // Reset
+    } else {
+      this.step_category++; // +1
+    }
+    this.category = this.category_types[this.step_category]; // Set the category
+    this.editEmbed(); // Edit the embed
   }
   /**
    * Build the final reminder Object to insert in the database
@@ -488,6 +538,7 @@ module.exports = class RemindUsInput {
       server_id: this.msg.guild.id,
       recurrence: this.recurrence,
       notif: this.notif,
+      category: this.category,
     };
     // Return the object
     return myObj;
@@ -506,9 +557,10 @@ module.exports = class RemindUsInput {
       server_id,
       notif,
       recurrence,
+      category,
     } = remindUsObject; // Destructuring
     // SQL Query
-    const sql = `INSERT INTO Reminder_Us (t_date, c_date, remind, channel_id, server_id, notif, recurrence) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+    const sql = `INSERT INTO Reminder_Us (t_date, c_date, remind, channel_id, server_id, notif, recurrence, category) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
     // SQL Values
     const values = [
       target_date,
@@ -518,6 +570,7 @@ module.exports = class RemindUsInput {
       server_id,
       notif,
       recurrence,
+      category,
     ];
     // SQL Query Command (Insert)
     con.query(sql, values, (err, result) => {

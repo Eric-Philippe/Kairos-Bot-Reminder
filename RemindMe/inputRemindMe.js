@@ -189,7 +189,7 @@ module.exports = class RemindMeInput {
       } else {
         // If the user is not the same as the author
         i.reply({
-          content: `These buttons aren't for you!`,
+          content: ```🙆‍♂️`` - These buttons aren't for you!`,
           ephemeral: true, // Only the user can see it
         });
       }
@@ -241,15 +241,17 @@ module.exports = class RemindMeInput {
         try {
           // Create the reminder
           await this.insertRemindMe(this.buildFinalObject()); // SQL Insert
-          i.editReply("Reminder created!"); // Reply
+          i.editReply("``✅`` - Reminder created!"); // Reply
         } catch (err) {
-          i.editReply("Error while inserting the remind, call the admin"); // Error Reply
+          i.editReply(
+            "``❌`` - Error while inserting the remind, call the admin"
+          ); // Error Reply
         }
       } else {
-        i.editReply("Please enter a date in the future!"); // Past Reply
+        i.editReply("``❌`` - Please enter a date in the future!"); // Past Reply
       }
     } else {
-      i.editReply("Please fill all the required fields!"); // Empty Reply
+      i.editReply("``❌`` - Please fill all the required fields!"); // Empty Reply
     }
   }
   /**

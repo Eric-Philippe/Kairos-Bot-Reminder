@@ -29,7 +29,6 @@ const buildTimeLeft = function (targetDate, launchDate) {
   // Return the final text
   return finalText;
 };
-
 /**
  * [EN] date to [FR] date
  * @param {Date} d
@@ -38,20 +37,17 @@ const dateToString = function (d) {
   let month = d.getMonth() + 1;
   if (month < 10) month = "0" + month;
   let finalText = d.getDate() + "/" + month + "/" + d.getFullYear() + " "; // [First] - 01/01/1999
-
+  // Definition of the hours and minutes
   let hours = d.getHours();
   let minutes = d.getMinutes();
-
-  // Add the additional zero to the
-  if (hours === 0) hours = "00";
-  if (minutes === 0) minutes = "00";
-
+  // If the hours and minutes are less than 0, require a 0 before
+  if (hours < 10) hours = "0" + hours;
+  if (minutes < 10) minutes = "0" + minutes;
   // Add the hour to the final String
   finalText = finalText + hours + "h" + minutes;
-
+  // Return the final text
   return finalText;
 };
-
 /**
  * Convert the time left in ms into a valid String
  * @param {Number} target_mi
@@ -93,7 +89,6 @@ const timeLeft = function (target_mi) {
       d.getSeconds() +
       " sec remaining";
   }
-
   // Return the final Text
   return textTimeLeft;
 };

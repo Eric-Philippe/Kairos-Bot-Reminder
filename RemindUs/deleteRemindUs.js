@@ -3,6 +3,7 @@ const Discord = require("discord.js"); // Discord.js API
 const { client } = require("../utils/client");
 const { con } = require("../utils/mysql");
 // =============== FUNCTION IMPORTS =================
+const { isAdmin } = require("../utils/isAdmin");
 const { dateToString } = require("../dateTools");
 
 const { IMG } = require("../ressources.json"); // Ressources required for the system
@@ -12,9 +13,9 @@ const { IMG } = require("../ressources.json"); // Ressources required for the sy
  */
 const deleteRemindUs = async (msg) => {
   // Check if the user has the admin permission
-  if (!msg.member.permissions.has(Discord.Permissions.FLAGS.ADMINISTRATOR))
+  if (!isAdmin(msg))
     return msg.channel.send(
-      "You don't have the permission to use this command !"
+      "``🙆‍♂️`` - You don't have the permission to use this command !"
     );
   let server_id = msg.guild.id; // Server ID
   let sql = `SELECT * FROM Reminder_Us WHERE server_id = ?`; // SQL Reminder
@@ -54,7 +55,7 @@ const deleteRemindUs = async (msg) => {
       const msg_embed = await msg.channel.send({ embeds: [embed] });
       // Ask the user to choose a reminder to delete
       const msg_instruction = await msg.channel.send(
-        "Please choose a reminder to delete by typing the number of the reminder you want to delete"
+        "``🙆‍♂️`` - Please choose a reminder to delete by typing the number of the reminder you want to delete"
       );
       // Collector Builder
       let collector = msg.channel.createMessageCollector({
@@ -68,11 +69,11 @@ const deleteRemindUs = async (msg) => {
         if (m.author.id === msg.author.id) {
           // If the user has typed something else than a number
           if (isNaN(m.content))
-            return msg.channel.send("Please enter a number !");
+            return msg.channel.send("``❌`` - Please enter a number !");
           // If the number is not in the range of the reminder list
           if (parseInt(m.content) > results.length || parseInt(m.content) < 1)
             return msg.channel.send(
-              "Please enter a number between 1 and " + results.length
+              "``❌`` - Please enter a number between 1 and " + results.length
             );
           let sql = `DELETE FROM Reminder_Us WHERE id_reminder = ?`; // SQL Reminder
           let values = [results[parseInt(m.content) - 1].id_reminder]; // Values to send to the SQL
@@ -80,15 +81,17 @@ const deleteRemindUs = async (msg) => {
           await con.query(sql, values, (err, rslts) => {
             if (err) throw err;
             collector.stop("time");
-            msg.channel.send("Reminder deleted !"); // Success Message
+            msg.channel.send("``✅`` - Reminder deleted !"); // Success Message
             msg_embed.delete(); // Delete the Embed
             msg_instruction.delete(); // Delete the Instruction
           });
+          m.delete();
         }
       });
     } else {
-      msg.channel.send("The server has no reminders !"); // If there is no reminder
+      msg.channel.send("``🙆‍♂️`` - The server has no reminders !"); // If there is no reminder
     }
+    msg.delete();
   });
 };
 // Export the function

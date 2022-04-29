@@ -2,6 +2,8 @@ const Discord = require("discord.js"); // Discord.js API
 // ================== CONNEXION IMPORT =========================
 const { client } = require("../utils/client"); // Discord Bot
 const { con } = require("../utils/mysql"); // SQL Connexion
+// ================== DATE FUNCTION IMPORT =========================
+const { dateToString } = require("../dateTools");
 // ================== RESSOURCES IMPORT =========================
 const { IMG } = require("../ressources.json"); // Ressources required for the system
 /**
@@ -26,16 +28,10 @@ const checkRemindUs = async () => {
           .setColor("#03fcd3")
           .addField("🗨️ | Reminder Label : ", results[i].remind)
           .addField(
-            "🕔 | Reminder Date : ",
-            "``" + results[i].c_date + "``",
-            true
-          )
-          .addField(
             "🕣 | Reminder Target Date  : ",
-            "``" + results[i].t_date + "``",
+            "``" + dateToString(new Date(results[i].t_date)) + "``",
             true
           )
-          .addField("#️⃣ | Reminder ID : ", `#${results[i].id_reminder}`)
           .setFooter({ text: "Provided by Kairos | Reminder Bot" })
           .setThumbnail(IMG.REMINDER_LOGO);
         // ============= Notification paramaters ==========
