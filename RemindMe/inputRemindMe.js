@@ -255,7 +255,7 @@ module.exports = class RemindMeInput {
     }
   }
   /**
-   * Switch with the current step
+   * Switch to the current step
    */
   processInput() {
     switch (this.step) {

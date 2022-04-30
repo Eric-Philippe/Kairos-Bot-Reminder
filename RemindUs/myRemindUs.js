@@ -1,16 +1,16 @@
-// ================== MODULE IMPORT ==========================
+// ================== MODULE IMPORT ===========================
 const Discord = require("discord.js"); // Discord.js API
 const util = require("util"); // Util module
-// ================== CONNEXION IMPORT =======================
+// ================== CONNEXION IMPORT ========================
 const { client } = require("../utils/client"); // Discord Bot
 const { con } = require("../utils/mysql"); // SQL Connexion
-// ================== FUNCTION IMPORT =========================
+// ================== FUNCTION IMPORT ==========================
 const { isAdmin } = require("../utils/isAdmin"); // Check if the user is admin or not
 const { dateToString } = require("../dateTools"); // Convert Date to String Module
 const CategoryManager = require("./categoryManager"); // Category Manager
-// ================= RESSOURCES IMPORT ========================
+// ================= RESSOURCES IMPORT =========================
 const { IMG } = require("../ressources.json"); // Ressources required for the system
-// ===================== DEFINITIONS ==========================
+// ===================== DEFINITIONS ===========================
 const MOVE_AMOUNT = 3; // Step between two load
 const query = util.promisify(con.query).bind(con); // Promisify the query Function
 /**

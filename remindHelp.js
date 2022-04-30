@@ -4,7 +4,7 @@ const { client } = require("./utils/client"); // Discord Bot
 
 const { IMG } = require("./ressources.json"); // Ressources
 /**
- * Class for displaying all the commands
+ * Class for displaying all the commands and help
  */
 module.exports = class ReminderHelp {
   /** @param {Discord.Message} msg */

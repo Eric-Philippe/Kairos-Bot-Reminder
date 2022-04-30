@@ -85,9 +85,6 @@ const checkRemindUs = async () => {
               );
               values = [new_date, results[i].id_reminder];
               break;
-            // Default
-            default:
-              break;
           }
           // Send the SQL to the database
           con.query(sql, values, (err, result) => {

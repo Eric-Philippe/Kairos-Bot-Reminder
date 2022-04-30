@@ -2,9 +2,9 @@ const Discord = require("discord.js"); // Discord.js API
 // =============== CONNECTION IMPORTS ===============
 const { client } = require("../utils/client");
 const { con } = require("../utils/mysql");
-// =============== FUNCTION IMPORTS =================
+// =============== FUNCTION IMPORT =================
 const { dateToString } = require("../dateTools");
-
+// =============== RESSOURCES IMPORT ================
 const { IMG } = require("../ressources.json"); // Ressources required for the system
 /**
  * Delete a reminder chosen by the user

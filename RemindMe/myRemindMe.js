@@ -7,7 +7,7 @@ const { con } = require("../utils/mysql"); // SQL Connexion
 // ================== FUNCTION IMPORT =========================
 const { dateToString } = require("../dateTools"); // Convert Date to String Module
 // ================= RESSOURCES IMPORT ========================
-const { IMG } = require("../ressources.json"); // Ressources required for the system
+const { IMG } = require("../ressources.json"); // Ressources required
 // ===================== DEFINITIONS ==========================
 const MOVE_AMOUNT = 5; // Step between two load
 const query = util.promisify(con.query).bind(con); // Promisify the query Function

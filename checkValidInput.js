@@ -51,7 +51,7 @@ module.exports = class CheckInput {
     return CheckInput.buildDate(str) > new Date();
   }
   /**
-   * Check if the given string is a valid ID channel and if the bot has the permission to send a message
+   * Check if the given string is a valid ID channel and if the bot has the permission to send messages
    * @param {String} str
    * @returns {Boolean}
    */

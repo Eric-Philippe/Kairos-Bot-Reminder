@@ -1,6 +1,6 @@
-const Discord = require("discord.js");
+const Discord = require("discord.js"); // Discord.js API
 
-const { con } = require("../utils/mysql");
+const { con } = require("../utils/mysql"); // SQL Connexion
 /**
  * Interface wich contains all the required parameters
  * @typedef {Object} RemindMeObject

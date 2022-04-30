@@ -1,7 +1,6 @@
 /**
  * @author EricP
  * @version 1.2.0
- * @license MIT
  * @description This is the main launcher of the bot.
  */
 // ======================= Imports =======================

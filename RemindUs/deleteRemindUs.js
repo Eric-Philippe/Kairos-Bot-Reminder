@@ -89,7 +89,7 @@ const deleteRemindUs = async (msg) => {
         }
       });
     } else {
-      msg.channel.send("``🙆‍♂️`` - The server has no reminders !"); // If there is no reminder
+      msg.channel.send("``🙆‍♂️`` - The server has no reminders !"); // If there is no reminder for the server
     }
     msg.delete();
   });

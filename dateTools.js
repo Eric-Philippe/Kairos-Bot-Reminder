@@ -9,7 +9,7 @@ const buildTimeLeft = function (targetDate, launchDate) {
   let target_dateMi = targetDate.getTime(); // Target reminder date in milliseconde
   let launch_dateMi = launchDate.getTime(); // Launch reminder date in milliseconde
 
-  let total_time = target_dateMi - launch_dateMi; // Time beteween, the target and launch date
+  let total_time = target_dateMi - launch_dateMi; // Time beteween the target and launch date
   let elasped_time = currentDateMi - launch_dateMi; // Time elapsed between the current and launch date
   let produit_croix = (elasped_time * 10) / total_time; // Find the number of white square needed
   Math.round(produit_croix); // Need an integer

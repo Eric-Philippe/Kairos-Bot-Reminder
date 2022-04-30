@@ -194,7 +194,7 @@ module.exports = class RemindUsInput {
       .setCustomId("category")
       .setLabel("Change Category Type")
       .setStyle("PRIMARY");
-    // Build the basics Buttons Array
+    // Build the basics Buttons array
     const buttons = [
       button_previous,
       button_next,

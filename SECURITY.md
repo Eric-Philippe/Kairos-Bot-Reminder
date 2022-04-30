@@ -2,9 +2,8 @@
 name: Bug report
 about: Report incorrect or unexpected behavior of the bot
 title: BUG
-labels: ''
-assignees: ''
-
+labels: ""
+assignees: ""
 ---
 
 **Please describe the problem you are having in as much detail as possible:**
@@ -16,9 +15,10 @@ Steps to reproduce the behavior:
 A clear and concise description of what you expected to happen:
 
 **Screenshots**
-If applicable, add screenshots to help explain your problem:
+If applicable, add screenshots to help explain your problem
 
 **Further details:**
+
 - Bot version:
 - discord.js version:
 - Node.js version:

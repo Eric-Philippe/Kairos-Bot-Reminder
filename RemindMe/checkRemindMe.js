@@ -2,7 +2,7 @@ const Discord = require("discord.js"); // Discord.js API
 // ================== CONNEXION IMPORT =========================
 const { client } = require("../utils/client"); // Discord Bot
 const { con } = require("../utils/mysql"); // SQL Connexion
-// ================== DATE FUNCTION IMPORT =========================
+// ================== DATE FUNCTION IMPORT ======================
 const { dateToString } = require("../dateTools");
 // ================== RESSOURCES IMPORT =========================
 const { IMG } = require("../ressources.json"); // Ressources required for the system

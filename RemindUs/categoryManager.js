@@ -1,7 +1,7 @@
-// ================== MODULE IMPORT ==========================
+// ================== MODULE IMPORT ===========================
 const Discord = require("discord.js"); // Discord.js API
 const util = require("util"); // Util module
-// ================== CONNEXION IMPORT =======================
+// ================== CONNEXION IMPORT ========================
 const { con } = require("../utils/mysql"); // SQL Connexion
 // ================== FUNCTION IMPORT =========================
 const { isAdmin } = require("../utils/isAdmin"); // Check if the user is admin or not
