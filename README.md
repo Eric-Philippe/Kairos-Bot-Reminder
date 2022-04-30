@@ -55,7 +55,7 @@ alt="Help Command">
 
 <br/>
 
-> !reminUs 13/05/2023 10:00 My Own Birthday !
+> !remindMe 13/05/2023 10:00 My Own Birthday !
 
 It will send you a notification at the given date with the given message !
 
