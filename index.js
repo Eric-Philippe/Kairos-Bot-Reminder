@@ -21,9 +21,9 @@ const { remindUsCheck } = require("./RemindUs/checkRemindUs");
 const ListRemindUs = require("./RemindUs/myRemindUs");
 const { deleteRemindUs } = require("./RemindUs/deleteRemindUs");
 // =========== CategoryManager Class Imports =============
-const CategoryManager = require("./RemindUs/CategoryManager");
+const CategoryManager = require("./RemindUs/categoryManager");
 const ReminderHelp = require("./remindHelp");
-// When Client's ready
+// When Client is ready
 client.on("ready", () => {
   console.log(`Well connected to ${client.user.username}`);
   client.user.setActivity("Time is Meaningless");

@@ -7,7 +7,7 @@ const { con } = require("../utils/mysql"); // SQL Connexion
 const { isAdmin } = require("../utils/isAdmin"); // Check if the user is admin or not
 // ===================== DEFINITIONS ==========================
 const LIMIT = 4; // Limit of groups for a server
-const query = util.promisify(con.query).bind(con); // Promisify the query Function
+const query = util.promisify(con.query).bind(con); // Promisify the query function
 /**
  * Interface wich contains all the required parameters
  * @typedef {Object} CategoryObject
