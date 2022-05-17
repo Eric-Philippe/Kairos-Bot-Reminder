@@ -19,6 +19,7 @@ const checkRemindUs = async () => {
     // If there is a reminder to send
     if (results.length > 0) {
       // For each reminder
+      console.log(results);
       for (let i = 0; i < results.length; i++) {
         let thumb;
         if (results[i].category) {
