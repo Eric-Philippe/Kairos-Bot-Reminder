@@ -23,9 +23,9 @@ const checkRemindUs = async () => {
       for (let i = 0; i < results.length; i++) {
         let thumb;
         if (results[i].category) {
-          if (thumb === "Birthday") {
+          if (results[i].category === "Birthday") {
             thumb = IMG.BIRTH_LOGO;
-          } else if (thumb === "Meeting") {
+          } else if (results[i].category === "Meeting") {
             thumb = IMG.CHAT_LOGO;
           }
         } else {
