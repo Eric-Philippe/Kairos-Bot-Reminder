@@ -68,7 +68,7 @@ module.exports = class ReminderHelp {
         name: this.msg.author.username,
         iconURL: this.msg.author.avatarURL(),
       })
-      .setThumbnail(IMG.REMINDER_LOGO)
+      .setThumbnail(IMG.CHAT_LOGO)
       .setDescription(
         "``💡`` **・ Remind Myself - RemindMe** \n" +
           "``✅`` ➸ ``remindMe`` - Reminds you of something in the future.\n" +
@@ -206,7 +206,7 @@ module.exports = class ReminderHelp {
         name: this.msg.author.username,
         iconURL: this.msg.author.avatarURL(),
       })
-      .setThumbnail(IMG.REMINDER_LOGO)
+      .setThumbnail(IMG.CLOCK_LOGO)
       .setDescription(newLocal)
       .setFooter({
         text: "All the commands can be entered regardless of the case !",
@@ -229,7 +229,7 @@ module.exports = class ReminderHelp {
         name: this.msg.author.username,
         iconURL: this.msg.author.avatarURL(),
       })
-      .setThumbnail(IMG.REMINDER_LOGO)
+      .setThumbnail(IMG.CLOCK_LOGO)
       .setDescription(
         "``☀️`` **・ RemindUs Commands Format** \n\n" +
           "``✅`` ➸ ``remindUs`` \n" +
@@ -269,7 +269,7 @@ module.exports = class ReminderHelp {
         name: this.msg.author.username,
         iconURL: this.msg.author.avatarURL(),
       })
-      .setThumbnail(IMG.REMINDER_LOGO)
+      .setThumbnail(IMG.CLOCK_LOGO)
       .setDescription(
         "``📚`` **・ Category Manager Commands Format** \n\n" +
           "``✅`` ➸ ``createGroup`` \n" +

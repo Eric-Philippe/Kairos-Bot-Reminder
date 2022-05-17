@@ -20,6 +20,16 @@ const checkRemindUs = async () => {
     if (results.length > 0) {
       // For each reminder
       for (let i = 0; i < results.length; i++) {
+        let thumb;
+        if (results[i].category) {
+          if (thumb === "Birthday") {
+            thumb = IMG.BIRTH_LOGO;
+          } else if (thumb === "Meeting") {
+            thumb = IMG.CHAT_LOGO;
+          }
+        } else {
+          thumb = IMG.REMINDER_LOGO;
+        }
         // Find the channel of the reminder
         let channel = client.channels.cache.get(results[i].channel_id);
         if (!channel) return; // If the channel doesn't exist anymore
@@ -33,7 +43,7 @@ const checkRemindUs = async () => {
             true
           )
           .setFooter({ text: "Provided by Kairos | Reminder Bot" })
-          .setThumbnail(IMG.REMINDER_LOGO);
+          .setThumbnail(thumb);
         // ============= Notification paramaters ==========
         // @everyone
         if (results[i].notif === "@everyone") {

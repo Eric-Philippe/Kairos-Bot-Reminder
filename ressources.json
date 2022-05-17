@@ -1,5 +1,8 @@
 {
   "IMG": {
-    "REMINDER_LOGO": "https://cdn.discordapp.com/attachments/911765013423878215/911768975862558740/rappel.png"
+    "REMINDER_LOGO": "https://media.discordapp.net/attachments/739553949199106158/976008630329552907/remind2.png?width=661&height=661",
+    "CLOCK_LOGO": "https://media.discordapp.net/attachments/739553949199106158/976008630086295592/remind.png?width=661&height=661",
+    "BIRTH_LOGO": "https://media.discordapp.net/attachments/739553949199106158/976008629700427816/anniv.png?width=661&height=661",
+    "CHAT_LOGO": "https://media.discordapp.net/attachments/739553949199106158/976008630556049479/reunion.png?width=661&height=661"
   }
 }

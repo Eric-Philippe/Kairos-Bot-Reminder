@@ -7,5 +7,6 @@ CREATE TABLE Reminder_Us(
    server_id VARCHAR(18) NOT NULL,
    notif VARCHAR(23),
    recurrence VARCHAR(18),
+   category VARCHAR(18),
    PRIMARY KEY(id_reminder)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
