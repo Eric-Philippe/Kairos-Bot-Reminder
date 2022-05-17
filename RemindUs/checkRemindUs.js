@@ -15,11 +15,10 @@ const checkRemindUs = async () => {
   const values = [now]; // Values to send to the SQL
   // Send the SQL to the database
   await con.query(sql, values, (err, results) => {
-    if (err) throw err;
+    if (err) console.log(err);
     // If there is a reminder to send
     if (results.length > 0) {
       // For each reminder
-      console.log(results);
       for (let i = 0; i < results.length; i++) {
         let thumb;
         if (results[i].category) {
@@ -32,8 +31,6 @@ const checkRemindUs = async () => {
           thumb = IMG.REMINDER_LOGO;
         }
         // Find the channel of the reminder
-        let channel = client.channels.cache.get(results[i].channel_id);
-        if (!channel) return; // If the channel doesn't exist anymore
         let embedReminder = new Discord.MessageEmbed() // Embed Reminder Constructor
           .setTitle("You have a reminder !")
           .setColor("#03fcd3")
@@ -46,20 +43,23 @@ const checkRemindUs = async () => {
           .setFooter({ text: "Provided by Kairos | Reminder Bot" })
           .setThumbnail(thumb);
         // ============= Notification paramaters ==========
-        // @everyone
-        if (results[i].notif === "@everyone") {
-          channel.send("||@everyone||");
-          // @here
-        } else if (results[i].notif === "@here") {
-          channel.send("||@here||");
-        } else if (results[i].notif != "None") {
-          channel.send(`||${results[i].notif}||`);
+        let channel = client.channels.cache.get(results[i].channel_id);
+        if (channel) {
+          // @everyone
+          if (results[i].notif === "@everyone") {
+            channel.send("||@everyone||");
+            // @here
+          } else if (results[i].notif === "@here") {
+            channel.send("||@here||");
+          } else if (results[i].notif != "None") {
+            channel.send(`||${results[i].notif}||`);
+          }
+          channel.send({ embeds: [embedReminder] });
         }
         // Send the Main Embed
-        channel.send({ embeds: [embedReminder] });
         // ============ Recurrence parameters =============
         // If the reminder is recurrent
-        if (results[i].recurrence != "None") {
+        if (results[i].recurrence != "None" && channel) {
           const sql = `UPDATE Reminder_Us SET t_date = ? WHERE id_reminder = ?`; // SQL Update
           let values; // Values to send to the SQL
           let current_date = new Date(results[i].t_date); // Create a new date with the past current date
