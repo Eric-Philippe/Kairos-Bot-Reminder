@@ -1,16 +1,16 @@
 CREATE TABLE Country(
-   cId VARCHAR(3),
+   CId VARCHAR(3),
    name VARCHAR(50) NOT NULL,
    gmtOffset INT NOT NULL,
-   PRIMARY KEY(cId)
+   PRIMARY KEY(CId)
 );
 
 CREATE TABLE RCategories(
-   rId CHAR(4),
+   RCId CHAR(4),
    name VARCHAR(50) NOT NULL,
    parentId VARCHAR(50) NOT NULL,
    isGuild BOOLEAN NOT NULL,
-   PRIMARY KEY(rId)
+   PRIMARY KEY(RCId)
 );
 
 CREATE TABLE Remindus(
@@ -24,9 +24,9 @@ CREATE TABLE Remindus(
    repetition VARCHAR(50),
    mentionId VARCHAR(20),
    isPaused BOOLEAN NOT NULL,
-   rId CHAR(4),
+   RCId CHAR(4),
    PRIMARY KEY(usId),
-   FOREIGN KEY(rId) REFERENCES RCategories(rId)
+   FOREIGN KEY(RCId) REFERENCES RCategories(RCId)
 );
 
 CREATE TABLE ACategories(
@@ -39,9 +39,9 @@ CREATE TABLE ACategories(
 CREATE TABLE Utilisateur(
    userId CHAR(18),
    superAdmin BOOLEAN NOT NULL,
-   cId VARCHAR(3) NOT NULL,
+   CId VARCHAR(3) NOT NULL,
    PRIMARY KEY(userId),
-   FOREIGN KEY(cId) REFERENCES Country(cId)
+   FOREIGN KEY(CId) REFERENCES Country(CId)
 );
 
 CREATE TABLE Remindme(
@@ -52,10 +52,10 @@ CREATE TABLE Remindme(
    targetDate DATETIME NOT NULL,
    repetition VARCHAR(50),
    isPaused BOOLEAN NOT NULL,
-   rId CHAR(4),
+   RCId CHAR(4),
    userId CHAR(18) NOT NULL,
    PRIMARY KEY(meId),
-   FOREIGN KEY(rId) REFERENCES RCategories(rId),
+   FOREIGN KEY(RCId) REFERENCES RCategories(RCId),
    FOREIGN KEY(userId) REFERENCES Utilisateur(userId)
 );
 
