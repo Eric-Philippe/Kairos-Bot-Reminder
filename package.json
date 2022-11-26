@@ -21,8 +21,10 @@
   },
   "homepage": "https://github.com/Eric-Philippe/Kairos-Bot-Reminder#readme",
   "dependencies": {
+    "@fusionstrings/randexp": "^0.2.0",
     "discord.js": "^14.6.0",
-    "dotenv": "^16.0.3"
+    "dotenv": "^16.0.3",
+    "mysql2": "^2.3.3"
   },
   "devDependencies": {
     "@types/node": "^18.11.9",

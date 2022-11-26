@@ -1,4 +1,5 @@
 import { Command } from "./types";
-import { Ping } from "./commands/ping";
+import { Time } from "./commands/time";
+import { Test } from "./commands/test";
 
-export const Commands: Command[] = [Ping];
+export const Commands: Command[] = [Time, Test];

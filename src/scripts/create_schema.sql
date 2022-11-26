@@ -9,7 +9,7 @@ CREATE TABLE RCategories(
    rId CHAR(4),
    name VARCHAR(50) NOT NULL,
    parentId VARCHAR(50) NOT NULL,
-   isGuild LOGICAL NOT NULL,
+   isGuild BOOLEAN NOT NULL,
    PRIMARY KEY(rId)
 );
 
@@ -23,22 +23,22 @@ CREATE TABLE Remindus(
    description TEXT,
    repetition VARCHAR(50),
    mentionId VARCHAR(20),
-   isPaused LOGICAL NOT NULL,
+   isPaused BOOLEAN NOT NULL,
    rId CHAR(4),
    PRIMARY KEY(usId),
    FOREIGN KEY(rId) REFERENCES RCategories(rId)
 );
 
 CREATE TABLE ACategories(
-   rId CHAR(4),
+   ACId CHAR(4),
    name VARCHAR(50) NOT NULL,
    parentId VARCHAR(50) NOT NULL,
-   PRIMARY KEY(rId)
+   PRIMARY KEY(ACId)
 );
 
 CREATE TABLE Utilisateur(
    userId CHAR(18),
-   superAdmin LOGICAL NOT NULL,
+   superAdmin BOOLEAN NOT NULL,
    cId VARCHAR(3) NOT NULL,
    PRIMARY KEY(userId),
    FOREIGN KEY(cId) REFERENCES Country(cId)
@@ -51,7 +51,7 @@ CREATE TABLE Remindme(
    entryDate DATETIME NOT NULL,
    targetDate DATETIME NOT NULL,
    repetition VARCHAR(50),
-   isPaused LOGICAL NOT NULL,
+   isPaused BOOLEAN NOT NULL,
    rId CHAR(4),
    userId CHAR(18) NOT NULL,
    PRIMARY KEY(meId),
@@ -65,22 +65,22 @@ CREATE TABLE Activities(
    startDate DATETIME NOT NULL,
    endDate DATETIME,
    estimate TIME,
-   isClosed LOGICAL NOT NULL,
+   isClosed BOOLEAN NOT NULL,
    userId CHAR(18) NOT NULL,
-   rId CHAR(4),
+   ACId CHAR(4),
    PRIMARY KEY(AId),
    FOREIGN KEY(userId) REFERENCES Utilisateur(userId),
-   FOREIGN KEY(rId) REFERENCES ACategories(rId)
+   FOREIGN KEY(ACId) REFERENCES ACategories(ACId)
 );
 
 CREATE TABLE Task(
-   id VARCHAR(5),
+   TId VARCHAR(5),
    name VARCHAR(50) NOT NULL,
    startDate DATETIME NOT NULL,
    endDate DATETIME,
    estimate TIME,
-   isFinished LOGICAL NOT NULL,
+   isFinished BOOLEAN NOT NULL,
    AId CHAR(5) NOT NULL,
-   PRIMARY KEY(id),
+   PRIMARY KEY(TId),
    FOREIGN KEY(AId) REFERENCES Activities(AId)
 );
