@@ -34,7 +34,7 @@ export const init = () => {
 export const execute = <T>(
   query: string,
   params: string[] | Object
-): Promise<Array<Object>> => {
+): Promise<T> => {
   try {
     if (!connection)
       throw new Error(
@@ -42,6 +42,8 @@ export const execute = <T>(
       );
 
     return new Promise<any>(async (resolve, reject) => {
+      console.log("query: ", query);
+
       connection.execute(query, params, (err, res) => {
         if (err) reject(err);
         else resolve(res);

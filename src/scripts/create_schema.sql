@@ -1,7 +1,7 @@
 CREATE TABLE Country(
    CId VARCHAR(3),
    name VARCHAR(50) NOT NULL,
-   gmtOffset INT NOT NULL,
+   gmtOffset DECIMAL(2,1) NOT NULL,
    PRIMARY KEY(CId)
 );
 

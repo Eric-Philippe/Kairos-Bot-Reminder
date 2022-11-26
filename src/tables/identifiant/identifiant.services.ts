@@ -1,7 +1,7 @@
 import RandExp from "@fusionstrings/randexp";
 
-import { execute } from "../utils/mysql.connector";
-import { IdentifiantRegex } from "./identifiant.enum";
+import { execute } from "../../utils/mysql.connector";
+import { IdentifiantRegex } from "./identifiant_regex.enum";
 import { IdentifiantQueries } from "./identifiant.queries";
 
 export const getAvailableIdentifiant = async (
@@ -41,7 +41,7 @@ export const getAvailableIdentifiant = async (
       throw new Error("Invalid table name");
   }
 
-  let identifiants = await execute(query, []);
+  let identifiants: any[] = await execute(query, []);
   let availableIdentifiant = "";
   let i = 0;
   while (availableIdentifiant === "" && i < identifiants.length * 4) {
