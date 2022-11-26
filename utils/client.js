@@ -1,7 +1,6 @@
 const Discord = require("discord.js");
 
 const { ClientOptions } = require("./clientOption");
-
 /**
  * Export of the client object, usable everywhere
  */
