@@ -14,7 +14,7 @@ CREATE TABLE RCategories(
 );
 
 CREATE TABLE Remindus(
-   usId CHAR(4),
+   usId CHAR(5),
    guildId VARCHAR(50) NOT NULL,
    channelId CHAR(18) NOT NULL,
    content VARCHAR(110) NOT NULL,

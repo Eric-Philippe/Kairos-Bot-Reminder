@@ -1,6 +1,8 @@
 import { RemindusQueries } from "./remindus.queries";
 import { execute } from "../../utils/mysql.connector";
 import { Remindus } from "./remindus";
+import { getAvailableIdentifiant } from "../identifiant/identifiant.services";
+import { MYSQL_TABLES } from "src/utils/mysql_tables.enum";
 
 export const RemindusServices = {
   getRemindusById: async (usId: string): Promise<Remindus[]> => {
@@ -10,32 +12,32 @@ export const RemindusServices = {
     return result;
   },
   addRemindus: async (
-    usId: string,
     guildId: string,
     channelId: string,
     content: string,
-    description: string,
+    description: string | null,
     entryDate: Date,
     targetDate: Date,
-    repetition: string,
-    mentionId: string,
+    repetition: string | null,
+    mentionId: string | null,
     isPaused: number,
-    RCId: string
-  ): Promise<number> => {
+    RCId: string | null
+  ): Promise<string> => {
+    let usId = await getAvailableIdentifiant(MYSQL_TABLES.Remindus);
     await execute(RemindusQueries.AddRemindus, [
       usId,
       guildId,
       channelId,
       content,
-      description,
       entryDate,
       targetDate,
+      description,
       repetition,
       mentionId,
       isPaused,
       RCId,
     ]);
-    return 0;
+    return usId;
   },
   removeRemindus: async (usId: string): Promise<number> => {
     await execute(RemindusQueries.DeleteRemindus, [usId]);
@@ -52,6 +54,20 @@ export const RemindusServices = {
     const result: Remindus[] = await execute(
       RemindusQueries.GetRemindusByGuildId,
       [guildId]
+    );
+    return result;
+  },
+  breakRemindus: async (usId: string, isPaused: number): Promise<number> => {
+    await execute(RemindusQueries.BreakRemindus, [isPaused, usId]);
+    return 0;
+  },
+  getRemindusByCategoryAndGuildId: async (
+    RCId: string,
+    guildId: string
+  ): Promise<Remindus[]> => {
+    const result: Remindus[] = await execute(
+      RemindusQueries.GetRemindusByCategoryAndGuildId,
+      [RCId, guildId]
     );
     return result;
   },

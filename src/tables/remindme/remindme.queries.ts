@@ -50,4 +50,14 @@ export const RemindmeQueries = {
             SET targetDate = ?
             WHERE meId = ?;
             `,
+
+  GetRemindmesByCategoryAndUserId: `
+            SELECT
+            *
+            FROM
+            Remindme
+            WHERE
+            RCId = ? AND
+            userId = ?;
+            `,
 };

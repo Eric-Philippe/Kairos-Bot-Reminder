@@ -76,4 +76,15 @@ export const RemindmeServices = {
     ]);
     return 0;
   },
+
+  getRemindmesByCategoryAndUserId: async (
+    RCId: string,
+    userId: string
+  ): Promise<Remindme[]> => {
+    const result: Remindme[] = await execute(
+      RemindmeQueries.GetRemindmesByCategoryAndUserId,
+      [RCId, userId]
+    );
+    return result;
+  },
 };

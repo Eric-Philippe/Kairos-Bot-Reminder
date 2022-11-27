@@ -13,13 +13,19 @@ import RCategoriesDefault from "../utils/rcategories.enum";
 import { UsersServices } from "../tables/users/users.services";
 import { RCategoryServices } from "../tables/rcategory/rcategory.services";
 import { RemindmeServices } from "../tables/remindme/remindme.services";
+import {
+  autoCompleteTime,
+  autoCompleteDate,
+  autocompleteCategories,
+} from "../utils/autocomplete.recurrent";
 
 import { IMG } from "../assets/LOGOS.json";
+import { Remindme } from "src/tables/remindme/remindme";
 
 const Remindme: Command = {
   data: new SlashCommandBuilder()
     .setName("remindme")
-    .setDescription("Set a reminder")
+    .setDescription("Self Reminders")
     .addSubcommand((subCommand) =>
       subCommand
         .setName("delete")
@@ -33,7 +39,16 @@ const Remindme: Command = {
         )
     )
     .addSubcommand((subCommand) =>
-      subCommand.setName("list").setDescription("List all your reminders")
+      subCommand
+        .setName("list")
+        .setDescription("List all your reminders")
+        .addStringOption((option) =>
+          option
+            .setName("category")
+            .setDescription("The category of the reminder")
+            .setRequired(false)
+            .setAutocomplete(true)
+        )
     )
     .addSubcommand((subCommand) =>
       subCommand
@@ -127,6 +142,18 @@ const Remindme: Command = {
               .setRequired(false)
               .setAutocomplete(true)
         )
+    )
+    .addSubcommand((subCommand) =>
+      subCommand
+        .setName("show")
+        .setDescription("Show a reminder")
+        .addStringOption((option) =>
+          option
+            .setName("id")
+            .setDescription("The id of the reminder")
+            .setRequired(true)
+            .setAutocomplete(true)
+        )
     ),
   autocomplete: async (interaction) => {
     const focusedValue = interaction.options.getFocused(true);
@@ -167,6 +194,9 @@ const Remindme: Command = {
         break;
       case "set":
         await createReminder(interaction);
+        break;
+      case "show":
+        await showReminder(interaction);
         break;
     }
   },
@@ -290,9 +320,17 @@ const deleteReminder = async (interaction: ChatInputCommandInteraction) => {
 };
 
 const listReminders = async (interaction: ChatInputCommandInteraction) => {
-  const remindmes = await RemindmeServices.getRemindmeByUserId(
-    interaction.user.id
-  );
+  let category = interaction.options.getString("category", false);
+  let remindmes: Remindme[] = [];
+  if (category) {
+    remindmes = await RemindmeServices.getRemindmesByCategoryAndUserId(
+      category,
+      interaction.user.id
+    );
+  } else {
+    remindmes = await RemindmeServices.getRemindmeByUserId(interaction.user.id);
+  }
+
   const embed = new EmbedBuilder()
     .setTitle("List of your reminders")
     .setDescription(
@@ -347,6 +385,33 @@ const restartReminder = async (interaction: ChatInputCommandInteraction) => {
   await interaction.reply({ embeds: [embed] });
 };
 
+const showReminder = async (interaction: ChatInputCommandInteraction) => {
+  const id = interaction.options.getString("id", true);
+  const remindme = await RemindmeServices.getRemindmesById(id);
+  if (!remindme) return interaction.reply("This reminder doesn't exist");
+  if (remindme[0].userId !== interaction.user.id)
+    return interaction.reply("This reminder doesn't exist");
+
+  const embed = new EmbedBuilder()
+    .setTitle("Reminder")
+    .setDescription(
+      `**Content:** ${remindme[0].content}\n**Description:** ${
+        remindme[0].description ? remindme[0].description : "None"
+        // }\n**Category:** ${
+        //   remindme[0].category ? remindme[0].category : "None"
+      }\n**Repetition:** ${
+        remindme[0].repetition ? remindme[0].repetition : "None"
+      }\n**Target date:** ${remindme[0].targetDate}\n**Creation date:** ${
+        remindme[0].entryDate
+      }\n**Entry date:** ${remindme[0].entryDate}
+      }\n**Status:** ${remindme[0].isPaused ? "Paused" : "Active"}`
+    )
+    .setColor("Blurple")
+    .setTimestamp();
+
+  await interaction.reply({ embeds: [embed] });
+};
+
 const autoCompleteRemindMe = async (
   interaction: AutocompleteInteraction
 ): Promise<ApplicationCommandOptionChoiceData[]> => {
@@ -363,199 +428,6 @@ const autoCompleteRemindMe = async (
       value: choice.meId,
     };
   });
-  if (choices.length > 25) choices = choices.slice(0, 25);
-  return choices;
-};
-
-const autoCompleteTime = async (
-  interaction: AutocompleteInteraction
-): Promise<ApplicationCommandOptionChoiceData[]> => {
-  const focusedOption = interaction.options.getFocused(true);
-  let choices: ApplicationCommandOptionChoiceData[] = [];
-  const firstChoicesRaw = [
-    "00:00",
-    "01:00",
-    "02:00",
-    "03:00",
-    "04:00",
-    "05:00",
-    "06:00",
-    "07:00",
-    "08:00",
-    "09:00",
-    "10:00",
-    "11:00",
-    "12:00",
-    "13:00",
-    "14:00",
-    "15:00",
-    "16:00",
-    "17:00",
-    "18:00",
-    "19:00",
-    "20:00",
-    "21:00",
-    "22:00",
-    "23:00",
-  ];
-  const secondChoicesRaw = ["00", "15", "30", "45"];
-
-  if (focusedOption.value.includes(":")) {
-    const firstChoice = focusedOption.value.split(":")[0];
-    const secondChoice = focusedOption.value.split(":")[1];
-    choices = secondChoicesRaw
-      .filter((choice) => choice.startsWith(secondChoice))
-      .map((choice) => {
-        return {
-          name: `${firstChoice}:${choice}`,
-          value: `${firstChoice}:${choice}`,
-        };
-      });
-  } else {
-    choices = firstChoicesRaw
-      .filter((choice) => choice.startsWith(focusedOption.value))
-      .map((choice) => {
-        return {
-          name: choice,
-          value: choice,
-        };
-      });
-  }
-
-  if (choices.length > 25) choices = choices.slice(0, 25);
-  return choices;
-};
-
-const autoCompleteDate = async (
-  interaction: AutocompleteInteraction
-): Promise<ApplicationCommandOptionChoiceData[]> => {
-  const focusedOption = interaction.options.getFocused(true);
-  let choices: ApplicationCommandOptionChoiceData[] = [];
-  const firstChoicesRaw = [
-    "01",
-    "02",
-    "03",
-    "04",
-    "05",
-    "06",
-    "07",
-    "08",
-    "09",
-    "10",
-    "11",
-    "12",
-    "13",
-    "14",
-    "15",
-    "16",
-    "17",
-    "18",
-    "19",
-    "20",
-    "21",
-    "22",
-    "23",
-    "24",
-    "25",
-    "26",
-    "27",
-    "28",
-    "29",
-    "30",
-    "31",
-  ];
-
-  const secondChoicesRaw = [
-    "01",
-    "02",
-    "03",
-    "04",
-    "05",
-    "06",
-    "07",
-    "08",
-    "09",
-    "10",
-    "11",
-    "12",
-  ];
-
-  const thirdChoicesRaw = [
-    new Date().getFullYear(),
-    new Date().getFullYear() + 1,
-  ];
-
-  if (!focusedOption.value.includes("/")) {
-    choices = firstChoicesRaw
-      .filter((choice) => choice.startsWith(focusedOption.value))
-      .map((choice) => {
-        return {
-          name: choice,
-          value: choice,
-        };
-      });
-  } else if (
-    focusedOption.value.split("/").length === 2 ||
-    focusedOption.value.length == 2
-  ) {
-    const firstChoice = focusedOption.value.split("/")[0];
-    const secondChoice = focusedOption.value.split("/")[1];
-    choices = secondChoicesRaw
-      .filter((choice) => choice.startsWith(secondChoice))
-      .map((choice) => {
-        return {
-          name: `${firstChoice}/${choice}`,
-          value: `${firstChoice}/${choice}`,
-        };
-      });
-  } else if (
-    focusedOption.value.split("/").length === 3 ||
-    focusedOption.value.length == 5
-  ) {
-    const firstChoice = focusedOption.value.split("/")[0];
-    const secondChoice = focusedOption.value.split("/")[1];
-    const thirdChoice = focusedOption.value.split("/")[2];
-    choices = thirdChoicesRaw
-      .filter((choice) => choice.toString().startsWith(thirdChoice))
-      .map((choice) => {
-        return {
-          name: `${firstChoice}/${secondChoice}/${choice}`,
-          value: `${firstChoice}/${secondChoice}/${choice}`,
-        };
-      });
-  }
-
-  if (choices.length > 25) choices = choices.slice(0, 25);
-  return choices;
-};
-
-const autocompleteCategories = async (
-  interaction: AutocompleteInteraction
-): Promise<ApplicationCommandOptionChoiceData[]> => {
-  let choices: ApplicationCommandOptionChoiceData[] = [];
-  const choicesRaw = RCategoriesDefault;
-  choices = choicesRaw.map((choice) => {
-    return {
-      name: choice,
-      value: choice,
-    };
-  });
-  // Add custom categories from user
-  const userCategories = await RCategoryServices.getRCategoriesByParentId(
-    interaction.user.id
-  );
-
-  if (userCategories.length != 0) {
-    choices = choices.concat(
-      userCategories.map((choice) => {
-        return {
-          name: choice.name,
-          value: choice.name,
-        };
-      })
-    );
-  }
-
   if (choices.length > 25) choices = choices.slice(0, 25);
   return choices;
 };
