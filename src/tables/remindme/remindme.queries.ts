@@ -1,15 +1,7 @@
 export const RemindmeQueries = {
   GetRemindmesById: `
         SELECT
-        meId,
-        content,
-        description,
-        entryDate,
-        targetDate,
-        repetition,
-        isPaused,
-        RCId,
-        userId
+        *
         FROM
         Remindme
         WHERE
@@ -21,15 +13,7 @@ export const RemindmeQueries = {
         DELETE FROM Remindme WHERE meId = ?;`,
   GetRemindmeAtDate: `
         SELECT
-        meId,
-        content,
-        description,
-        entryDate,
-        targetDate,
-        repetition,
-        isPaused,
-        RCId,
-        userId
+        *
         FROM
         Remindme
         WHERE
@@ -37,15 +21,7 @@ export const RemindmeQueries = {
         `,
   GetRemindmeByUserId: `
             SELECT
-            meId,
-            content,
-            description,
-            entryDate,
-            targetDate,
-            repetition,
-            isPaused,
-            RCId,
-            userId
+            *
             FROM
             Remindme
             WHERE
@@ -56,23 +32,18 @@ export const RemindmeQueries = {
             SET isPaused = ?
             WHERE meId = ?;
             `,
-
+  // Query that will check every remindme that has a date past the current date considering the Utilisateur timezone
   FetchNewQueuedRemindme: `
-            SELECT
-            meId,
-            content,
-            description,
-            entryDate,
-            targetDate,
-            repetition,
-            isPaused,
-            RCId,
-            userId
-            FROM
-            Remindme
-            WHERE
-            isPaused = 1;
-            `,
+      SELECT
+      *
+      FROM
+      Remindme as R, Utilisateur as U, Country as C
+      WHERE
+      R.userId = U.userId AND
+      U.CId = C.CId AND
+      R.isPaused = 0 AND
+      R.targetDate <= DATE_ADD(NOW(), INTERVAL C.gmtOffset HOUR);
+      `,
 
   UpdateRemindmeDate: `
             UPDATE Remindme
