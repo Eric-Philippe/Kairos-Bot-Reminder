@@ -35,6 +35,9 @@ export const execute = <T>(
   query: string,
   params: string[] | Object
 ): Promise<T> => {
+  console.log("Executing query: ", query);
+  console.log("With params: ", params);
+
   try {
     if (!connection)
       throw new Error(

@@ -6,6 +6,6 @@ export interface Remindme {
   targetDate: Date;
   repetition: string;
   isPaused: number;
-  RId: string;
+  RCId: string;
   userId: string;
 }

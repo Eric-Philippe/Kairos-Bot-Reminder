@@ -57,4 +57,23 @@ export const RemindmeServices = {
     await execute(RemindmeQueries.PauseRemindme, [value, meId]);
     return 0;
   },
+
+  fetchPastRemindme: async (): Promise<Remindme[]> => {
+    const result: Remindme[] = await execute(
+      RemindmeQueries.FetchNewQueuedRemindme,
+      []
+    );
+    return result;
+  },
+
+  updateRemindme: async (
+    remindme: Remindme,
+    targetDate: Date
+  ): Promise<number> => {
+    await execute(RemindmeQueries.UpdateRemindmeDate, [
+      targetDate,
+      remindme.meId,
+    ]);
+    return 0;
+  },
 };

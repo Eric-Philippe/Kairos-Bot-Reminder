@@ -11,7 +11,8 @@
     "clearW": "rd /s /q dist && rd /s /q node_modules",
     "clear": "rm -rf dist && rm -rf node_modules",
     "clear-dist": "rm -rf dist",
-    "pull": "git pull origin master"
+    "pull": "git pull origin master",
+    "handler": "tsc && node dist/Handler.js"
   },
   "repository": {
     "type": "git",

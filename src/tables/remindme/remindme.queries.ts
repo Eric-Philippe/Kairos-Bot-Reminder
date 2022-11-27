@@ -56,4 +56,27 @@ export const RemindmeQueries = {
             SET isPaused = ?
             WHERE meId = ?;
             `,
+
+  FetchNewQueuedRemindme: `
+            SELECT
+            meId,
+            content,
+            description,
+            entryDate,
+            targetDate,
+            repetition,
+            isPaused,
+            RCId,
+            userId
+            FROM
+            Remindme
+            WHERE
+            isPaused = 1;
+            `,
+
+  UpdateRemindmeDate: `
+            UPDATE Remindme
+            SET targetDate = ?
+            WHERE meId = ?;
+            `,
 };
