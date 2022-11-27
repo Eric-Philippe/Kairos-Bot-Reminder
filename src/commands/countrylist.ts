@@ -1,5 +1,5 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
-import { Command } from "src/types";
+import { Command } from "src/CommandTemplate";
 
 import { UsersServices } from "../tables/users/users.services";
 import { CountryServices } from "../tables/country/country.services";

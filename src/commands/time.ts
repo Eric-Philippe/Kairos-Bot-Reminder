@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "discord.js";
-import { Command } from "src/types";
+import { Command } from "src/CommandTemplate";
 
 const Time: Command = {
   data: new SlashCommandBuilder()

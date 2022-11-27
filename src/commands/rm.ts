@@ -1,5 +1,5 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
-import { Command } from "src/types";
+import { Command } from "src/CommandTemplate";
 
 import { UsersServices } from "../tables/users/users.services";
 import { RemindmeServices } from "../tables/remindme/remindme.services";
@@ -25,8 +25,8 @@ const Rm: Command = {
         .setRequired(true)
         .addChoices(
           {
-            name: "Tomorrow",
-            value: "tomorrow",
+            name: "Today",
+            value: "today",
           },
           {
             name: "Tomorrow",

@@ -6,7 +6,7 @@ import {
   ApplicationCommandOptionChoiceData,
 } from "discord.js";
 
-import { Command } from "src/types";
+import { Command } from "src/CommandTemplate";
 
 import { Repetition } from "../utils/repetition.enum";
 import RCategoriesDefault from "../utils/rcategories.enum";
@@ -37,8 +37,8 @@ const Remindme: Command = {
     )
     .addSubcommand((subCommand) =>
       subCommand
-        .setName("stop")
-        .setDescription("Stop a reminder")
+        .setName("break")
+        .setDescription("Break a reminder")
         .addStringOption((option) =>
           option
             .setName("id")
@@ -159,8 +159,8 @@ const Remindme: Command = {
       case "list":
         await listReminders(interaction);
         break;
-      case "stop":
-        await stopReminder(interaction);
+      case "break":
+        await breakReminder(interaction);
         break;
       case "restart":
         await restartReminder(interaction);
@@ -313,7 +313,7 @@ const listReminders = async (interaction: ChatInputCommandInteraction) => {
   await interaction.reply({ embeds: [embed] });
 };
 
-const stopReminder = async (interaction: ChatInputCommandInteraction) => {
+const breakReminder = async (interaction: ChatInputCommandInteraction) => {
   const id = interaction.options.getString("id", true);
   const remindme = await RemindmeServices.getRemindmesById(id);
   if (!remindme) return interaction.reply("This reminder doesn't exist");

@@ -1,7 +1,7 @@
 import { readdirSync } from "fs";
 import * as path from "path";
 
-import { Command } from "./types";
+import { Command } from "./CommandTemplate";
 
 const Commands: Command[] = [];
 // Loop through all the commands folder with a .js extension only
