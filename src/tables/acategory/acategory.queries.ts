@@ -5,21 +5,21 @@ export const ACategoryQueries = {
         name,
         parentId
         FROM
-        ACategory
+        ACategories
         WHERE
         ACId = ?;
         `,
   AddACategory: `
-        INSERT INTO ACategory VALUES (?, ?, ?);`,
+        INSERT INTO ACategories VALUES (?, ?, ?);`,
   DeleteACategory: `
-        DELETE FROM ACategory WHERE ACId = ?;`,
+        DELETE FROM ACategories WHERE ACId = ?;`,
   GetACategoriesByParentId: `
         SELECT
         ACId,
         name,
         parentId
         FROM
-        ACategory
+        ACategories
         WHERE
         parentId = ?;
         `,

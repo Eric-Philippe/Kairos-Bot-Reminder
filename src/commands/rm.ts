@@ -1,10 +1,7 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { Command } from "src/types";
 
-import { MYSQL_TABLES } from "../utils/mysql_tables.enum";
-
 import { UsersServices } from "../tables/users/users.services";
-import { getAvailableIdentifiant } from "../tables/identifiant/identifiant.services";
 import { RemindmeServices } from "../tables/remindme/remindme.services";
 
 import { IMG } from "../assets/LOGOS.json";
@@ -106,9 +103,7 @@ const Rm: Command = {
 
     let entryDate: Date = new Date();
 
-    let reminderId = await getAvailableIdentifiant(MYSQL_TABLES.Remindme);
     await RemindmeServices.addRemindMe(
-      reminderId,
       content,
       null,
       entryDate,
@@ -121,9 +116,7 @@ const Rm: Command = {
 
     let embed = new EmbedBuilder()
       .setTitle("📅 | Reminder created")
-      .setDescription(
-        `Reminder created with the id ${reminderId} has been created !`
-      )
+      .setDescription(`Reminder has been created !`)
       .setColor("Aqua")
       .setThumbnail(IMG.REMINDER_LOGO)
       .setTimestamp();

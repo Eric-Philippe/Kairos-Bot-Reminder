@@ -16,6 +16,7 @@ const handleSlashCommand = async (
     (cmd) => cmd.data.name === interaction.commandName
   );
   if (!slashCommand) return;
+  if (!interaction.isChatInputCommand()) return;
 
   try {
     await slashCommand.run(client, interaction);

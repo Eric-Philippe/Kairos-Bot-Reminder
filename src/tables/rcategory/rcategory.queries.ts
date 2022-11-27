@@ -1,28 +1,39 @@
 export const RCategoryQueries = {
   GetRCategoryById: `
         SELECT
-        ACId,
+        RCId,
         name,
         parentId,
         isGuild
         FROM
-        ACategory
+        RCategories
         WHERE
-        ACId = ?;
+        RCId = ?;
         `,
   AddRCategory: `
-        INSERT INTO RCategory VALUES (?, ?, ?, ?);`,
+        INSERT INTO RCategories VALUES (?, ?, ?, ?);`,
   DeleteRCategory: `
-        DELETE FROM RCategory WHERE RCId = ?;`,
+        DELETE FROM RCategories WHERE RCId = ?;`,
   GetRCategoriesByParentId: `
         SELECT
-        ACId,
+        RCId,
         name,
         parentId,
         isGuild
         FROM
-        ACategory
+        RCategories
         WHERE
         parentId = ?;
         `,
+  GetRCategoryByNameAndParentId: `
+            SELECT
+            RCId,
+            name,
+            parentId,
+            isGuild
+            FROM
+            RCategories
+            WHERE
+            name = ? AND parentId = ?;
+            `,
 };

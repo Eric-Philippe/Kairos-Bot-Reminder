@@ -1,6 +1,7 @@
 import { Client } from "discord.js";
 
-import interactionCreate from "./listeners/interactionCreate";
+import slashCommandCreate from "./listeners/slashCommandCreate";
+import autoCompleteCreate from "./listeners/autoCompleteCreate";
 import ready from "./listeners/ready";
 
 require("dotenv").config();
@@ -10,6 +11,7 @@ const client = new Client({
 });
 
 ready(client);
-interactionCreate(client);
+slashCommandCreate(client);
+autoCompleteCreate(client);
 
 client.login(process.env.TOKEN);

@@ -20,7 +20,7 @@ export const RemindusServices = {
     repetition: string,
     mentionId: string,
     isPaused: number,
-    RId: string
+    RCId: string
   ): Promise<number> => {
     await execute(RemindusQueries.AddRemindus, [
       usId,
@@ -33,7 +33,7 @@ export const RemindusServices = {
       repetition,
       mentionId,
       isPaused,
-      RId,
+      RCId,
     ]);
     return 0;
   },

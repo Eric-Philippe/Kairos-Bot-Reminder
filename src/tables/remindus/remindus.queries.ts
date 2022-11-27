@@ -11,7 +11,7 @@ export const RemindusQueries = {
         repetition,
         mentionId,
         isPaused,
-        RId
+        RCId
         FROM
         Remindus
         WHERE
@@ -34,7 +34,7 @@ export const RemindusQueries = {
         repetition,
         mentionId,
         isPaused,
-        RId
+        RCId
         FROM
         Remindus
         WHERE
@@ -52,7 +52,7 @@ export const RemindusQueries = {
         repetition,
         mentionId,
         isPaused,
-        RId
+        RCId
         FROM
         Remindus
         WHERE

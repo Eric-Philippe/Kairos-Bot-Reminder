@@ -8,7 +8,7 @@ export const RemindmeQueries = {
         targetDate,
         repetition,
         isPaused,
-        RId,
+        RCId,
         userId
         FROM
         Remindme
@@ -28,7 +28,7 @@ export const RemindmeQueries = {
         targetDate,
         repetition,
         isPaused,
-        RId,
+        RCId,
         userId
         FROM
         Remindme
@@ -44,11 +44,16 @@ export const RemindmeQueries = {
             targetDate,
             repetition,
             isPaused,
-            RId,
+            RCId,
             userId
             FROM
             Remindme
             WHERE
             userId = ?;
+            `,
+  PauseRemindme: `
+            UPDATE Remindme
+            SET isPaused = ?
+            WHERE meId = ?;
             `,
 };

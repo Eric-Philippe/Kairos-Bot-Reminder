@@ -4,11 +4,17 @@ import {
   Client,
   SlashCommandBuilder,
   SlashCommandSubcommandsOnlyBuilder,
+  AutocompleteInteraction,
+  ChatInputCommandInteraction,
 } from "discord.js";
 
 export interface Command {
   data:
     | Omiy<SlashCommandBuilder, "addSubCommandGroup" | "addSubcommand">
     | SlashCommandSubcommandsOnlyBuilder;
-  run: (client: Client, interaction: CommandInteraction) => Promise<any>;
+  autocomplete?: (interaction: AutocompleteInteraction) => Promise<void>;
+  run: (
+    client: Client,
+    interaction: ChatInputCommandInteraction
+  ) => Promise<any>;
 }

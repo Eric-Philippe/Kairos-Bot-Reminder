@@ -1,7 +1,7 @@
 import { UserQueries } from "./users.queries";
 import { execute } from "../../utils/mysql.connector";
 import { Utilisateur } from "./utilisateur";
-import { DEFAULT } from "src/default.enum";
+import { DEFAULT } from "src/utils/default.enum";
 
 export const UsersServices = {
   isADBUser: async (userId: string): Promise<boolean> => {

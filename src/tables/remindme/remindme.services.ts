@@ -1,6 +1,8 @@
 import { RemindmeQueries } from "./remindme.queries";
 import { execute } from "../../utils/mysql.connector";
 import { Remindme } from "./remindme";
+import { getAvailableIdentifiant } from "../identifiant/identifiant.services";
+import { MYSQL_TABLES } from "src/utils/mysql_tables.enum";
 
 export const RemindmeServices = {
   getRemindmesById: async (meId: string): Promise<Remindme[]> => {
@@ -10,7 +12,6 @@ export const RemindmeServices = {
     return result;
   },
   addRemindMe: async (
-    meId: string,
     content: string,
     description: string | null,
     entryDate: Date,
@@ -19,7 +20,8 @@ export const RemindmeServices = {
     isPaused: number,
     RCId: string | null,
     userId: string
-  ): Promise<number> => {
+  ): Promise<string> => {
+    let meId = await getAvailableIdentifiant(MYSQL_TABLES.Remindme);
     await execute(RemindmeQueries.AddRemindme, [
       meId,
       content,
@@ -31,7 +33,7 @@ export const RemindmeServices = {
       RCId,
       userId,
     ]);
-    return 0;
+    return meId;
   },
   removeRemindMe: async (meId: string): Promise<number> => {
     await execute(RemindmeQueries.DeleteRemindme, [meId]);
@@ -50,5 +52,9 @@ export const RemindmeServices = {
       [userId]
     );
     return result;
+  },
+  pauseRemindme: async (meId: string, value: number): Promise<number> => {
+    await execute(RemindmeQueries.PauseRemindme, [value, meId]);
+    return 0;
   },
 };
