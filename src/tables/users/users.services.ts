@@ -1,6 +1,7 @@
 import { UserQueries } from "./users.queries";
 import { execute } from "../../utils/mysql.connector";
 import { Utilisateur } from "./utilisateur";
+import { DEFAULT } from "src/default.enum";
 
 export const UsersServices = {
   isADBUser: async (userId: string): Promise<boolean> => {
@@ -41,5 +42,13 @@ export const UsersServices = {
       userId,
     ]);
     return result[0];
+  },
+
+  updateUserCountry: async (
+    userId: string,
+    countryId: string
+  ): Promise<number> => {
+    await execute(UserQueries.UpdateUserCountry, [countryId, userId]);
+    return 0;
   },
 };

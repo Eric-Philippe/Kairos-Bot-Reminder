@@ -22,4 +22,7 @@ export const UserQueries = {
 
   DeleteUser: `
         DELETE FROM Utilisateur WHERE userId = ?;`,
+
+  UpdateUserCountry: `
+            UPDATE Utilisateur SET cId = ? WHERE userId = ?;`,
 };

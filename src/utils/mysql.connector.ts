@@ -42,8 +42,6 @@ export const execute = <T>(
       );
 
     return new Promise<any>(async (resolve, reject) => {
-      console.log("query: ", query);
-
       connection.execute(query, params, (err, res) => {
         if (err) reject(err);
         else resolve(res);
