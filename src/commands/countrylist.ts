@@ -1,14 +1,14 @@
-import { ApplicationCommandType, EmbedBuilder } from "discord.js";
+import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { Command } from "src/types";
 
 import { UsersServices } from "../tables/users/users.services";
 import { CountryServices } from "../tables/country/country.services";
 import { Country } from "src/tables/country/country";
 
-export const CountryList: Command = {
-  name: "countrylist",
-  description: "Give the list of all the countries",
-  type: ApplicationCommandType.ChatInput,
+const CountryList: Command = {
+  data: new SlashCommandBuilder()
+    .setName("countrylist")
+    .setDescription("List all countries"),
   run: async (client, interaction) => {
     await UsersServices.isADBUser(interaction.user.id);
     let countries: Country[] = await CountryServices.getCountries();
@@ -26,3 +26,5 @@ export const CountryList: Command = {
     await interaction.reply({ embeds: [embed] });
   },
 };
+
+export default CountryList;

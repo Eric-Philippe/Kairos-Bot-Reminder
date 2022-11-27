@@ -44,7 +44,7 @@ export const getAvailableIdentifiant = async (
   let identifiants: any[] = await execute(query, []);
   let availableIdentifiant = "";
   let i = 0;
-  while (availableIdentifiant === "" && i < identifiants.length * 4) {
+  while (availableIdentifiant === "" && i < (identifiants.length + 1) * 4) {
     let identifiant = createNextIdentifiant(regex);
     if (!identifiants.includes(identifiant)) {
       availableIdentifiant = identifiant;

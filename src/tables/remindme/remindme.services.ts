@@ -12,12 +12,12 @@ export const RemindmeServices = {
   addRemindMe: async (
     meId: string,
     content: string,
-    description: string,
+    description: string | null,
     entryDate: Date,
     targetDate: Date,
-    repetition: string,
+    repetition: string | null,
     isPaused: number,
-    RId: string,
+    RCId: string | null,
     userId: string
   ): Promise<number> => {
     await execute(RemindmeQueries.AddRemindme, [
@@ -28,7 +28,7 @@ export const RemindmeServices = {
       targetDate,
       repetition,
       isPaused,
-      RId,
+      RCId,
       userId,
     ]);
     return 0;

@@ -1,10 +1,10 @@
-import { ApplicationCommandType } from "discord.js";
+import { SlashCommandBuilder } from "discord.js";
 import { Command } from "src/types";
 
-export const Time: Command = {
-  name: "time",
-  description: "Give the current time for many locations",
-  type: ApplicationCommandType.ChatInput,
+const Time: Command = {
+  data: new SlashCommandBuilder()
+    .setName("time")
+    .setDescription("Give the current time for many locations"),
   run: async (client, interaction) => {
     let template = "It is currently {time} in {country}.";
     let cities = [
@@ -63,3 +63,5 @@ export const Time: Command = {
     await interaction.reply({ content: response });
   },
 };
+
+export default Time;
