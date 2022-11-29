@@ -95,3 +95,4 @@ CREATE TABLE Task(
    PRIMARY KEY(TId),
    FOREIGN KEY(AId) REFERENCES Activities(AId)
 );
+
