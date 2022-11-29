@@ -14,7 +14,7 @@ CREATE TABLE RCategories(
 );
 
 CREATE TABLE Remindus(
-   usId CHAR(4),
+   usId CHAR(5),
    channelId CHAR(18) NOT NULL,
    content VARCHAR(110) NOT NULL,
    entryDate DATETIME NOT NULL,
@@ -95,3 +95,4 @@ CREATE TABLE Task(
    PRIMARY KEY(TId),
    FOREIGN KEY(AId) REFERENCES Activities(AId)
 );
+
