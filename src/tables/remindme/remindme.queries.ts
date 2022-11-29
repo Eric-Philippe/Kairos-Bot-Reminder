@@ -43,7 +43,7 @@ export const RemindmeQueries = {
             WHERE
             Remindme.userId = Utilisateur.userId
             AND Utilisateur.CId = Country.CId
-            AND Remindme.targetDate <= DATE_ADD(NOW(), INTERVAL Country.gmtOffset - 1 HOUR)
+            AND Remindme.targetDate <= DATE_ADD(NOW(), INTERVAL Country.gmtOffset - 1 HOUR);
       `,
 
   UpdateRemindmeDate: `
