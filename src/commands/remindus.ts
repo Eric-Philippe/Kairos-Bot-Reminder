@@ -12,7 +12,7 @@ import { Command } from "src/CommandTemplate";
 
 import { Repetition } from "../utils/repetition.enum";
 import RCategoriesDefault from "../utils/rcategories.enum";
-import { UsersServices } from "../tables/users/users.services";
+import { GuildServices } from "../tables/guild/guild.services";
 import { RCategoryServices } from "../tables/rcategory/rcategory.services";
 import { RemindusServices } from "../tables/remindus/remindus.services";
 import {
@@ -175,7 +175,7 @@ const Remindus: Command = {
       return interaction.reply({
         content: "This command is not available in DMs",
       });
-
+    0;
     // If the user doesn't have the MANAGE_MESSAGES permission, return
     if (!interaction.memberPermissions?.has(PermissionFlagsBits.ManageMessages))
       return interaction.reply({
@@ -239,9 +239,10 @@ const createReminder = async (interaction: ChatInputCommandInteraction) => {
   let category = interaction.options.getString("category", false);
   let role = interaction.options.getRole("role", false);
 
-  const user = interaction.user;
-  if (await !UsersServices.isADBUser(user.id)) {
-    UsersServices.addUser(user.id);
+  const guild = interaction.guild;
+  if (!guild) return;
+  if (await !GuildServices.isADBGuild(guild.id)) {
+    GuildServices.addGuild(guild.id);
   }
 
   // Check if the time is valid (HH:MM)
@@ -250,6 +251,10 @@ const createReminder = async (interaction: ChatInputCommandInteraction) => {
 
   let hours = parseInt(time.split(":")[0]);
   let minutes = parseInt(time.split(":")[1]);
+
+  if (hours > 23 || hours < 0 || minutes > 59 || minutes < 0) {
+    return interaction.reply("Invalid time format");
+  }
 
   // Check if the date is valid If there is not year, add the current year, if there is not month, add the current month
   let splittedDate = date.split("/");
@@ -281,6 +286,10 @@ const createReminder = async (interaction: ChatInputCommandInteraction) => {
   let month = parseInt(splittedDate[1]) - 1;
   let day = parseInt(splittedDate[0]);
 
+  if (month > 11 || month < 0 || day > 31 || day < 0) {
+    return interaction.reply("Invalid date format");
+  }
+
   let targetDate = new Date(year, month, day, hours, minutes);
 
   if (targetDate < new Date())
@@ -297,12 +306,12 @@ const createReminder = async (interaction: ChatInputCommandInteraction) => {
   let idCategory = null;
   if (category) {
     const categoryExists =
-      await RCategoryServices.getRCategoryByNameAndParentId(category, user.id);
+      await RCategoryServices.getRCategoryByNameAndParentId(category, guild.id);
     if (!categoryExists && !RCategoriesDefault.includes(category)) {
       //Create the category
-      idCategory = await RCategoryServices.addRCategory(category, user.id, 1);
+      idCategory = await RCategoryServices.addRCategory(category, guild.id, 1);
     } else {
-      idCategory = categoryExists.RCId;
+      idCategory = categoryExists.RCId || "#000";
     }
   }
 
@@ -353,9 +362,10 @@ const createReminder = async (interaction: ChatInputCommandInteraction) => {
 const deleteReminder = async (interaction: ChatInputCommandInteraction) => {
   let id = interaction.options.getString("id", true);
 
-  const user = interaction.user;
-  if (await !UsersServices.isADBUser(user.id)) {
-    await UsersServices.addUser(user.id);
+  const guild = interaction.guild;
+  if (!guild) return;
+  if (await !GuildServices.isADBGuild(guild.id)) {
+    await GuildServices.addGuild(guild.id);
   }
 
   const remindus = await RemindusServices.getRemindusById(id);
@@ -363,7 +373,7 @@ const deleteReminder = async (interaction: ChatInputCommandInteraction) => {
     return interaction.reply("The reminder doesn't exist");
   }
 
-  if (remindus[0].usId != user.id) {
+  if (remindus[0].usId != guild.id) {
     return interaction.reply("The reminder doesn't exist");
   }
 
@@ -442,19 +452,22 @@ const listReminders = async (interaction: ChatInputCommandInteraction) => {
     );
   }
 
+  let content;
+  if (reminduss.length > 0) {
+    content = reminduss
+      .map((r) => {
+        return `${r.usId} - ${
+          r.content.length > 25 ? r.content.substring(0, 25) + "..." : r.content
+        }`;
+      })
+      .join("\n");
+  } else {
+    content = "No reminders";
+  }
+
   const embed = new EmbedBuilder()
     .setTitle("Guild reminders list")
-    .setDescription(
-      reminduss
-        .map((r) => {
-          return `${r.usId} - ${
-            r.content.length > 25
-              ? r.content.substring(0, 25) + "..."
-              : r.content
-          }`;
-        })
-        .join("\n")
-    )
+    .setDescription(content)
     .setColor("#00ff00")
     .setThumbnail(IMG.REMINDER_LOGO)
     .setTimestamp();

@@ -26,14 +26,15 @@ export const RCategoryQueries = {
         parentId = ?;
         `,
   GetRCategoryByNameAndParentId: `
-            SELECT
-            RCId,
-            name,
-            parentId,
-            isGuild
-            FROM
-            RCategories
-            WHERE
-            name = ? AND parentId = ?;
+  SELECT
+  RCId,
+  name,
+  parentId,
+  isGuild
+  FROM
+  RCategories
+  WHERE
+  name = ?
+  AND (parentId = ? OR parentId = '1');
             `,
 };

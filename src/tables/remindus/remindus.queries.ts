@@ -1,12 +1,11 @@
 export const RemindusQueries = {
   GetRemindusById: `
-        SELECT
-       *
-        FROM
-        Remindus
-        WHERE
-        usId = ?;
-        `,
+      SELECT
+      *
+      FROM
+      Remindus
+      WHERE
+      usId = ?;`,
 
   AddRemindus: `
         INSERT INTO Remindus VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
@@ -24,9 +23,7 @@ export const RemindusQueries = {
         SELECT
        *
         FROM
-        Remindus
-        WHERE
-        guildId = ?;
+        Remindus as R, Guild as G
         `,
   BreakRemindus: `
             UPDATE Remindus SET isPaused = ? WHERE usId = ?;
@@ -39,5 +36,23 @@ export const RemindusQueries = {
             WHERE
             RCId = ? AND
             guildId = ?;
+            `,
+
+  FetchPastRemindus: `
+            SELECT
+            *
+            FROM
+            Remindus as R, Guild as G, Country as C
+            WHERE
+            R.guildId = G.guildId AND
+            G.CId = C.CId AND
+            R.isPaused = 0 AND
+            R.targetDate <= DATE_ADD(NOW(), INTERVAL C.gmtOffset HOUR);
+            `,
+
+  UpdateRemindusDate: `
+            UPDATE Remindus
+            SET targetDate = ?
+            WHERE usId = ?;
             `,
 };

@@ -15,7 +15,7 @@ export const UsersServices = {
     }
   },
   addUser: async (userId: string): Promise<number> => {
-    await execute(UserQueries.AddUser, [userId, 0, "#14"]);
+    await execute(UserQueries.AddUser, [userId, 0, DEFAULT.TimeZoneId]);
     return 0;
   },
 

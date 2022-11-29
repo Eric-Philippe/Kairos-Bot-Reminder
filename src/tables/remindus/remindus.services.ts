@@ -26,7 +26,6 @@ export const RemindusServices = {
     let usId = await getAvailableIdentifiant(MYSQL_TABLES.Remindus);
     await execute(RemindusQueries.AddRemindus, [
       usId,
-      guildId,
       channelId,
       content,
       entryDate,
@@ -35,6 +34,7 @@ export const RemindusServices = {
       repetition,
       mentionId,
       isPaused,
+      guildId,
       RCId,
     ]);
     return usId;
@@ -70,5 +70,22 @@ export const RemindusServices = {
       [RCId, guildId]
     );
     return result;
+  },
+  fetchPastRemindus: async (): Promise<Remindus[]> => {
+    const result: Remindus[] = await execute(
+      RemindusQueries.FetchPastRemindus,
+      []
+    );
+    return result;
+  },
+  updateRemindus: async (
+    remindus: Remindus,
+    targetDate: Date
+  ): Promise<number> => {
+    await execute(RemindusQueries.UpdateRemindusDate, [
+      targetDate,
+      remindus.usId,
+    ]);
+    return 0;
   },
 };

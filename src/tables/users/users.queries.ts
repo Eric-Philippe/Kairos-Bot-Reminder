@@ -1,28 +1,24 @@
 export const UserQueries = {
   GetUsers: `
-        SELECT
-        userId,
-        superAdmin,
-        cId
-        FROM
-        Utilisateur;
-        `,
+      SELECT
+      *
+      FROM
+      Utilisateur;`,
+
   GetUserById: `
-        SELECT
-        userId,
-        superAdmin,
-        cId
-        FROM
-        Utilisateur
-        WHERE
-        userId = ?;
-        `,
+      SELECT
+      *
+      FROM
+      Utilisateur
+      WHERE
+      userId = ?;`,
+
   AddUser: `
-        INSERT INTO Utilisateur VALUES (?, ?, ?);`,
+      INSERT INTO Utilisateur VALUES (?, ?, ?);`,
 
   DeleteUser: `
-        DELETE FROM Utilisateur WHERE userId = ?;`,
+      DELETE FROM Utilisateur WHERE userId = ?;`,
 
   UpdateUserCountry: `
-            UPDATE Utilisateur SET cId = ? WHERE userId = ?;`,
+      UPDATE Utilisateur SET cId = ? WHERE userId = ?;`,
 };

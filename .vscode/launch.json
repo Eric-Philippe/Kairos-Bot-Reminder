@@ -19,7 +19,7 @@
       "request": "launch",
       "name": "Launch Cron",
       "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}\\src\\Handler.ts",
+      "program": "${workspaceFolder}\\src\\Controller\\Controller.ts",
       "preLaunchTask": "tsc: build - tsconfig.json",
       "outFiles": ["${workspaceFolder}/dist/**/*.js"]
     }

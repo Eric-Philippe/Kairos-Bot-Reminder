@@ -14,8 +14,7 @@ CREATE TABLE RCategories(
 );
 
 CREATE TABLE Remindus(
-   usId CHAR(5),
-   guildId VARCHAR(50) NOT NULL,
+   usId CHAR(4),
    channelId CHAR(18) NOT NULL,
    content VARCHAR(110) NOT NULL,
    entryDate DATETIME NOT NULL,
@@ -24,10 +23,14 @@ CREATE TABLE Remindus(
    repetition VARCHAR(50),
    mentionId VARCHAR(20),
    isPaused BOOLEAN NOT NULL,
+   guildId VARCHAR(18) NOT NULL,
    RCId CHAR(4),
    PRIMARY KEY(usId),
+   FOREIGN KEY(guildId) REFERENCES Guild(guildId),
    FOREIGN KEY(RCId) REFERENCES RCategories(RCId)
 );
+
+
 
 CREATE TABLE ACategories(
    ACId CHAR(4),
@@ -35,6 +38,14 @@ CREATE TABLE ACategories(
    parentId VARCHAR(50) NOT NULL,
    PRIMARY KEY(ACId)
 );
+
+CREATE TABLE Guild(
+   guildId VARCHAR(18),
+   CId VARCHAR(3) NOT NULL,
+   PRIMARY KEY(guildId),
+   FOREIGN KEY(CId) REFERENCES Country(CId)
+);
+
 
 CREATE TABLE Utilisateur(
    userId CHAR(18),

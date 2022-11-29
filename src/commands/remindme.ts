@@ -222,6 +222,10 @@ const createReminder = async (interaction: ChatInputCommandInteraction) => {
   let hours = parseInt(time.split(":")[0]);
   let minutes = parseInt(time.split(":")[1]);
 
+  if (hours > 23 || hours < 0 || minutes > 59 || minutes < 0) {
+    return interaction.reply("Invalid time format");
+  }
+
   // Check if the date is valid If there is not year, add the current year, if there is not month, add the current month
   let splittedDate = date.split("/");
   // If there is only one number, it's the day
@@ -251,6 +255,10 @@ const createReminder = async (interaction: ChatInputCommandInteraction) => {
   let year = parseInt(splittedDate[2]);
   let month = parseInt(splittedDate[1]) - 1;
   let day = parseInt(splittedDate[0]);
+
+  if (month > 11 || month < 0 || day > 31 || day < 0) {
+    return interaction.reply("Invalid date format");
+  }
 
   let targetDate = new Date(year, month, day, hours, minutes);
 
@@ -331,19 +339,24 @@ const listReminders = async (interaction: ChatInputCommandInteraction) => {
     remindmes = await RemindmeServices.getRemindmeByUserId(interaction.user.id);
   }
 
+  let content;
+  if (remindmes.length > 0) {
+    content = remindmes
+      .map((remindme) => {
+        return `${remindme.meId} - ${
+          remindme.content.length > 25
+            ? remindme.content.substring(0, 25) + "..."
+            : remindme.content
+        }`;
+      })
+      .join("\n");
+  } else {
+    content = "You don't have any reminder";
+  }
+
   const embed = new EmbedBuilder()
     .setTitle("List of your reminders")
-    .setDescription(
-      remindmes
-        .map((remindme) => {
-          return `${remindme.meId} - ${
-            remindme.content.length > 25
-              ? remindme.content.substring(0, 25) + "..."
-              : remindme.content
-          }`;
-        })
-        .join("\n")
-    )
+    .setDescription(content)
     .setColor("#ff0000")
     .setThumbnail(IMG.REMINDER_LOGO)
     .setTimestamp();

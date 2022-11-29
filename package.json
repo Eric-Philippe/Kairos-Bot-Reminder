@@ -12,7 +12,7 @@
     "clear": "rm -rf dist && rm -rf node_modules",
     "clear-dist": "rm -rf dist",
     "pull": "git pull origin master",
-    "handler": "tsc && node dist/Handler.js"
+    "handler": "tsc && node dist/Controller/Controller.js"
   },
   "repository": {
     "type": "git",
