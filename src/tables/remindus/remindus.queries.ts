@@ -40,7 +40,7 @@ export const RemindusQueries = {
 
   FetchPastRemindus: `
             SELECT
-            *
+            R.*
             FROM
             Remindus as R, Guild as G, Country as C
             WHERE

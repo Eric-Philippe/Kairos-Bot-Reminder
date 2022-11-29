@@ -35,15 +35,15 @@ export const RemindmeQueries = {
   // MYSql query to get all remindmes that are now in the past and considering also the timezone linked to the user
   FetchNewQueuedRemindme: `
             SELECT
-            *
+            R.*
             FROM
-            Remindme
-            Utilisateur
-            Country
+            Remindme as R,
+            Utilisateur as U,
+            Country as C
             WHERE
-            Remindme.userId = Utilisateur.userId
-            AND Utilisateur.CId = Country.CId
-            AND Remindme.targetDate <= DATE_ADD(NOW(), INTERVAL Country.gmtOffset - 1 HOUR);
+            R.userId = U.userId
+            AND U.CId = C.CId
+            AND R.targetDate <= DATE_ADD(NOW(), INTERVAL C.gmtOffset - 1 HOUR);
       `,
 
   UpdateRemindmeDate: `
