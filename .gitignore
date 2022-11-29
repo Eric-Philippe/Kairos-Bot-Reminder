@@ -1,4 +1,4 @@
-config.json
 mysql.json
 /node_modules
-/.vscode
+/dist
+.env

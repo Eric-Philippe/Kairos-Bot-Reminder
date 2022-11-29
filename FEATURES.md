@@ -20,19 +20,11 @@
 
 `Set the country of the server or the user`
 
-\_\_
+### ~~Country Available at first~~
 
-#### /country-propose ['Language' | 'Currency' | 'Timezone']
+### All the timezone are available !
 
-`Propose a new language, currency or timezone`
-
-### Country Available at first (With the default timezones)
-
-- [FR] **France** (Europe/Paris) (French)
-- [US-E] **United States East** (America/New_York) (English)
-- [US-W] **United States West** (America/Los_Angeles) (English)
-- [US-C] **United States Central** (America/Chicago) (English)
-- [UK] **United Kingdom** (Europe/London) (English)
+Every timezone are here and working
 
 FR Will be the default country for every case scenario
 
@@ -46,9 +38,11 @@ FR Will be the default country for every case scenario
 
 ### /rm
 
+rm is a quick command to add a Reminder for yourself, useful when you want to remind yourself something quickly
+
 \_\_
 
-#### /rm [All Args Dumped]
+#### /rm [Time] [Raw-Date] [Message]
 
 ##### _Ex: /rm 8:00 27/12 Birthday_
 
@@ -60,7 +54,7 @@ FR Will be the default country for every case scenario
 
 \_\_
 
-#### /remindme \``add`\` ["Remind Reason"] ["HH"] ["MM"] <"DD"> <"MM"> <"YYYY">
+#### /remindme \``set`\` [Time] [Date] [Message] <Description> <Repetition> <Category>
 
 `Create a new self reminder`
 
@@ -72,21 +66,9 @@ _Default if no value_ :
 
 \_\_
 
-#### /remindme \``create`\`
-
-`Launch the process to create a new self reminder with more options (Repeating (Choose day, Month), Categories, Description etc...)`
-
-\_\_
-
 #### /remindme \``delete`\` ["Reminder ID"]
 
 `Delete a self reminder`
-
-\_\_
-
-#### /remindme \``clear`\`
-
-`Clear all self reminders`
 
 \_\_
 
@@ -96,21 +78,15 @@ _Default if no value_ :
 
 \_\_
 
-#### /remindme \``unbreak`\` ["Reminder ID"]
+#### /remindme \``restart`\` ["Reminder ID"]
 
-`Unbreak a self reminder`
+`Restart a broken self reminder`
 
 \_\_
 
 #### /remindme \``list`\`
 
 `List all self reminders`
-
----
-
-### Slash Commands
-
-### Quick Command
 
 ---
 
@@ -163,11 +139,3 @@ _Default if no value_ :
 ## Help
 
 Check journalier de serveur s'ils sont toujours disponibles sinont les supprimer et clear la db
-
-Code Remindme
-
-\#AA11
-
-Code Remindus
-
-\#A123
