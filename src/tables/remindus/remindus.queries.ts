@@ -47,7 +47,7 @@ export const RemindusQueries = {
             R.guildId = G.guildId AND
             G.CId = C.CId AND
             R.isPaused = 0 AND
-            R.targetDate <= DATE_ADD(NOW(), INTERVAL C.gmtOffset HOUR);
+            R.targetDate <= DATE_ADD(NOW(), INTERVAL C.gmtOffset - 1 HOUR);
             `,
 
   UpdateRemindusDate: `
