@@ -41,7 +41,7 @@ client.on("ready", async () => {
     console.log(error);
   }
 
-  await process.exit(0);
+  process.exit(0);
 });
 
-client.login(process.env.TOKEN);
+client.login(process.env.TOKEN_KAIROS);
