@@ -1,5 +1,7 @@
 # Reminder Discord Bot | Kairos#9720
 
+![Kairos Updates](https://cronitor.io/badges/0MAGtr/production/twr2tQ6ZQDnTxuEuX286BEZU5TM.svg)
+
 <img src="https://media.discordapp.net/attachments/579303130886569984/969848226880569364/unknown.png"
 style="border-radius:20px; width: 30%; margin-left: 5%; box-shadow: 7px 5px 5px rgb(0, 0, 255, .2);"
 alt="Main Display of the Bot" />
