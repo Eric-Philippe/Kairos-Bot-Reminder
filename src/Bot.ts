@@ -14,4 +14,4 @@ ready(client);
 slashCommandCreate(client);
 autoCompleteCreate(client);
 
-client.login(process.env.TOKEN);
+client.login(process.env.TOKEN_KAIROS);
