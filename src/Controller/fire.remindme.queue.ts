@@ -78,7 +78,6 @@ export default class FireRemindmeQueue implements FireQueue {
             LogType.ERROR,
             __filename
           );
-          rej(-2);
         }
       }
       res();

@@ -78,7 +78,6 @@ export default class FireRemindusQueue extends FireQueue {
             LogType.ERROR,
             __filename
           );
-          rej(-2);
         }
       }
       res();
