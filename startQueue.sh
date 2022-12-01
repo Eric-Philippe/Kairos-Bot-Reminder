@@ -5,4 +5,10 @@ if [ ! -d "dist" ]; then
     exit 1
 fi
 
-node ./dist/Controller/Controller.js >> logsController.log &
+# If ps -aux | grep Controller.js returns nothing, then the controller is not running
+if [ -z "$(ps -aux | grep Controller.js)" ]; then
+    echo "Controller is not running, starting it"
+    node ./dist/Controller/Controller.js >> logsController.log &
+else 
+    echo "Controller is already running"
+fi
