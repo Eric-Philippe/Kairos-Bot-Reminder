@@ -9,6 +9,8 @@ import * as MySQLConnector from "../utils/mysql.connector";
 import FireRemindmeQueue from "./fire.remindme.queue";
 import FireRemindusQueue from "./fire.remindus.queue";
 
+require("dotenv").config();
+
 const cronitor = require("cronitor")(process.env.CRONTAB_KEY);
 const monitor = new cronitor.Monitor("important-heartbeat-monitor");
 
