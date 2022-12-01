@@ -9,6 +9,9 @@ import * as MySQLConnector from "../utils/mysql.connector";
 import FireRemindmeQueue from "./fire.remindme.queue";
 import FireRemindusQueue from "./fire.remindus.queue";
 
+const cronitor = require("cronitor")(process.env.CRONTAB_KEY);
+const monitor = new cronitor.Monitor("important-heartbeat-monitor");
+
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -29,22 +32,26 @@ dotenv.config();
 MySQLConnector.init();
 
 client.on("ready", async () => {
-  const remindmeQueue = new FireRemindmeQueue();
-  const remindusQueue = new FireRemindusQueue();
-
-  try {
-    const backValues = await Promise.all([
-      remindmeQueue.fire(client),
-      remindusQueue.fire(client),
-    ]);
-  } catch (error) {
-    console.log(error);
-  }
-
-  await client.destroy();
-
-  console.log("End of the snippet"); // End of the snippet
-  return process.exit();
+  fire();
 });
+
+const fire = async () => {
+  setInterval(async () => {
+    console.log("Checking remind queue");
+
+    const remindmeQueue = new FireRemindmeQueue();
+    const remindusQueue = new FireRemindusQueue();
+
+    try {
+      const backValues = await Promise.all([
+        remindmeQueue.fire(client),
+        remindusQueue.fire(client),
+      ]);
+      monitor.ping({ message: "Alive" });
+    } catch (error) {
+      monitor.ping({ count: 2, error_count: 2 });
+    }
+  }, 1000 * 60);
+};
 
 client.login(process.env.TOKEN_KAIROS);
