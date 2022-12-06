@@ -53,9 +53,7 @@ const fire = async () => {
     } catch (error) {
       monitor.ping({ count: 2, error_count: 2 });
     }
-    // }, 1000 * 60);
-    console.log("Waiting 10 seconds");
-  }, 1000 * 5);
+  }, 1000 * 60);
 };
 
 client.login(process.env.TOKEN_KAIROS);
