@@ -98,6 +98,8 @@ export default class FireRemindmeQueue implements FireQueue {
             .setColor("#5865F2");
 
           await target.send({ embeds: [embed] });
+          // Wait 2 seconds before sending the attachment
+          await new Promise((res) => setTimeout(res, 2000));
           await target.send({ files: [attachment] });
 
           res(0);

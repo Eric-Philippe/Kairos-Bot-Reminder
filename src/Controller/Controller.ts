@@ -14,30 +14,7 @@ require("dotenv").config();
 const cronitor = require("cronitor")(process.env.CRONTAB_KEY);
 const monitor = new cronitor.Monitor("important-heartbeat-monitor");
 
-const client = new Client({
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.GuildMembers,
-    GatewayIntentBits.GuildPresences,
-    GatewayIntentBits.GuildVoiceStates,
-    GatewayIntentBits.GuildMessageReactions,
-    GatewayIntentBits.MessageContent,
-    GatewayIntentBits.DirectMessages,
-    GatewayIntentBits.DirectMessageTyping,
-  ],
-});
-
-if (process.env.DEBUG_MODE == "true") console.log("Starting bot");
-
-dotenv.config();
-MySQLConnector.init();
-
-client.on("ready", async () => {
-  fire();
-});
-
-const fire = async () => {
+const fireController = async (client: Client) => {
   setInterval(async () => {
     console.log("Checking remind queue");
 
@@ -56,4 +33,4 @@ const fire = async () => {
   }, 1000 * 60);
 };
 
-client.login(process.env.TOKEN_KAIROS);
+export default fireController;
