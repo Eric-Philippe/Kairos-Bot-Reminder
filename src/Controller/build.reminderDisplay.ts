@@ -4,7 +4,7 @@ import DateWorker from "../utils/date.worker";
 
 import { Remindme } from "../tables/remindme/remindme";
 
-const pathToImg = "../assets/img/New_Reminder.png";
+const pathToImg = "src/assets/img/New_Reminder.png";
 
 const RemindmeDisplay = async (
   remindme: Remindme
