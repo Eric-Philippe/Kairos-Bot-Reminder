@@ -30,7 +30,7 @@ const fireController = async (client: Client) => {
     } catch (error) {
       monitor.ping({ count: 2, error_count: 2 });
     }
-  }, 1000 * 60);
+  }, 1000 * 30);
 };
 
 export default fireController;
