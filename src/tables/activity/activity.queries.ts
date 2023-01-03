@@ -1,17 +1,34 @@
 export const ActivityQueries = {
   GetActivitiesByUserId: `
-    SELECT * FROM Activities WHERE userId = ?;
+    SELECT * 
+    FROM Activity as a, TCategory as tc
+    WHERE a.TCId = tc.TCId
+    AND tc.userid = ?;
     `,
 
   GetActivityById: `
-    SELECT * FROM Activities WHERE AId = ?;
+    SELECT *
+    FROM Activity
+    WHERE AId = ?;
     `,
 
-  AddActivity: `
-    INSERT INTO Activities VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+  IsDuplicatedActivity: `
+    SELECT *
+    FROM Activity
+    WHERE name = ? AND TCId = ?;
+    `,
+
+  InsertActivity: `
+    INSERT INTO Activity (AId, name, entryDate, endDate, TCId) VALUES (?, ?, ?, ?, ?);
     `,
 
   DeleteActivity: `
-    DELETE FROM Activities WHERE AId = ?;
+    DELETE FROM Activity
+    WHERE AId = ?;
+    `,
+
+  EndActivity: `
+    UPDATE Activity SET endDate = ?
+    WHERE AId = ?;
     `,
 };

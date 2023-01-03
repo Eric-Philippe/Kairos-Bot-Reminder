@@ -1,6 +1,6 @@
 export const enum MYSQL_TABLES {
-  ACategories = "ACategories",
-  Activities = "Activities",
+  TCategory = "TCategory",
+  Activity = "Activity",
   Country = "Country",
   RCategories = "RCategories",
   Remindme = "Remindme",

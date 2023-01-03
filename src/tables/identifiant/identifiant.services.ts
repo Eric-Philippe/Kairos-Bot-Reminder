@@ -9,11 +9,11 @@ export const getAvailableIdentifiant = async (
 ): Promise<string> => {
   let query, regex;
   switch (table) {
-    case "ACategories":
-      query = IdentifiantQueries.GetACategories;
+    case "TCategory":
+      query = IdentifiantQueries.GetTCategories;
       regex = IdentifiantRegex.CATEGORIES;
       break;
-    case "Activities":
+    case "Activity":
       query = IdentifiantQueries.GetActivities;
       regex = IdentifiantRegex.ACTIVITIES;
       break;

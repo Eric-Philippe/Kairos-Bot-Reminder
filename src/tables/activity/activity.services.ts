@@ -1,6 +1,8 @@
 import { ActivityQueries } from "./activity.queries";
 import { execute } from "../../utils/mysql.connector";
 import { Activity } from "./activity";
+import { getAvailableIdentifiant } from "../identifiant/identifiant.services";
+import { MYSQL_TABLES } from "../../utils/mysql_tables.enum";
 
 export const ActivityServices = {
   getActivitiesByUserId: async (userId: string): Promise<Activity[]> => {
@@ -18,31 +20,38 @@ export const ActivityServices = {
     return result[0];
   },
 
-  addActivity: async (
-    AId: string,
-    userId: string,
+  insertActivity: async (
     name: string,
-    description: string,
-    dueDate: string,
-    isComplete: boolean,
-    isRecurring: boolean,
-    isGuild: boolean
+    entryDate: Date,
+    endDate: Date,
+    TCId: string
   ): Promise<number> => {
-    await execute(ActivityQueries.AddActivity, [
+    let AId = await getAvailableIdentifiant(MYSQL_TABLES.Activity);
+    await execute(ActivityQueries.InsertActivity, [
       AId,
-      userId,
       name,
-      description,
-      dueDate,
-      isComplete,
-      isRecurring,
-      isGuild,
+      entryDate,
+      endDate,
+      TCId,
     ]);
     return 0;
   },
 
-  removeActivity: async (AId: string): Promise<number> => {
+  isDuplicateActivity: async (name: string, TCId: string): Promise<boolean> => {
+    const result: Activity[] = await execute(
+      ActivityQueries.IsDuplicatedActivity,
+      [name, TCId]
+    );
+    return result.length > 0;
+  },
+
+  deleteActivity: async (AId: string): Promise<number> => {
     await execute(ActivityQueries.DeleteActivity, [AId]);
+    return 0;
+  },
+
+  endActivity: async (AId: string, endDate: Date): Promise<number> => {
+    await execute(ActivityQueries.EndActivity, [endDate, AId]);
     return 0;
   },
 };

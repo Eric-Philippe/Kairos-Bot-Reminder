@@ -1,9 +1,8 @@
 export interface Task {
   TId: string;
-  name: string;
-  startDate: Date;
+  content: string;
+  entryDate: Date;
   endDate: Date;
-  estimate: string;
-  isFinished: number;
+  TCId: string;
   AId: string;
 }

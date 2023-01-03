@@ -30,15 +30,6 @@ CREATE TABLE Remindus(
    FOREIGN KEY(RCId) REFERENCES RCategories(RCId)
 );
 
-
-
-CREATE TABLE ACategories(
-   ACId CHAR(4),
-   name VARCHAR(50) NOT NULL,
-   parentId VARCHAR(50) NOT NULL,
-   PRIMARY KEY(ACId)
-);
-
 CREATE TABLE Guild(
    guildId VARCHAR(18),
    CId VARCHAR(3) NOT NULL,
@@ -70,29 +61,33 @@ CREATE TABLE Remindme(
    FOREIGN KEY(userId) REFERENCES Utilisateur(userId)
 );
 
-CREATE TABLE Activities(
+CREATE TABLE TCategory(
+   TCId CHAR(5),
+   title VARCHAR(50) NOT NULL,
+   userId CHAR(18) NOT NULL,
+   PRIMARY KEY(TCId),
+   FOREIGN KEY(userId) REFERENCES Utilisateur(userId)
+);
+
+CREATE TABLE Activity(
    AId CHAR(5),
    name VARCHAR(50) NOT NULL,
-   startDate DATETIME NOT NULL,
+   entryDate DATETIME NOT NULL,
    endDate DATETIME,
-   estimate TIME,
-   isClosed BOOLEAN NOT NULL,
-   userId CHAR(18) NOT NULL,
-   ACId CHAR(4),
+   TCId CHAR(5) NOT NULL,
    PRIMARY KEY(AId),
-   FOREIGN KEY(userId) REFERENCES Utilisateur(userId),
-   FOREIGN KEY(ACId) REFERENCES ACategories(ACId)
+   FOREIGN KEY(TCId) REFERENCES TCategory(TCId)
 );
 
 CREATE TABLE Task(
-   TId VARCHAR(5),
-   name VARCHAR(50) NOT NULL,
-   startDate DATETIME NOT NULL,
+   TId CHAR(5),
+   content VARCHAR(50) NOT NULL,
+   entryDate DATETIME NOT NULL,
    endDate DATETIME,
-   estimate TIME,
-   isFinished BOOLEAN NOT NULL,
+   TCId CHAR(5) NOT NULL,
    AId CHAR(5) NOT NULL,
    PRIMARY KEY(TId),
-   FOREIGN KEY(AId) REFERENCES Activities(AId)
+   FOREIGN KEY(TCId) REFERENCES TCategory(TCId),
+   FOREIGN KEY(AId) REFERENCES Activity(AId)
 );
 

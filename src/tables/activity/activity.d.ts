@@ -1,10 +1,7 @@
 export interface Activity {
   AId: string;
   name: string;
-  startDate: Date;
+  entryDate: Date;
   endDate: Date;
-  estimate: string;
-  isClosed: number;
-  userId: string;
-  ACId: string;
+  TCId: string;
 }
