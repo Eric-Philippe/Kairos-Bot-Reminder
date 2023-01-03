@@ -9,6 +9,7 @@ import { Remindme } from "../tables/remindme/remindme";
 import { Repetition } from "../utils/repetition.enum";
 
 import FireQueue from "./fire.model";
+import RemindmeDisplay from "./build.reminderDisplay";
 
 export default class FireRemindmeQueue implements FireQueue {
   private RemindmeQueue: Remindme[] = [];
@@ -78,7 +79,6 @@ export default class FireRemindmeQueue implements FireQueue {
             LogType.ERROR,
             __filename
           );
-          rej(-2);
         }
       }
       res();
@@ -92,15 +92,20 @@ export default class FireRemindmeQueue implements FireQueue {
       // Log the instance of the target
       if (target instanceof User) {
         try {
+          let attachment = await RemindmeDisplay(reminder);
           let embed = new EmbedBuilder()
-            .setTitle("Remindme")
-            .setDescription(reminder.content)
-            .setColor("Aqua");
+            .setTitle("⌛ | You have a new reminder ! ⌛")
+            .setColor("#5865F2");
 
           await target.send({ embeds: [embed] });
+          // Wait 2 seconds before sending the attachment
+          await new Promise((res) => setTimeout(res, 2000));
+          await target.send({ files: [attachment] });
 
           res(0);
         } catch (error) {
+          console.log(error);
+
           rej(-3);
         }
       }

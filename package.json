@@ -29,6 +29,8 @@
   "homepage": "https://github.com/Eric-Philippe/Kairos-Bot-Reminder#readme",
   "dependencies": {
     "@fusionstrings/randexp": "^0.2.0",
+    "canvas": "^2.10.2",
+    "cronitor": "^2.3.3",
     "discord.js": "^14.6.0",
     "dotenv": "^16.0.3",
     "fs": "^0.0.1-security",

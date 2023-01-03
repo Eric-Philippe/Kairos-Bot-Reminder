@@ -9,39 +9,28 @@ import * as MySQLConnector from "../utils/mysql.connector";
 import FireRemindmeQueue from "./fire.remindme.queue";
 import FireRemindusQueue from "./fire.remindus.queue";
 
-const client = new Client({
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.GuildMembers,
-    GatewayIntentBits.GuildPresences,
-    GatewayIntentBits.GuildVoiceStates,
-    GatewayIntentBits.GuildMessageReactions,
-    GatewayIntentBits.MessageContent,
-    GatewayIntentBits.DirectMessages,
-    GatewayIntentBits.DirectMessageTyping,
-  ],
-});
+require("dotenv").config();
 
-if (process.env.DEBUG_MODE == "true") console.log("Starting bot");
+const cronitor = require("cronitor")(process.env.CRONTAB_KEY);
+const monitor = new cronitor.Monitor("important-heartbeat-monitor");
 
-dotenv.config();
-MySQLConnector.init();
+const fireController = async (client: Client) => {
+  setInterval(async () => {
+    console.log("Checking remind queue");
 
-client.on("ready", async () => {
-  const remindmeQueue = new FireRemindmeQueue();
-  const remindusQueue = new FireRemindusQueue();
+    const remindmeQueue = new FireRemindmeQueue();
+    const remindusQueue = new FireRemindusQueue();
 
-  try {
-    const backValues = await Promise.all([
-      remindmeQueue.fire(client),
-      remindusQueue.fire(client),
-    ]);
-  } catch (error) {
-    console.log(error);
-  }
+    try {
+      const backValues = await Promise.all([
+        remindmeQueue.fire(client),
+        remindusQueue.fire(client),
+      ]);
+      monitor.ping({ message: "Alive" });
+    } catch (error) {
+      monitor.ping({ count: 2, error_count: 2 });
+    }
+  }, 1000 * 30);
+};
 
-  process.exit(0);
-});
-
-client.login(process.env.TOKEN_KAIROS);
+export default fireController;

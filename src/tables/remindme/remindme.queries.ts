@@ -32,17 +32,18 @@ export const RemindmeQueries = {
             SET isPaused = ?
             WHERE meId = ?;
             `,
-  // Query that will check every remindme that has a date past the current date considering the Utilisateur timezone
+  // MYSql query to get all remindmes that are now in the past and considering also the timezone linked to the user
   FetchNewQueuedRemindme: `
-      SELECT
-      *
-      FROM
-      Remindme as R, Utilisateur as U, Country as C
-      WHERE
-      R.userId = U.userId AND
-      U.CId = C.CId AND
-      R.isPaused = 0 AND
-      R.targetDate <= DATE_ADD(NOW(), INTERVAL C.gmtOffset HOUR);
+            SELECT
+            R.*
+            FROM
+            Remindme as R,
+            Utilisateur as U,
+            Country as C
+            WHERE
+            R.userId = U.userId
+            AND U.CId = C.CId
+            AND R.targetDate <= DATE_ADD(NOW(), INTERVAL C.gmtOffset - 1 HOUR);
       `,
 
   UpdateRemindmeDate: `
