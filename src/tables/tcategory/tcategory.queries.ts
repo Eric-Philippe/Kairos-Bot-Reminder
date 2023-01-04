@@ -5,6 +5,12 @@ export const TCategoryQueries = {
   GetCategoryById: `
         SELECT * FROM TCategory WHERE TCId = ?;`,
 
+  GetCategoryByTitleUserId: `
+        SELECT * FROM TCategory WHERE UPPER(title) = UPPER(?) AND userId = ?;`,
+
+  GetMiscellaneousCategory: `
+        SELECT * FROM TCategory WHERE title = 'Miscellaneous' AND userId = ?;`,
+
   InsertCategory: `
         INSERT INTO TCategory (TCId, title, userId) VALUES (?, ?, ?);`,
 
@@ -12,5 +18,5 @@ export const TCategoryQueries = {
         DELETE FROM TCategory WHERE TCId = ?;`,
 
   IsDuplicatedCategory: `
-        SELECT * FROM TCategory WHERE title = ? AND userId = ?;`,
+        SELECT * FROM TCategory WHERE UPPER(title) = UPPER(?) AND userId = ?;`,
 };

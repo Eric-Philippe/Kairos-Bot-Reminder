@@ -20,12 +20,34 @@ export const ActivityServices = {
     return result[0];
   },
 
+  getActivityByNameUserId: async (
+    name: string,
+    userId: string
+  ): Promise<Activity> => {
+    const result: Activity[] = await execute(
+      ActivityQueries.GetActivityByNameUserId,
+      [name, userId]
+    );
+    return result[0];
+  },
+
+  getActivityByNameUserIdNotEnded: async (
+    name: string,
+    userId: string
+  ): Promise<Activity> => {
+    const result: Activity[] = await execute(
+      ActivityQueries.GetActivityByNameUserIdNotEnded,
+      [name, userId]
+    );
+    return result[0];
+  },
+
   insertActivity: async (
     name: string,
     entryDate: Date,
-    endDate: Date,
+    endDate: Date | null,
     TCId: string
-  ): Promise<number> => {
+  ): Promise<string> => {
     let AId = await getAvailableIdentifiant(MYSQL_TABLES.Activity);
     await execute(ActivityQueries.InsertActivity, [
       AId,
@@ -34,7 +56,7 @@ export const ActivityServices = {
       endDate,
       TCId,
     ]);
-    return 0;
+    return AId;
   },
 
   isDuplicateActivity: async (name: string, TCId: string): Promise<boolean> => {

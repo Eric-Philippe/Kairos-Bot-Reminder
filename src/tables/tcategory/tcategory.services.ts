@@ -19,9 +19,27 @@ export const TCategoryServices = {
     );
     return result;
   },
+  getTCategoryByTitleUserId: async (
+    title: string,
+    userId: string
+  ): Promise<TCategory> => {
+    const result: TCategory[] = await execute(
+      TCategoryQueries.GetCategoryByTitleUserId,
+      [title, userId]
+    );
+    return result[0];
+  },
+  getMiscellaneousTCategory: async (userId: string): Promise<TCategory> => {
+    const result: TCategory[] = await execute(
+      TCategoryQueries.GetMiscellaneousCategory,
+      [userId]
+    );
+    return result[0];
+  },
   insertTCategory: async (title: string, userId: string) => {
     const TCId = await getAvailableIdentifiant(MYSQL_TABLES.TCategory);
     await execute(TCategoryQueries.InsertCategory, [TCId, title, userId]);
+    return TCId;
   },
   deleteTCategory: async (TCId: string) => {
     await execute(TCategoryQueries.DeleteCategory, [TCId]);

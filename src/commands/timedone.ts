@@ -11,14 +11,26 @@ import { Task } from "../tables/task/task";
 
 const StartWork: Command = {
   data: new SlashCommandBuilder()
-    .setName("startwork")
-    .setDescription("Start a work session")
+    .setName("timedone")
+    .setDescription("Insert a completed task")
     .addStringOption((option) =>
       option
         .setName("task")
         .setDescription("The name of the task")
         .setMaxLength(50)
         .setMinLength(2)
+        .setRequired(true)
+    )
+    .addIntegerOption((option) =>
+      option
+        .setName("hours")
+        .setDescription("The number of hours")
+        .setRequired(true)
+    )
+    .addIntegerOption((option) =>
+      option
+        .setName("minutes")
+        .setDescription("The number of minutes")
         .setRequired(true)
     )
     .addStringOption((option) =>
@@ -39,13 +51,24 @@ const StartWork: Command = {
     ),
 
   run: async (client, interaction) => {
-    let categoryCreated = false;
-    let activityCreated = false;
     let userId = interaction.user.id;
     await UsersServices.isADBUser(interaction.user.id);
-    const task = interaction.options.getString("task") as string;
+    const task = interaction.options.getString("task") || "";
     const activity = interaction.options.getString("activity");
     const category = interaction.options.getString("category");
+
+    // Create a variable to store the number of hours
+    const hours = interaction.options.getInteger("hours") || 0;
+    // Create a variable to store the number of minutes
+    const minutes = interaction.options.getInteger("minutes") || 0;
+
+    // Create a date of today 00:00:00
+    const entryDate = new Date();
+    entryDate.setHours(0, 0, 0, 0);
+
+    // Create a date of today 00:00:00 + the number of hours and minutes
+    const endDate = new Date();
+    endDate.setHours(hours, minutes, 0, 0);
 
     let myCategory: TCategory;
     // If the category is not specified, we use the default Miscellaneous category
@@ -64,22 +87,13 @@ const StartWork: Command = {
           category,
           userId
         );
-        categoryCreated = true;
       }
     }
 
     let myActivity: Activity;
 
     if (!activity) {
-      if (
-        await !TaskServices.isDuplicateTaskFromCategory(task, myCategory.TCId)
-      ) {
-        TaskServices.insertTask(task, new Date(), null, myCategory.TCId, null);
-      } else {
-        if (categoryCreated)
-          await TCategoryServices.deleteTCategory(myCategory.TCId);
-        return interaction.reply("Task already exists");
-      }
+      TaskServices.insertTask(task, entryDate, endDate, myCategory.TCId, null);
     } else {
       // We try to find the given activity
       myActivity = await ActivityServices.getActivityByNameUserId(
@@ -95,29 +109,17 @@ const StartWork: Command = {
           endDate: null,
           TCId: "",
         };
-
         myActivity.AId = await ActivityServices.insertActivity(
           activity,
           new Date(),
           null,
           myCategory.TCId
         );
-        activityCreated = true;
       }
-
-      if (
-        await TaskServices.isDuplicateTaskFromActivity(task, myActivity.AId)
-      ) {
-        if (categoryCreated)
-          await TCategoryServices.deleteTCategory(myCategory.TCId);
-        if (activityCreated)
-          await ActivityServices.deleteActivity(myActivity.AId);
-        return interaction.reply("Task already exists");
-      }
-      TaskServices.insertTask(task, new Date(), null, null, myActivity.AId);
+      TaskServices.insertTask(task, entryDate, endDate, null, myActivity.AId);
     }
 
-    await interaction.reply("Task added");
+    await interaction.reply("Task done added");
   },
 };
 

@@ -15,7 +15,25 @@ export const ActivityQueries = {
   IsDuplicatedActivity: `
     SELECT *
     FROM Activity
-    WHERE name = ? AND TCId = ?;
+    WHERE UPPER(name) = UPPER(?) AND TCId = ? AND endDate IS NULL;
+    `,
+
+  GetActivityByNameUserId: `
+    SELECT *
+    FROM Activity as a, TCategory as tc
+    WHERE UPPER(a.name) = UPPER(?)
+    AND a.TCId = tc.TCId
+    AND tc.userId = ?;
+    `,
+
+  GetActivityByNameUserIdNotEnded: `
+    SELECT *
+    FROM Activity as a, TCategory as tc
+    WHERE UPPER(a.name) = UPPER(?)
+    AND a.endDate IS NULL
+    AND a.TCId = tc.TCId
+    AND tc.userId = ?
+    ORDER BY a.entryDate DESC;
     `,
 
   InsertActivity: `

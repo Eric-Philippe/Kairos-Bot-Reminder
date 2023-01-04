@@ -5,16 +5,33 @@ import { getAvailableIdentifiant } from "../identifiant/identifiant.services";
 import { MYSQL_TABLES } from "../../utils/mysql_tables.enum";
 
 export const TaskServices = {
-  getTaskByName: async (userId: string, content: string): Promise<Task[]> => {
+  getTaskByName: async (userId: string, content: string): Promise<Task> => {
     const result: Task[] = await execute(TaskQueries.GetTaskByName, [
       content,
       userId,
     ]);
-    return result;
+    return result[0];
+  },
+  getTaskByNameNotEndend: async (
+    userId: string,
+    content: string
+  ): Promise<Task> => {
+    const result: Task[] = await execute(TaskQueries.GetTaskByNameNotEnded, [
+      content,
+      userId,
+    ]);
+    return result[0];
   },
   getTaskById: async (TId: string): Promise<Task> => {
     const result: Task[] = await execute(TaskQueries.GetTaskById, [TId]);
     return result[0];
+  },
+  getTasksByActivityId: async (AId: string): Promise<Task[]> => {
+    const result: Task[] = await execute(
+      TaskQueries.GetTasksNotEndedByActivityId,
+      [AId]
+    );
+    return result;
   },
   getTasksByUserId: async (userId: string): Promise<Task[]> => {
     const result: Task[] = await execute(TaskQueries.GetTasksByUserId, [
@@ -25,11 +42,12 @@ export const TaskServices = {
   insertTask: async (
     content: string,
     entryDate: Date,
-    endDate: Date,
-    TCId: string,
-    AId: string
+    endDate: Date | null,
+    TCId: string | null,
+    AId: string | null
   ): Promise<number> => {
     let TId = await getAvailableIdentifiant(MYSQL_TABLES.Task);
+    // If a task with the same name already with the same category or activity exists, we add a number at the end of the name
     await execute(TaskQueries.InsertTask, [
       TId,
       content,
@@ -47,5 +65,25 @@ export const TaskServices = {
   removeTask: async (TId: string): Promise<number> => {
     await execute(TaskQueries.DeleteTask, [TId]);
     return 0;
+  },
+  isDuplicateTaskFromActivity: async (
+    content: string,
+    AId: string | null
+  ): Promise<boolean> => {
+    const result: Task[] = await execute(
+      TaskQueries.IsDuplicateTaskFromActivity,
+      [content, AId]
+    );
+    return result.length > 0;
+  },
+  isDuplicateTaskFromCategory: async (
+    content: string,
+    TCId: string | null
+  ): Promise<boolean> => {
+    const result: Task[] = await execute(
+      TaskQueries.IsDuplicateTaskFromTCategory,
+      [content, TCId]
+    );
+    return result.length > 0;
   },
 };

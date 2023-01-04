@@ -16,8 +16,6 @@ const monitor = new cronitor.Monitor("important-heartbeat-monitor");
 
 const fireController = async (client: Client) => {
   setInterval(async () => {
-    console.log("Checking remind queue");
-
     const remindmeQueue = new FireRemindmeQueue();
     const remindusQueue = new FireRemindusQueue();
 
@@ -30,7 +28,7 @@ const fireController = async (client: Client) => {
     } catch (error) {
       monitor.ping({ count: 2, error_count: 2 });
     }
-  }, 1000 * 30);
+  }, 1000 * 20);
 };
 
 export default fireController;

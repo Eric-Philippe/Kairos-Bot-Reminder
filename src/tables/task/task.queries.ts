@@ -2,12 +2,25 @@ export const TaskQueries = {
   GetTaskByName: `
             SELECT * 
             FROM Task as t, Activity as a, TCategory as tc
-            WHERE t.content = ?
+            WHERE UPPER(t.content) = UPPER(?)
             AND (t.AId = a.AId AND a.TCId = tc.TCId) OR (t.TCId = tc.TCId)
             AND tc.userid = ?
       `,
+  GetTaskByNameNotEnded: `
+            SELECT *
+            FROM Task as t, Activity as a, TCategory as tc
+            WHERE UPPER(t.content) = UPPER(?)
+            AND t.endDate IS NULL
+            AND (t.AId = a.AId AND a.TCId = tc.TCId) OR (t.TCId = tc.TCId)
+            AND tc.userid = ?
+            ORDER BY t.entryDate DESC;
+      `,
   GetTaskById: `
             SELECT * FROM Task WHERE TId = ?;
+      `,
+
+  GetTasksNotEndedByActivityId: `
+            SELECT * FROM Task WHERE AId = ? AND endDate IS NULL;
       `,
   GetTasksByUserId: `
             SELECT *
@@ -24,5 +37,11 @@ export const TaskQueries = {
       `,
   DeleteTask: `
             DELETE FROM Task WHERE TId = ?;
+      `,
+  IsDuplicateTaskFromActivity: `
+            SELECT * FROM Task WHERE UPPER(content) = UPPER(?) AND AId = ? AND TCId IS NULL AND endDate IS NULL;
+      `,
+  IsDuplicateTaskFromTCategory: `
+            SELECT * FROM Task WHERE UPPER(content) = UPPER(?) AND TCId = ? AND AId IS NULL AND endDate IS NULL;
       `,
 };

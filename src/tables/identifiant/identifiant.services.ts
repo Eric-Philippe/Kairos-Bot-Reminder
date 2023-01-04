@@ -11,7 +11,7 @@ export const getAvailableIdentifiant = async (
   switch (table) {
     case "TCategory":
       query = IdentifiantQueries.GetTCategories;
-      regex = IdentifiantRegex.CATEGORIES;
+      regex = IdentifiantRegex.TCATEGORIES;
       break;
     case "Activity":
       query = IdentifiantQueries.GetActivities;
