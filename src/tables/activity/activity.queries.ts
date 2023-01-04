@@ -12,10 +12,17 @@ export const ActivityQueries = {
     WHERE AId = ?;
     `,
 
+  GetActivityByNameCategoryId: `
+    SELECT *
+    FROM Activity
+    WHERE UPPER(name) = UPPER(?)
+    AND TCId = ?;
+    `,
+
   IsDuplicatedActivity: `
     SELECT *
     FROM Activity
-    WHERE UPPER(name) = UPPER(?) AND TCId = ? AND endDate IS NULL;
+    WHERE UPPER(name) = UPPER(?) AND TCId = ?;
     `,
 
   GetActivityByNameUserId: `
@@ -26,27 +33,12 @@ export const ActivityQueries = {
     AND tc.userId = ?;
     `,
 
-  GetActivityByNameUserIdNotEnded: `
-    SELECT *
-    FROM Activity as a, TCategory as tc
-    WHERE UPPER(a.name) = UPPER(?)
-    AND a.endDate IS NULL
-    AND a.TCId = tc.TCId
-    AND tc.userId = ?
-    ORDER BY a.entryDate DESC;
-    `,
-
   InsertActivity: `
-    INSERT INTO Activity (AId, name, entryDate, endDate, TCId) VALUES (?, ?, ?, ?, ?);
+    INSERT INTO Activity (AId, name, TCId) VALUES (?, ?, ?);
     `,
 
   DeleteActivity: `
     DELETE FROM Activity
-    WHERE AId = ?;
-    `,
-
-  EndActivity: `
-    UPDATE Activity SET endDate = ?
     WHERE AId = ?;
     `,
 };

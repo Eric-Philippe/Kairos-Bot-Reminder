@@ -39,7 +39,14 @@ export const TaskQueries = {
             DELETE FROM Task WHERE TId = ?;
       `,
   IsDuplicateTaskFromActivity: `
-            SELECT * FROM Task WHERE UPPER(content) = UPPER(?) AND AId = ? AND TCId IS NULL AND endDate IS NULL;
+            SELECT *
+            FROM Task as t, Activity as a, TCategory as tc
+            WHERE UPPER(t.content) = UPPER(?)
+            AND t.AId = ?
+            AND t.AId = a.AId
+            AND a.TCId = tc.TCId
+            AND tc.TCId = ?
+            AND t.endDate IS NULL;
       `,
   IsDuplicateTaskFromTCategory: `
             SELECT * FROM Task WHERE UPPER(content) = UPPER(?) AND TCId = ? AND AId IS NULL AND endDate IS NULL;

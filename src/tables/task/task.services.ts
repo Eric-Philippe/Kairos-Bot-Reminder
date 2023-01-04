@@ -68,11 +68,12 @@ export const TaskServices = {
   },
   isDuplicateTaskFromActivity: async (
     content: string,
-    AId: string | null
+    AId: string,
+    TCId: string
   ): Promise<boolean> => {
     const result: Task[] = await execute(
       TaskQueries.IsDuplicateTaskFromActivity,
-      [content, AId]
+      [content, AId, TCId]
     );
     return result.length > 0;
   },
@@ -84,6 +85,7 @@ export const TaskServices = {
       TaskQueries.IsDuplicateTaskFromTCategory,
       [content, TCId]
     );
+
     return result.length > 0;
   },
 };

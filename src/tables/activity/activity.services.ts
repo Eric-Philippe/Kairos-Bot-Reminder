@@ -20,6 +20,17 @@ export const ActivityServices = {
     return result[0];
   },
 
+  getActivityByNameCategoryId: async (
+    name: string,
+    TCId: string
+  ): Promise<Activity> => {
+    const result: Activity[] = await execute(
+      ActivityQueries.GetActivityByNameCategoryId,
+      [name, TCId]
+    );
+    return result[0];
+  },
+
   getActivityByNameUserId: async (
     name: string,
     userId: string
@@ -31,31 +42,9 @@ export const ActivityServices = {
     return result[0];
   },
 
-  getActivityByNameUserIdNotEnded: async (
-    name: string,
-    userId: string
-  ): Promise<Activity> => {
-    const result: Activity[] = await execute(
-      ActivityQueries.GetActivityByNameUserIdNotEnded,
-      [name, userId]
-    );
-    return result[0];
-  },
-
-  insertActivity: async (
-    name: string,
-    entryDate: Date,
-    endDate: Date | null,
-    TCId: string
-  ): Promise<string> => {
+  insertActivity: async (name: string, TCId: string): Promise<string> => {
     let AId = await getAvailableIdentifiant(MYSQL_TABLES.Activity);
-    await execute(ActivityQueries.InsertActivity, [
-      AId,
-      name,
-      entryDate,
-      endDate,
-      TCId,
-    ]);
+    await execute(ActivityQueries.InsertActivity, [AId, name, TCId]);
     return AId;
   },
 
@@ -69,11 +58,6 @@ export const ActivityServices = {
 
   deleteActivity: async (AId: string): Promise<number> => {
     await execute(ActivityQueries.DeleteActivity, [AId]);
-    return 0;
-  },
-
-  endActivity: async (AId: string, endDate: Date): Promise<number> => {
-    await execute(ActivityQueries.EndActivity, [endDate, AId]);
     return 0;
   },
 };
