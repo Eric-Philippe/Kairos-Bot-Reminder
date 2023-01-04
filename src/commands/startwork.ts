@@ -82,7 +82,7 @@ const StartWork: Command = {
       }
     } else {
       // We try to find the given activity
-      myActivity = await ActivityServices.getActivityByNameUserId(
+      myActivity = await ActivityServices.getActivityByNameUserIdNotEnded(
         activity,
         userId
       );

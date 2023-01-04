@@ -96,7 +96,7 @@ const StartWork: Command = {
       TaskServices.insertTask(task, entryDate, endDate, myCategory.TCId, null);
     } else {
       // We try to find the given activity
-      myActivity = await ActivityServices.getActivityByNameUserId(
+      myActivity = await ActivityServices.getActivityByNameUserIdNotEnded(
         activity,
         userId
       );
