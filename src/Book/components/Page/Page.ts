@@ -1,4 +1,11 @@
-import { Message, EmbedBuilder, ColorResolvable } from "discord.js";
+import {
+  Message,
+  EmbedBuilder,
+  ColorResolvable,
+  TextChannel,
+} from "discord.js";
+
+import Controller from "../Controller/Controller";
 
 /** The maximum size of a page's content */
 const SIZE_LIMIT = 4096;
@@ -8,9 +15,9 @@ const TITLE_LIMIT = 256;
  * A page of a book
  */
 class Page {
-  _title: string;
-  _content: string;
-  _color: string;
+  private _title: string;
+  private _content: string;
+  private _color: string;
   /**
    * Create a new page
    * @param title
@@ -53,10 +60,30 @@ class Page {
     msg: Message,
     index: number,
     maxPage: number
-  ): Promise<Message> {
-    const embed = await this.generateEmbed(msg, index, maxPage);
-    return await msg.edit({ embeds: [embed] });
+  ): Promise<Message | undefined> {
+    const embed = await this.generateEmbed(index, maxPage);
+    if (!embed) return;
+    return await msg.edit({
+      embeds: [embed],
+      components: [Controller.buildController(this)],
+    });
   }
+  /**
+   * Send the page to a given channel
+   */
+  public async send(
+    channel: TextChannel,
+    index: number,
+    maxPage: number
+  ): Promise<Message | undefined> {
+    const embed = await this.generateEmbed(index, maxPage);
+    if (!embed) return;
+    return await channel.send({
+      embeds: [embed],
+      components: [Controller.buildController(this)],
+    });
+  }
+
   /**
    * Generate the embed of the page
    * @param msg
@@ -64,13 +91,40 @@ class Page {
    * @param maxPage
    * @returns
    */
-  public async generateEmbed(msg: Message, index: number, maxPage: number) {
+  public async generateEmbed(
+    index: number,
+    maxPage: number
+  ): Promise<EmbedBuilder | undefined> {
     let embed = new EmbedBuilder()
       .setTitle(this._title)
       .setDescription(this._content)
       .setColor(this._color as ColorResolvable)
       .setFooter({ text: `${index}/${maxPage}` });
     return embed;
+  }
+  /**
+   * Getter of the title
+   * @returns
+   */
+  public get title(): string {
+    return this._title;
+  }
+  /**
+   * Getter of the content
+   * @returns
+   * @see SIZE_LIMIT
+   */
+  public get content(): string {
+    return this._content;
+  }
+  /**
+   * Getter of the color
+   * @returns
+   * @see ColorResolvable
+   * @see https://discord.js.org/#/docs/main/stable/typedef/ColorResolvable
+   */
+  public get color(): string {
+    return this._color;
   }
 }
 

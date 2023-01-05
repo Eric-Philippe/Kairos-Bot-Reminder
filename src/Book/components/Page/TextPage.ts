@@ -14,7 +14,7 @@ import ExcelManager from "../ExcelManager/ExcelManager";
  * @see Book
  */
 class TextPage extends Page {
-  _Excel: ExcelManager;
+  private _Excel: ExcelManager;
   /**
    * Create a new TextPage
    * @param title
@@ -73,11 +73,11 @@ class TextPage extends Page {
    * @returns
    */
   public override async generateEmbed(
-    msg: Message<boolean>,
     index: number,
     maxPage: number
-  ): Promise<EmbedBuilder> {
-    const embed = await super.generateEmbed(msg, index, maxPage);
+  ): Promise<EmbedBuilder | undefined> {
+    const embed = await super.generateEmbed(index, maxPage);
+    if (!embed) return;
     embed.setAuthor({ name: "TextPage" });
     return embed;
   }
