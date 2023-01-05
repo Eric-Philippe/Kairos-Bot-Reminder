@@ -14,7 +14,7 @@ require("dotenv").config();
 const cronitor = require("cronitor")(process.env.CRONTAB_KEY);
 const monitor = new cronitor.Monitor("important-heartbeat-monitor");
 
-const fireController = async (client: Client) => {
+const fireListener = async (client: Client) => {
   setInterval(async () => {
     const remindmeQueue = new FireRemindmeQueue();
     const remindusQueue = new FireRemindusQueue();
@@ -31,4 +31,4 @@ const fireController = async (client: Client) => {
   }, 1000 * 20);
 };
 
-export default fireController;
+export default fireListener;
