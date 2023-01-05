@@ -2,7 +2,7 @@ import {
   Message,
   EmbedBuilder,
   ColorResolvable,
-  TextChannel,
+  TextBasedChannel,
 } from "discord.js";
 
 import Controller from "../Controller/Controller";
@@ -15,6 +15,7 @@ const TITLE_LIMIT = 256;
  * A page of a book
  */
 class Page {
+  protected _type = "PAGE";
   private _title: string;
   private _content: string;
   private _color: string;
@@ -72,7 +73,7 @@ class Page {
    * Send the page to a given channel
    */
   public async send(
-    channel: TextChannel,
+    channel: TextBasedChannel,
     index: number,
     maxPage: number
   ): Promise<Message | undefined> {
@@ -101,6 +102,13 @@ class Page {
       .setColor(this._color as ColorResolvable)
       .setFooter({ text: `${index}/${maxPage}` });
     return embed;
+  }
+  /**
+   * Getter of the type
+   * @returns
+   */
+  public get type(): string {
+    return this._type;
   }
   /**
    * Getter of the title

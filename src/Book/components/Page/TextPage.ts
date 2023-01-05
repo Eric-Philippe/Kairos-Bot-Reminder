@@ -2,7 +2,6 @@ import {
   AttachmentBuilder,
   ChatInputCommandInteraction,
   EmbedBuilder,
-  Message,
 } from "discord.js";
 import Page from "./Page";
 
@@ -14,6 +13,7 @@ import ExcelManager from "../ExcelManager/ExcelManager";
  * @see Book
  */
 class TextPage extends Page {
+  protected _type = "PAGE_TEXT";
   private _Excel: ExcelManager;
   /**
    * Create a new TextPage

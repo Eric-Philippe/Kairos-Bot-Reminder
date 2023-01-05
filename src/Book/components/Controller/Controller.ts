@@ -8,8 +8,6 @@ import {
 } from "discord.js";
 
 import Page from "../Page/Page";
-import TextPage from "../Page/TextPage";
-import GraphPage from "../Page/GraphPage";
 
 const NAVIGATION_BUTTONS = {
   NEXT: new ButtonBuilder()
@@ -42,10 +40,10 @@ class Controller {
       new ActionRowBuilder() as ActionRowBuilder<MessageActionRowComponentBuilder>;
     row.addComponents(NAVIGATION_BUTTONS.PREVIOUS);
     switch (true) {
-      case page instanceof TextPage:
+      case page.type === "PAGE_TEXT":
         row.addComponents(NAVIGATION_BUTTONS.DOWNLOAD_XLSX);
         break;
-      case page instanceof GraphPage:
+      case page.type === "PAGE_GRAPH":
         row.addComponents(NAVIGATION_BUTTONS.DOWNLOAD_PNG);
     }
     row.addComponents(NAVIGATION_BUTTONS.NEXT);
@@ -71,6 +69,7 @@ class Controller {
         i.reply({ content: "None of your business.", ephemeral: true });
         return;
       }
+      i.deferUpdate();
       callBack(i.customId);
     });
   }

@@ -1,16 +1,19 @@
 import { SlashCommandBuilder } from "discord.js";
-import TextPage from "../Book/components/Page/TextPage";
 import { Command } from "src/CommandTemplate";
 
-import { UsersServices } from "../tables/users/users.services";
-import GraphManager from "../Book/components/GraphManager/GraphManager";
+import Page from "../Book/components/Page/Page";
+import Book from "../Book/Book";
 
 const Test: Command = {
   data: new SlashCommandBuilder()
     .setName("test")
     .setDescription("Test command"),
   run: async (client, interaction) => {
-    GraphManager.sendMyGraph(interaction);
+    const pages = [
+      new Page("Hello world", "This is a test page"),
+      new Page("Foo bar", "This is a test page"),
+    ];
+    new Book(pages, interaction, interaction.user);
   },
 };
 

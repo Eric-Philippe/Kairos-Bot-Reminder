@@ -2,9 +2,10 @@ import { Chart } from "chart.js";
 import { ChatInputCommandInteraction } from "discord.js";
 const ChartJsImage = require("chartjs-to-image");
 
-import { BarData, isBarData } from "./bar.data";
-import { DonutData, isDonutData } from "./donut.data";
-import { PolarData, isPolarData } from "./polar.data";
+import BarData from "./bar.data";
+import DonutData from "./donut.data";
+import PolarData from "./polar.data";
+import BodyGuardData from "./bodyguard.data";
 
 const PrettyColors = {
   RED_PINK: "rgb(255, 99, 132)",
@@ -36,11 +37,11 @@ class GraphManager {
       throw new Error("Invalid type");
 
     // If the given data is an instance of the right class
-    if (type === GraphTypes.BAR && !isBarData(data))
+    if (type === GraphTypes.BAR && !BodyGuardData.isBarData(data))
       throw new Error("Invalid data given with type : " + type);
-    if (type === GraphTypes.DOUGHNUT && !isDonutData(data))
+    if (type === GraphTypes.DOUGHNUT && !BodyGuardData.isDonutData(data))
       throw new Error("Invalid data given with type : " + type);
-    if (type === GraphTypes.POLAR && !isPolarData(data))
+    if (type === GraphTypes.POLAR && !BodyGuardData.isPolarData(data))
       throw new Error("Invalid data given with type : " + type);
 
     const chart = new ChartJsImage();

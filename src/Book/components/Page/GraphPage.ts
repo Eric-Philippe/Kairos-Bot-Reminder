@@ -19,6 +19,7 @@ import BarData from "../GraphManager/bar.data";
  * @see Book
  */
 class GraphPage extends Page {
+  protected _type = "PAGE_GRAPH";
   private _graph: any; // ChartJsImage
   /**
    * @param title
