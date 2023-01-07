@@ -1,5 +1,4 @@
 import {
-  InteractionResponse,
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,

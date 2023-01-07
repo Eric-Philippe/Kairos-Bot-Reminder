@@ -1,4 +1,3 @@
-import { Title } from "chart.js/dist";
 import { Column, Row, Workbook, Worksheet } from "exceljs";
 
 import ColumnType from "./columnType.enum";

@@ -1,0 +1,71 @@
+@startuml Book
+title __UML Class Diagram for BOOK COMPONENTS__ 
+header UML
+
+class ExcelManager {
+    -Workbook _workbook
+    -Worksheet _worksheet
+    -Column _category
+    -Column _activity
+    -Column _task
+    -Column _time
+    -Row _currentRow
+    -Number _nCurrentRow
+    +ExcelManager()
+    -chooseStyle(String type) : StyleObject
+    -newLine()
+    +addBlankLine()
+    +addSeparatorLine()
+    +get TITLE_STYLE() : String
+    +get VALUE_STYLE() : String
+    +get ITALIC_STYLE() : String
+    +addRow(String label, String type, String time, String styleType)
+    +generateXLSFile()
+    +generateBuffer() : Buffer
+}
+
+enum ColumnType {
+    CATEGORY
+    ACTIVITY
+    TASK
+    TIME
+}
+
+ExcelManager o-- ColumnType
+
+class GraphManager {
+    +{static} generateGraph(String type, data: BarData | DonutData | PolarData) : ChartJsImage
+    +{static} chartToBuffer(chart: ChartJsImage) : Buffer
+    +{static} chartToPng(chart: ChartJsImage) : String
+}
+
+interface BarData {
+    +labels: String[]
+    +datasets: Datasets[]
+}
+
+interface DonutData {
+    +labels: String[]
+    +datasets: Datasets[]
+}
+
+interface PolarData {
+    +labels: String[]
+    +datasets: Datasets[]
+}
+
+class BodyGuardData {
+    +{static} isBarData(data: BarData) : Boolean
+    +{static} isDonutData(data: DonutData) : Boolean
+    +{static} isPolarData(data: PolarData) : Boolean
+}
+
+GraphManager o-- BarData
+GraphManager o-- DonutData
+GraphManager o-- PolarData
+GraphManager --- BodyGuardData
+
+
+
+
+footer EricP | Kairos 2023
