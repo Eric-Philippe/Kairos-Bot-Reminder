@@ -469,7 +469,7 @@ const listReminders = async (interaction: ChatInputCommandInteraction) => {
     .setTitle("Guild reminders list")
     .setDescription(content)
     .setColor("#00ff00")
-    .setThumbnail(IMG.REMINDER_LOGO)
+    .setThumbnail(IMG.BELL_LOGO)
     .setTimestamp();
 
   await interaction.reply({ embeds: [embed] });
@@ -498,7 +498,7 @@ const showReminder = async (interaction: ChatInputCommandInteraction) => {
      \n**Channel:** <#${remindus[0].channelId}>`
     )
     .setColor("#00ff00")
-    .setThumbnail(IMG.REMINDER_LOGO)
+    .setThumbnail(IMG.BACKGROUND_ME)
     .setTimestamp();
 
   await interaction.reply({ embeds: [embed] });

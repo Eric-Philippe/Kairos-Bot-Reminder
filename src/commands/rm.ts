@@ -118,7 +118,7 @@ const Rm: Command = {
       .setTitle("📅 | Reminder created")
       .setDescription(`Reminder has been created !`)
       .setColor("Aqua")
-      .setThumbnail(IMG.REMINDER_LOGO)
+      .setThumbnail(IMG.BELL_LOGO)
       .setTimestamp();
     await interaction.reply({
       embeds: [embed],

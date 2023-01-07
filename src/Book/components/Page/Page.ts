@@ -1,14 +1,14 @@
 import {
-  Interaction,
   EmbedBuilder,
   ColorResolvable,
-  InteractionResponse,
   ChatInputCommandInteraction,
 } from "discord.js";
-import { waitForDebugger } from "inspector";
-
+/** Controller corresponds to the button at the bottom of the embed */
 import Controller from "../Controller/Controller";
-
+/** The assets {logos}
+ * @console.warn("You can't use this file without the assets folder");
+ */
+import { IMG } from "../../../assets/LOGOS.json";
 /** The maximum size of a page's content */
 const SIZE_LIMIT = 4096;
 /** The maximum size of a page's title */
@@ -53,6 +53,20 @@ class Page {
     return title.length > TITLE_LIMIT;
   }
   /**
+   * Generate the good amount of empty characters to fill the footer
+   * @param str
+   * @returns
+   */
+  public static generateFooterSeparator(str: string): string {
+    const SEPARATOR = require("../../../utils/separator").default;
+    const MAX_LENGTH = 48;
+    if (!str.includes("{?}")) return str;
+    return str.replace(
+      "{?}",
+      SEPARATOR.repeat(MAX_LENGTH - str.replace("{?}", "").length)
+    );
+  }
+  /**
    * Main method to display the page
    * @param msg
    * @param index
@@ -88,7 +102,6 @@ class Page {
       });
     }, 800); // This one is just for the sake of the animation
   }
-
   /**
    * Generate the embed of the page
    * @param msg
@@ -100,13 +113,16 @@ class Page {
     index: number,
     maxPage: number
   ): Promise<EmbedBuilder | undefined> {
+    let txtFooter = `Provided by Kairos {?} 1${index}/1${maxPage}`;
+    txtFooter = Page.generateFooterSeparator(txtFooter);
     let embed = new EmbedBuilder()
       .setTitle(this._title)
       .setDescription(this._content)
       .setColor(this._color as ColorResolvable)
       .setFooter({
-        text: `Provided by Kairos ————————————————— ${index}/${maxPage}`,
-      });
+        text: txtFooter,
+      })
+      .setThumbnail(IMG.CHAT_LOGO);
     return embed;
   }
   /**

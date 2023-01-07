@@ -358,7 +358,7 @@ const listReminders = async (interaction: ChatInputCommandInteraction) => {
     .setTitle("List of your reminders")
     .setDescription(content)
     .setColor("#ff0000")
-    .setThumbnail(IMG.REMINDER_LOGO)
+    .setThumbnail(IMG.BACKGROUND_ME)
     .setTimestamp();
 
   await interaction.reply({ embeds: [embed] });

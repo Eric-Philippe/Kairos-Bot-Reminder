@@ -7,6 +7,10 @@ import {
 import Page from "./Page";
 
 import ExcelManager from "../ExcelManager/ExcelManager";
+/** The assets {logos}
+ * @console.warn("You can't use this file without the assets folder");
+ */
+import { IMG } from "../../../assets/LOGOS.json";
 /**
  * A TextPage of a book
  * @extends Page
@@ -79,9 +83,7 @@ class TextPage extends Page {
   ): Promise<EmbedBuilder | undefined> {
     const embed = await super.generateEmbed(index, maxPage);
     if (!embed) return;
-    embed.setThumbnail(
-      "https://media.discordapp.net/attachments/739553949199106158/976008630086295592/remind.png?width=661&height=661"
-    );
+    embed.setThumbnail(IMG.CLOCK_LOGO);
     return embed;
   }
 }
