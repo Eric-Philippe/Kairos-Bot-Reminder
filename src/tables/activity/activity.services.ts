@@ -31,6 +31,14 @@ export const ActivityServices = {
     return result[0];
   },
 
+  getActivitiesByCategoryId: async (TCId: string): Promise<Activity[]> => {
+    const result: Activity[] = await execute(
+      ActivityQueries.GetActivitiesByCategoryId,
+      [TCId]
+    );
+    return result;
+  },
+
   getActivityByNameUserId: async (
     name: string,
     userId: string

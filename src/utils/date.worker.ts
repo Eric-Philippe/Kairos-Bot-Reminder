@@ -45,4 +45,20 @@ export default class DateWorker {
     }
     return finalMonths;
   }
+  /**
+   * Returns a readable string with a given time in minutes
+   * Ex: 60 -> 1h
+   * Ex: 90 -> 1h 30m
+   * Ex: 10 -> 10m
+   * @param time
+   */
+  public static timeToReadable(time: number): string {
+    if (!time || time == null || time < 0) return "0m";
+    let hours = Math.floor(time / 60);
+    let minutes = time % 60;
+    let finalTime = "";
+    if (hours > 0) finalTime += hours + "h ";
+    if (minutes > 0) finalTime += minutes + "m";
+    return finalTime;
+  }
 }

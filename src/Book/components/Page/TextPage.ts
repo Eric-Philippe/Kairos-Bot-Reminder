@@ -1,5 +1,6 @@
 import {
   AttachmentBuilder,
+  ButtonInteraction,
   ChatInputCommandInteraction,
   EmbedBuilder,
 } from "discord.js";
@@ -46,7 +47,7 @@ class TextPage extends Page {
    * @returns
    */
   public async sendFile(
-    interaction: ChatInputCommandInteraction
+    interaction: ButtonInteraction | ChatInputCommandInteraction
   ): Promise<Boolean> {
     const attachment = await this.generateFile();
     if (interaction.replied)
@@ -78,7 +79,9 @@ class TextPage extends Page {
   ): Promise<EmbedBuilder | undefined> {
     const embed = await super.generateEmbed(index, maxPage);
     if (!embed) return;
-    embed.setAuthor({ name: "TextPage" });
+    embed.setThumbnail(
+      "https://media.discordapp.net/attachments/739553949199106158/976008630086295592/remind.png?width=661&height=661"
+    );
     return embed;
   }
 }

@@ -1,5 +1,6 @@
 import {
   AttachmentBuilder,
+  ButtonInteraction,
   ChatInputCommandInteraction,
   EmbedBuilder,
   Message,
@@ -51,11 +52,13 @@ class GraphPage extends Page {
    * @param interaction
    * @returns
    */
-  public async sendFile(interaction: ChatInputCommandInteraction) {
-    if (!this._graph) return;
+  public async sendFile(
+    interaction: ButtonInteraction | ChatInputCommandInteraction
+  ) {
+    if (!this.graph) return;
     const attachment = await GraphManager.chartToBuffer(this._graph);
     if (interaction.replied)
-      await interaction.editReply({ files: [attachment] });
+      await interaction.followUp({ files: [attachment] });
     else await interaction.reply({ files: [attachment] });
   }
   /**
@@ -82,14 +85,17 @@ class GraphPage extends Page {
    * Override of the Page's method "display" to add the graph to the embed
    */
   public override async display(
-    msg: Message<boolean>,
+    interaction: ChatInputCommandInteraction,
     index: number,
     maxPage: number
-  ): Promise<Message<boolean> | undefined> {
+  ) {
     if (!this._graph) return;
     const embed = await this.generateEmbed(index, maxPage);
     if (!embed) return;
-    return await msg.edit({ embeds: [embed] });
+    await interaction.editReply({
+      embeds: [embed],
+      files: [await GraphManager.chartToBuffer(this._graph)],
+    });
   }
 }
 

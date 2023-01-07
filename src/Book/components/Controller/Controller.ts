@@ -1,10 +1,12 @@
 import {
-  Message,
+  InteractionResponse,
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
   ComponentType,
   MessageActionRowComponentBuilder,
+  ButtonInteraction,
+  ChatInputCommandInteraction,
 } from "discord.js";
 
 import Page from "../Page/Page";
@@ -33,29 +35,31 @@ const NAVIGATION_BUTTONS = {
 };
 
 class Controller {
-  public static buildController(
-    page: Page
-  ): ActionRowBuilder<MessageActionRowComponentBuilder> {
+  public static buildController(page: Page): ActionRowBuilder<any>[] {
     const row =
       new ActionRowBuilder() as ActionRowBuilder<MessageActionRowComponentBuilder>;
     row.addComponents(NAVIGATION_BUTTONS.PREVIOUS);
+    row.addComponents(NAVIGATION_BUTTONS.NEXT);
+
+    const utilsRow =
+      new ActionRowBuilder() as ActionRowBuilder<MessageActionRowComponentBuilder>;
     switch (true) {
       case page.type === "PAGE_TEXT":
-        row.addComponents(NAVIGATION_BUTTONS.DOWNLOAD_XLSX);
+        utilsRow.addComponents(NAVIGATION_BUTTONS.DOWNLOAD_XLSX);
         break;
       case page.type === "PAGE_GRAPH":
-        row.addComponents(NAVIGATION_BUTTONS.DOWNLOAD_PNG);
+        utilsRow.addComponents(NAVIGATION_BUTTONS.DOWNLOAD_PNG);
     }
-    row.addComponents(NAVIGATION_BUTTONS.NEXT);
-    return row;
+    if (page.type === "PAGE") return [row];
+    return [row, utilsRow];
   }
 
   public static controllerListener(
-    msg: Message,
+    interaction: ChatInputCommandInteraction,
     userId: string,
-    callBack: (s: string) => void
+    callBack: (i: ButtonInteraction) => void
   ): void {
-    const collector = msg.createMessageComponentCollector({
+    const collector = interaction.channel?.createMessageComponentCollector({
       componentType: ComponentType.Button,
       time: 1000 * 60 * 5,
       filter: (i) =>
@@ -64,13 +68,13 @@ class Controller {
         ),
     });
 
-    collector.on("collect", (i) => {
+    collector?.on("collect", (i) => {
       if (i.user.id !== userId) {
         i.reply({ content: "None of your business.", ephemeral: true });
         return;
       }
-      i.deferUpdate();
-      callBack(i.customId);
+      if (["next", "previous"].includes(i.customId)) i.deferUpdate();
+      callBack(i);
     });
   }
 }

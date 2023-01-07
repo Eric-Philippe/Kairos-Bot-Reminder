@@ -1,6 +1,7 @@
 import { TaskQueries } from "./task.queries";
 import { execute } from "../../utils/mysql.connector";
 import { Task } from "./task";
+import { TaskAltered } from "./taskAltered";
 import { getAvailableIdentifiant } from "../identifiant/identifiant.services";
 import { MYSQL_TABLES } from "../../utils/mysql_tables.enum";
 
@@ -33,6 +34,27 @@ export const TaskServices = {
     );
     return result;
   },
+
+  GetTasksAlteredEndedByActivityId: async (
+    AId: string
+  ): Promise<TaskAltered[]> => {
+    const result: TaskAltered[] = await execute(
+      TaskQueries.GetTasksAlteredEndedByActivityId,
+      [AId]
+    );
+    return result;
+  },
+
+  GetTasksALteredByCategoryIdNotEnded: async (
+    TCId: string
+  ): Promise<TaskAltered[]> => {
+    const result: TaskAltered[] = await execute(
+      TaskQueries.GetTasksAlteredByCategoryIdNotEnded,
+      [TCId]
+    );
+    return result;
+  },
+
   getTasksByUserId: async (userId: string): Promise<Task[]> => {
     const result: Task[] = await execute(TaskQueries.GetTasksByUserId, [
       userId,

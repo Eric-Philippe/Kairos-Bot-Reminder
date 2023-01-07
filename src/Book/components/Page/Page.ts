@@ -1,9 +1,11 @@
 import {
-  Message,
+  Interaction,
   EmbedBuilder,
   ColorResolvable,
-  TextBasedChannel,
+  InteractionResponse,
+  ChatInputCommandInteraction,
 } from "discord.js";
+import { waitForDebugger } from "inspector";
 
 import Controller from "../Controller/Controller";
 
@@ -58,31 +60,33 @@ class Page {
    * @returns
    */
   public async display(
-    msg: Message,
+    interaction: ChatInputCommandInteraction,
     index: number,
     maxPage: number
-  ): Promise<Message | undefined> {
+  ) {
     const embed = await this.generateEmbed(index, maxPage);
     if (!embed) return;
-    return await msg.edit({
+    await interaction.editReply({
       embeds: [embed],
-      components: [Controller.buildController(this)],
+      components: Controller.buildController(this),
     });
   }
   /**
    * Send the page to a given channel
    */
   public async send(
-    channel: TextBasedChannel,
+    interaction: ChatInputCommandInteraction,
     index: number,
     maxPage: number
-  ): Promise<Message | undefined> {
+  ) {
     const embed = await this.generateEmbed(index, maxPage);
-    if (!embed) return;
-    return await channel.send({
-      embeds: [embed],
-      components: [Controller.buildController(this)],
-    });
+    if (!embed) return null;
+    setTimeout(() => {
+      interaction.editReply({
+        embeds: [embed],
+        components: Controller.buildController(this),
+      });
+    }, 800); // This one is just for the sake of the animation
   }
 
   /**
@@ -100,7 +104,9 @@ class Page {
       .setTitle(this._title)
       .setDescription(this._content)
       .setColor(this._color as ColorResolvable)
-      .setFooter({ text: `${index}/${maxPage}` });
+      .setFooter({
+        text: `Provided by Kairos ————————————————— ${index}/${maxPage}`,
+      });
     return embed;
   }
   /**

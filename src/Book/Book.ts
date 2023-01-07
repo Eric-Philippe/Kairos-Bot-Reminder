@@ -1,12 +1,21 @@
-import { ChatInputCommandInteraction, Message, User } from "discord.js";
+import {
+  ButtonInteraction,
+  InteractionResponse,
+  ChatInputCommandInteraction,
+  Message,
+  User,
+  Interaction,
+} from "discord.js";
 import Page from "./components/Page/Page";
 import Controller from "./components/Controller/Controller";
-import { channel } from "diagnostics_channel";
+import TextPage from "./components/Page/TextPage";
+import GraphPage from "./components/Page/GraphPage";
 
 class Book {
-  _currentPage: number;
+  _nCurrentPage: number;
+  _currentPage: Page | TextPage | GraphPage | null = null;
   _pages: Page[];
-  _message: Message | null = null;
+  _interaction: ChatInputCommandInteraction;
   _user: User;
 
   constructor(
@@ -14,41 +23,51 @@ class Book {
     rootInteraction: ChatInputCommandInteraction,
     user: User
   ) {
-    this._currentPage = 0;
+    this._nCurrentPage = 0;
     this._pages = pages;
     this._user = user;
+    this._interaction = rootInteraction;
     this.loadFirstPage(rootInteraction);
   }
 
   public async loadFirstPage(interaction: ChatInputCommandInteraction) {
     if (this._pages.length === 0) return;
     if (!interaction.channel) return;
-    let m = await this._pages[0].send(interaction.channel, 1, this.totalPages);
-    interaction.reply({ content: "Here are your results !" });
-    if (m) {
-      this._message = m;
-      this.launchControllerCollector(m);
-    }
+    this._currentPage = this._pages[0];
+    await this._pages[0].send(interaction, 1, this._pages.length);
+    this.launchControllerCollector();
   }
 
-  public async launchControllerCollector(m: Message) {
+  public async launchControllerCollector() {
     Controller.controllerListener(
-      m,
+      this._interaction,
       this._user.id,
       this.onInteractionReceived.bind(this)
     );
   }
 
-  public async onInteractionReceived(interactionId: string) {
-    if (interactionId === "next") {
-      this.nextPage();
-    } else if (interactionId === "previous") {
-      this.previousPage();
+  public async onInteractionReceived(interaction: ButtonInteraction) {
+    switch (interaction.customId) {
+      case "next":
+        this.nextPage();
+        break;
+      case "previous":
+        this.previousPage();
+        break;
+      case "download_xlsx":
+        if (this._currentPage instanceof TextPage)
+          this._currentPage.sendFile(interaction);
+
+        break;
+      case "download_png":
+        if (this._currentPage instanceof GraphPage)
+          this._currentPage.sendFile(interaction);
+        break;
     }
   }
 
   public get currentPage() {
-    return this._currentPage + 1;
+    return this._nCurrentPage + 1;
   }
 
   public get pages() {
@@ -60,27 +79,24 @@ class Book {
   }
 
   public nextPage() {
-    if (this._currentPage < this.totalPages - 1) this._currentPage++;
-    else this._currentPage = 0;
+    if (this._nCurrentPage < this.totalPages - 1) this._nCurrentPage++;
+    else this._nCurrentPage = 0;
     this.updatePage();
   }
 
   public previousPage() {
-    if (this._currentPage > 0) this._currentPage--;
-    else this._currentPage = this.totalPages - 1;
+    if (this._nCurrentPage > 0) this._nCurrentPage--;
+    else this._nCurrentPage = this.totalPages - 1;
     this.updatePage();
   }
 
   public async updatePage() {
-    if (this._message) {
-      let m = await this._pages[this._currentPage].display(
-        this._message,
+    if (this._interaction) {
+      await this._pages[this._nCurrentPage].display(
+        this._interaction,
         this.currentPage,
         this.totalPages
       );
-      if (m) {
-        this._message = m;
-      }
     }
   }
 }

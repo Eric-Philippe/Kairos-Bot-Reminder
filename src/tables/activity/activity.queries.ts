@@ -12,6 +12,12 @@ export const ActivityQueries = {
     WHERE AId = ?;
     `,
 
+  GetActivitiesByCategoryId: `
+    SELECT *
+    FROM Activity
+    WHERE TCId = ?;
+    `,
+
   GetActivityByNameCategoryId: `
     SELECT *
     FROM Activity

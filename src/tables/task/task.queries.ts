@@ -28,6 +28,19 @@ export const TaskQueries = {
             WHERE (t.AId = a.AId AND a.TCId = tc.TCId) OR (t.TCId = tc.TCId)
             AND tc.userid = ?;
       `,
+
+  GetTasksAlteredEndedByActivityId: `
+      SELECT TId, content, timestampdiff(MINUTE, entryDate, endDate) as timeElapsed, TCId, AId
+      FROM Reminder.Task
+      WHERE endDate IS NOT NULL AND AId = ?;
+      `,
+
+  GetTasksAlteredByCategoryIdNotEnded: `
+      SELECT TId, content, timestampdiff(MINUTE, entryDate, endDate) as timeElapsed, TCId, AId
+      FROM Reminder.Task
+      WHERE endDate IS NOT NULL AND TCId = ?;
+      `,
+
   InsertTask: `
             INSERT INTO Task (TId, content, entryDate, endDate, TCId, AId) VALUES (?, ?, ?, ?, ?, ?);
       `,

@@ -19,7 +19,7 @@ export default class FireRemindusQueue extends FireQueue {
       try {
         res(await RemindusServices.fetchPastRemindus());
       } catch (error) {
-        rej(-1);
+        rej(error);
       }
     });
   }
