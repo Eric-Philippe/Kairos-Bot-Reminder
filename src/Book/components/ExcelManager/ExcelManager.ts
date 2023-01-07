@@ -1,3 +1,4 @@
+import { Title } from "chart.js/dist";
 import { Column, Row, Workbook, Worksheet } from "exceljs";
 
 import ColumnType from "./columnType.enum";
@@ -105,14 +106,134 @@ class ExcelManager {
     this._currentRow = this._sheet.getRow(this._nCurrentRow++);
   }
   /**
+   * Method to create a blank line in the Excel file
+   */
+  public async addBlankLine() {
+    this.newLine();
+  }
+  /**
+   * Method to add a separator line in the Excel file
+   */
+  public async addSeparatorLine() {
+    this.newLine();
+    this._currentRow.getCell(1).value =
+      "----------------------------------------------------";
+    this._currentRow.getCell(1).style = {
+      font: {
+        bold: true,
+      },
+      border: {
+        top: { style: "thin" },
+        left: { style: "thin" },
+        bottom: { style: "thin" },
+        right: { style: "thin" },
+      },
+    };
+    this._currentRow.getCell(2).value =
+      "----------------------------------------";
+    this._currentRow.getCell(2).style = {
+      font: {
+        bold: true,
+      },
+      border: {
+        top: { style: "thin" },
+        left: { style: "thin" },
+        bottom: { style: "thin" },
+        right: { style: "thin" },
+      },
+    };
+    this._currentRow.getCell(3).value =
+      "---------------------------------------------";
+    this._currentRow.getCell(3).style = {
+      font: {
+        bold: true,
+      },
+      border: {
+        top: { style: "thin" },
+        left: { style: "thin" },
+        bottom: { style: "thin" },
+        right: { style: "thin" },
+      },
+    };
+    this._currentRow.getCell(4).value = "------------------";
+    this._currentRow.getCell(4).style = {
+      font: {
+        bold: true,
+      },
+      border: {
+        top: { style: "thin" },
+        left: { style: "thin" },
+        bottom: { style: "thin" },
+        right: { style: "thin" },
+      },
+    };
+  }
+  /**
+   * getter for the current row
+   */
+  public get TITLE_STYLE() {
+    return "TITLE";
+  }
+  public get VALUE_STYLE() {
+    return "VALUE";
+  }
+  public get ITALIC_STYLE() {
+    return "ITALIC";
+  }
+  /**
+   * Choose the style
+   * @param {Title | Value | Italic}
+   */
+  private chooseStyle(type: string) {
+    let style = {};
+    switch (type) {
+      case "TITLE":
+        style = {
+          font: {
+            bold: true,
+          },
+          border: {
+            top: { style: "thin" },
+            left: { style: "thin" },
+            bottom: { style: "thin" },
+            right: { style: "thin" },
+          },
+        };
+        break;
+      case "VALUE":
+        style = {
+          font: {
+            bold: false,
+          },
+          border: {},
+        };
+        break;
+      case "ITALIC":
+        style = {
+          font: {
+            bold: false,
+            italic: true,
+          },
+          border: {},
+        };
+        break;
+    }
+    return style;
+  }
+  /**
    * Add a row to the Excel file with the given parameters
    * @param label
    * @param type
    * @param time
    */
-  public async addRow(label: string, type: string, time: string) {
+  public async addRow(
+    label: string,
+    type: string,
+    time: string,
+    styleType: string = "VALUE"
+  ) {
     this.newLine();
-    let valueStyle = { font: { bold: false } };
+    let valueStyle = this.chooseStyle(styleType);
     switch (type) {
       case ColumnType.CATEGORY:
         this._currentRow.getCell(1).value = label;

@@ -113,7 +113,7 @@ class Page {
     index: number,
     maxPage: number
   ): Promise<EmbedBuilder | undefined> {
-    let txtFooter = `Provided by Kairos {?} 1${index}/1${maxPage}`;
+    let txtFooter = `Provided by Kairos {?} ${index}/${maxPage}`;
     txtFooter = Page.generateFooterSeparator(txtFooter);
     let embed = new EmbedBuilder()
       .setTitle(this._title)

@@ -117,6 +117,57 @@ export default class CategoryData {
     return totalElapsed;
   }
   /**
+   * Get the category name and the total elapsed time
+   */
+  getSummary(): Array<String> {
+    return [this.title, DateWorker.timeToReadable(this.getTotalElapsed())];
+  }
+  /**
+   * Get the activity name and the total elapsed time
+   */
+  getSummaryOfActivity(activityName: String): Array<String> {
+    return [
+      activityName,
+      DateWorker.timeToReadable(this.getTotalElapsedOfActivity(activityName)),
+    ];
+  }
+  /**
+   * Get the task name and the total elapsed time
+   */
+  getSummaryOfTaskActivity(
+    taskName: String,
+    activityName: String
+  ): Array<String> {
+    if (this.activities.has(activityName)) {
+      let activity = this.activities.get(activityName)!;
+      if (activity.has(taskName)) {
+        return [taskName, DateWorker.timeToReadable(activity.get(taskName)!)];
+      }
+    }
+    return ["", ""];
+  }
+  /**
+   * Get the task name and the total elapsed time of the category
+   */
+  getSummaryOfTaskCategory(taskName: String): Array<String> {
+    if (this.tasks.has(taskName)) {
+      return [taskName, DateWorker.timeToReadable(this.tasks.get(taskName)!)];
+    }
+    return ["", ""];
+  }
+  /**
+   * Getter of the activities
+   */
+  getActivities(): Map<String, Map<String, number>> {
+    return this.activities;
+  }
+  /**
+   * Getter of the tasks
+   */
+  getTasks(): Map<String, number> {
+    return this.tasks;
+  }
+  /**
    * toString method
    * @returns
    * @override

@@ -1,0 +1,20 @@
+@startuml Book
+title __UML Class Diagram for BOOK__ 
+header UML
+footer EricP | Kairos 2023
+
+class Book {
+    -String title
+    +String getTitle()
+}
+
+class Page {
+    -String text
+    +String getText()
+}
+
+ Link "1" -- "1" Book : contains
+ 
+
+
+@enduml

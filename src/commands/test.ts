@@ -7,6 +7,7 @@ import TextPage from "../Book/components/Page/TextPage";
 
 import TimeLoggerLoad from "../plugins/timelogger.load";
 import CategoryData from "../plugins/timelogger.data";
+import TextPageAgg from "../Book/components/Page/TextPageAgg";
 
 const Test: Command = {
   data: new SlashCommandBuilder()
@@ -25,8 +26,11 @@ const Test: Command = {
     if (categories === null || cat === null) return;
     const pages = [
       new Page("Test", "Test"),
-      new TextPage("Self care", categories.toString()),
-      new TextPage("House care", cat.toString()),
+      new TextPageAgg("Self care", categories.toString(), categories, [
+        categories,
+        cat,
+      ]),
+      new TextPageAgg("House care", cat.toString(), cat, [categories, cat]),
     ];
 
     new Book(pages, interaction, interaction.user);

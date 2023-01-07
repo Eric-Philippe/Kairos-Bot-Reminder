@@ -7,6 +7,8 @@ import {
 import Page from "./Page";
 
 import ExcelManager from "../ExcelManager/ExcelManager";
+import ColumnType from "../ExcelManager/columnType.enum";
+import CategoryData from "../../../plugins/timelogger.data";
 /** The assets {logos}
  * @console.warn("You can't use this file without the assets folder");
  */
@@ -20,15 +22,72 @@ import { IMG } from "../../../assets/LOGOS.json";
 class TextPage extends Page {
   protected _type = "PAGE_TEXT";
   private _Excel: ExcelManager;
+  private _data: CategoryData;
   /**
    * Create a new TextPage
    * @param title
    * @param content
+   * @param loadExcel
    * @param color
    */
-  constructor(title: string, content: string, color: string = "#5865F2") {
+  constructor(
+    title: string,
+    content: string,
+    data: CategoryData,
+    loadExcel: boolean = true,
+    color: string = "#5865F2"
+  ) {
     super(title, content, color);
     this._Excel = new ExcelManager();
+    this._data = data;
+    if (loadExcel) this.fillExcel();
+  }
+  /**
+   * Getter of the ExcelManager
+   */
+  public get Excel(): ExcelManager {
+    return this._Excel;
+  }
+  /**
+   * Fill the excel with the data
+   */
+  public fillExcel(): void {
+    // Get the result of getSummary that will return an array of two string, the first one is the label, the second one is the time
+    const result = this._data.getSummary();
+    this._Excel.addRow(
+      result[0].toString(),
+      ColumnType.CATEGORY,
+      result[1].toString()
+    );
+
+    for (const [key, value] of this._data.getActivities()) {
+      const result = this._data.getSummaryOfActivity(key);
+      this._Excel.addRow(
+        result[0].toString(),
+        ColumnType.ACTIVITY,
+        result[1].toString()
+      );
+      for (const [taskKey, taskValue] of value) {
+        const result = this._data.getSummaryOfTaskActivity(taskKey, key);
+        this._Excel.addRow(
+          result[0].toString(),
+          ColumnType.TASK,
+          result[1].toString()
+        );
+      }
+    }
+
+    if (this._data.getTasks().size > 0) this._Excel.addBlankLine();
+
+    for (const [key, value] of this._data.getTasks()) {
+      const result = this._data.getSummaryOfTaskCategory(key);
+      this._Excel.addRow(
+        result[0].toString(),
+        ColumnType.TASK,
+        result[1].toString(),
+        this._Excel.ITALIC_STYLE
+      );
+    }
   }
   /**
    * Generate the .xlsx file linked to the content of the page
@@ -54,9 +113,7 @@ class TextPage extends Page {
     interaction: ButtonInteraction | ChatInputCommandInteraction
   ): Promise<Boolean> {
     const attachment = await this.generateFile();
-    if (interaction.replied)
-      await interaction.editReply({ files: [attachment] });
-    else await interaction.reply({ files: [attachment] });
+    await interaction.reply({ files: [attachment], ephemeral: true });
     return true;
   }
   /**

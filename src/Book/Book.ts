@@ -1,19 +1,17 @@
 import {
   ButtonInteraction,
-  InteractionResponse,
   ChatInputCommandInteraction,
-  Message,
   User,
-  Interaction,
 } from "discord.js";
 import Page from "./components/Page/Page";
 import Controller from "./components/Controller/Controller";
 import TextPage from "./components/Page/TextPage";
+import TextPageAgg from "./components/Page/TextPageAgg";
 import GraphPage from "./components/Page/GraphPage";
 
 class Book {
   _nCurrentPage: number;
-  _currentPage: Page | TextPage | GraphPage | null = null;
+  _currentPage: Page | TextPage | TextPageAgg | GraphPage | null = null;
   _pages: Page[];
   _interaction: ChatInputCommandInteraction;
   _user: User;
@@ -31,6 +29,8 @@ class Book {
   }
 
   public async loadFirstPage(interaction: ChatInputCommandInteraction) {
+    console.log("Loading first page");
+
     if (this._pages.length === 0) return;
     if (!interaction.channel) return;
     this._currentPage = this._pages[0];
@@ -55,7 +55,10 @@ class Book {
         this.previousPage();
         break;
       case "download_xlsx":
-        if (this._currentPage instanceof TextPage)
+        if (
+          this._currentPage instanceof TextPage ||
+          this._currentPage instanceof TextPageAgg
+        )
           this._currentPage.sendFile(interaction);
 
         break;
@@ -94,10 +97,11 @@ class Book {
     if (this._interaction) {
       await this._pages[this._nCurrentPage].display(
         this._interaction,
-        this.currentPage,
+        this._nCurrentPage,
         this.totalPages
       );
     }
+    this._currentPage = this._pages[this._nCurrentPage];
   }
 }
 
