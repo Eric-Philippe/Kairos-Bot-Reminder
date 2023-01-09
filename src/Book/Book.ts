@@ -34,7 +34,7 @@ class Book {
     if (this._pages.length === 0) return;
     if (!interaction.channel) return;
     this._currentPage = this._pages[0];
-    await this._pages[0].send(interaction, 1, this._pages.length);
+    await this._pages[0].send(interaction, 0, this._pages.length);
     this.launchControllerCollector();
   }
 

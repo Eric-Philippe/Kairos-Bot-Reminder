@@ -83,6 +83,7 @@ class Page {
     await interaction.editReply({
       embeds: [embed],
       components: Controller.buildController(this),
+      files: [],
     });
   }
   /**
@@ -99,6 +100,7 @@ class Page {
       interaction.editReply({
         embeds: [embed],
         components: Controller.buildController(this),
+        files: [],
       });
     }, 800); // This one is just for the sake of the animation
   }
@@ -113,7 +115,7 @@ class Page {
     index: number,
     maxPage: number
   ): Promise<EmbedBuilder | undefined> {
-    let txtFooter = `Provided by Kairos {?} ${index}/${maxPage}`;
+    let txtFooter = `Provided by Kairos {?} ${index + 1}/${maxPage}`;
     txtFooter = Page.generateFooterSeparator(txtFooter);
     let embed = new EmbedBuilder()
       .setTitle(this._title)

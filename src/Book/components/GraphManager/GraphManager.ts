@@ -47,7 +47,7 @@ class GraphManager {
     const chart = new ChartJsImage();
     chart.setConfig({
       type: type,
-      datasets: data,
+      data: data,
     });
     return chart;
   }

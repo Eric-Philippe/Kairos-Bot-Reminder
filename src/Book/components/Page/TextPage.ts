@@ -8,7 +8,7 @@ import Page from "./Page";
 
 import ExcelManager from "../ExcelManager/ExcelManager";
 import ColumnType from "../ExcelManager/columnType.enum";
-import CategoryData from "../../../plugins/timelogger.data";
+import CategoryData from "../plugins/timelogger.data";
 /** The assets {logos}
  * @console.warn("You can't use this file without the assets folder");
  */
@@ -101,7 +101,13 @@ class TextPage extends Page {
     const finalBuffer = Buffer.from(await blob.arrayBuffer());
     const attachment = new AttachmentBuilder(finalBuffer);
 
-    attachment.setName("DisplayTime.xlsx");
+    const baseName = "DisplayTime";
+    const ext = ".xlsx";
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    attachment.setName(`${baseName}_${year}-${month}-${day}${ext}`);
     return attachment;
   }
   /**

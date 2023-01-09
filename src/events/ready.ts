@@ -13,6 +13,24 @@ export default (client: Client): void => {
 
     fireListener(client);
 
-    console.log("Kairos is starting up...");
+    console.log(
+      "%c⏳ Kairos is starting up...",
+      "color: #00ff00; font-size: 20px"
+    );
+    // Red
+    console.info(
+      `%c💾 CPU: ${process.cpuUsage().user / 1000}ms`,
+      "color: #FF5733; font-size: 20px"
+    );
+    console.info(
+      `%c🏓 Ping: ${client.ws.ping}ms`,
+      "color: #FF5733; font-size: 20px"
+    );
+    console.log(
+      `%c📝 Loaded ${Commands.length} commands`,
+      "color: #FF5733; font-size: 20px"
+    );
+
+    console.log(`🏷️ Logged in as ${client.user.tag}`);
   });
 };

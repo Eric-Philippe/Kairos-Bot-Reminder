@@ -3,6 +3,23 @@ import DonutData from "./donut.data";
 import PolarData from "./polar.data";
 
 class BodyGuardData {
+  /**
+   * export interface BarData {
+  labels: Array<String>;
+  datasets: Array<datasets>;
+}
+
+interface datasets {
+  label: String;
+  data: Array<number>;
+  backgroundColor: Array<String>;
+  borderColor: Array<String>;
+  borderWidth: number;
+}
+
+   * @param data 
+   * @returns 
+   */
   public static isBarData(data: any): data is BarData {
     if (!data.labels) return false;
     if (!data.datasets) return false;
@@ -15,7 +32,7 @@ class BodyGuardData {
     if (!data.datasets[0].backgroundColor) return false;
     if (!data.datasets[0].borderColor) return false;
     if (!data.datasets[0].borderWidth) return false;
-    if (!Array.isArray(data.datasets[0].label)) return false;
+    if (typeof data.datasets[0].label != "string") return false;
     if (!Array.isArray(data.datasets[0].data)) return false;
     if (!Array.isArray(data.datasets[0].backgroundColor)) return false;
     if (!Array.isArray(data.datasets[0].borderColor)) return false;

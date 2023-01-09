@@ -20,7 +20,7 @@ export const init = () => {
       port: Number(dataSource.port),
     });
 
-    console.debug("Connected to MySQL database");
+    console.debug("%c💿 Connected to MySQL database", "color: #00ff00");
   } catch (error) {
     console.error("[mysql.connector][init][Error]: ", error);
     throw new Error("failed to initialized pool");

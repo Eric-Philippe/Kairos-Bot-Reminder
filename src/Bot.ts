@@ -18,8 +18,6 @@ const client = new Client({
   ],
 });
 
-GraphManager.generateRandomPolarChart();
-
 ready(client);
 slashCommandCreate(client);
 autoCompleteCreate(client);

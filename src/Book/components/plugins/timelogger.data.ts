@@ -1,4 +1,4 @@
-import DateWorker from "../utils/date.worker";
+import DateWorker from "../../../utils/date.worker";
 // interface TaskTL {
 //   content: string;
 //   totalElapsed: number;
@@ -156,6 +156,49 @@ export default class CategoryData {
     return ["", ""];
   }
   /**
+   * Get an array of all the time elapsed for the activities
+   */
+  getActivitiesTimeArray(): Array<number> {
+    let result: Array<number> = [];
+    this.activities.forEach((activity) => {
+      activity.forEach((task) => {
+        result.push(task);
+      });
+    });
+    return result;
+  }
+  /**
+   * Get an array of all the name of the activities
+   */
+  getActivitiesNameArray(): Array<String> {
+    let result: Array<String> = [];
+    this.activities.forEach((activity, key) => {
+      result.push(key);
+    });
+    return result;
+  }
+  /**
+   * Get an array of all the time elapsed for the tasks
+   */
+  getTasksTimeArray(): Array<number> {
+    let result: Array<number> = [];
+    this.tasks.forEach((task) => {
+      result.push(task);
+    });
+    return result;
+  }
+  /**
+   * Get an array of all the name of the tasks
+   */
+  getTasksNameArray(): Array<String> {
+    let result: Array<String> = [];
+    this.tasks.forEach((task, key) => {
+      result.push(key);
+    });
+    return result;
+  }
+
+  /**
    * Getter of the activities
    */
   getActivities(): Map<String, Map<String, number>> {
@@ -166,6 +209,12 @@ export default class CategoryData {
    */
   getTasks(): Map<String, number> {
     return this.tasks;
+  }
+  /**
+   * Get the name of the category
+   */
+  getTitle(): String {
+    return this.title;
   }
   /**
    * toString method

@@ -3,7 +3,6 @@ import {
   ButtonInteraction,
   ChatInputCommandInteraction,
   EmbedBuilder,
-  Message,
 } from "discord.js";
 const ChartJsImage = require("chartjs-to-image");
 
@@ -13,6 +12,7 @@ import GraphManager from "../GraphManager/GraphManager";
 import PolarData from "../GraphManager/polar.data";
 import DonutData from "../GraphManager/donut.data";
 import BarData from "../GraphManager/bar.data";
+import BodyGuardData from "../GraphManager/bodyguard.data";
 /**
  * A GraphPage of a book
  * @extends Page
@@ -21,20 +21,27 @@ import BarData from "../GraphManager/bar.data";
  */
 class GraphPage extends Page {
   protected _type = "PAGE_GRAPH";
+  private _dataSets: BarData | DonutData | PolarData;
+  private _graphType: string;
   private _graph: any; // ChartJsImage
   /**
    * @param title
    * @param content
    * @param color
    */
-  constructor(title: string, content: string, color: string = "#5865F2") {
+  constructor(
+    title: string,
+    content: string,
+    data: BarData | DonutData | PolarData,
+    color: string = "#5865F2"
+  ) {
     super(title, content, color);
-  }
-  /**
-   * Setter for the graph
-   */
-  public setGraph(type: string, data: BarData | DonutData | PolarData) {
-    this._graph = GraphManager.generateGraph(type, data);
+    this._dataSets = data;
+    if (BodyGuardData.isBarData(data)) this._graphType = "bar";
+    else if (BodyGuardData.isDonutData(data)) this._graphType = "doughnut";
+    else if (BodyGuardData.isPolarData(data)) this._graphType = "polarArea";
+    else throw new Error("Invalid data");
+    this._graph = GraphManager.generateGraph(this._graphType, data);
   }
   /**
    * Generate the .png file of the graph
@@ -92,9 +99,13 @@ class GraphPage extends Page {
     if (!this._graph) return;
     const embed = await this.generateEmbed(index, maxPage);
     if (!embed) return;
+    let attachment = new AttachmentBuilder(
+      await GraphManager.chartToBuffer(this._graph)
+    );
+    attachment.setName("graph.png");
     await interaction.editReply({
       embeds: [embed],
-      files: [await GraphManager.chartToBuffer(this._graph)],
+      files: [attachment],
     });
   }
 }

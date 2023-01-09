@@ -20,7 +20,7 @@ export default class FireRemindmeQueue implements FireQueue {
       try {
         res(await RemindmeServices.fetchPastRemindme());
       } catch (error) {
-        rej(-1);
+        rej(error);
       }
     });
   }

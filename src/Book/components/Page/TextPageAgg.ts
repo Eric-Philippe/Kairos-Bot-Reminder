@@ -2,7 +2,7 @@ import TextPage from "./TextPage";
 
 import ColumnType from "../ExcelManager/columnType.enum";
 
-import CategoryData from "../../../plugins/timelogger.data";
+import CategoryData from "../plugins/timelogger.data";
 
 import DateWorker from "../../../utils/date.worker";
 /**

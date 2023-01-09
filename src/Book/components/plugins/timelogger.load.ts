@@ -1,7 +1,7 @@
 import CategoryData from "./timelogger.data";
-import { TCategoryServices } from "../tables/tcategory/tcategory.services";
-import { ActivityServices } from "../tables/activity/activity.services";
-import { TaskServices } from "../tables/task/task.services";
+import { TCategoryServices } from "../../../tables/tcategory/tcategory.services";
+import { ActivityServices } from "../../../tables/activity/activity.services";
+import { TaskServices } from "../../../tables/task/task.services";
 
 export default class TimeLoggerLoad {
   static async loadCategories(userId: string): Promise<CategoryData[] | null> {
