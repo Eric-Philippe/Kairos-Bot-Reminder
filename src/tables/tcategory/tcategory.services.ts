@@ -29,6 +29,17 @@ export const TCategoryServices = {
     );
     return result[0];
   },
+  getCategoryByKeywordUserId: async (
+    keyword: string,
+    userId: string
+  ): Promise<TCategory[]> => {
+    let keywordSQL = keyword.replace(/ /g, "%");
+    const result: TCategory[] = await execute(
+      TCategoryQueries.GetCategoryByKeywordUserId,
+      [keywordSQL, userId]
+    );
+    return result;
+  },
   getMiscellaneousTCategory: async (userId: string): Promise<TCategory> => {
     const result: TCategory[] = await execute(
       TCategoryQueries.GetMiscellaneousCategory,

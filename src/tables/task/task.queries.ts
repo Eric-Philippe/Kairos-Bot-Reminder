@@ -15,6 +15,26 @@ export const TaskQueries = {
             AND tc.userid = ?
             ORDER BY t.entryDate DESC;
       `,
+  GetTaskByContentUserIdEnded: `
+            SELECT *
+            FROM Task as t, Activity as a, TCategory as tc
+            WHERE UPPER(t.content) = UPPER(?)
+            AND t.endDate IS NOT NULL
+            AND (t.AId = a.AId AND a.TCId = tc.TCId) OR (t.TCId = tc.TCId)
+            AND tc.userid = ?
+            ORDER BY t.entryDate DESC;
+  `,
+
+  GetTasksByKeywordUserIdEnded: `
+            SELECT *
+            FROM Task as t, Activity as a, TCategory as tc
+            WHERE UPPER(t.content) LIKE UPPER(?)
+            AND t.endDate IS NOT NULL
+            AND (t.AId = a.AId AND a.TCId = tc.TCId) OR (t.TCId = tc.TCId)
+            AND tc.userid = ?
+            ORDER BY t.entryDate DESC;
+  `,
+
   GetTaskById: `
             SELECT * FROM Task WHERE TId = ?;
       `,

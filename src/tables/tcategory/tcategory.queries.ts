@@ -8,6 +8,10 @@ export const TCategoryQueries = {
   GetCategoryByTitleUserId: `
         SELECT * FROM TCategory WHERE UPPER(title) = UPPER(?) AND userId = ?;`,
 
+  GetCategoryByKeywordUserId: `
+      SELECT * FROM TCategory WHERE UPPER(title) LIKE UPPER(?) AND userId = ?;
+  `,
+
   GetMiscellaneousCategory: `
         SELECT * FROM TCategory WHERE title = 'Miscellaneous' AND userId = ?;`,
 

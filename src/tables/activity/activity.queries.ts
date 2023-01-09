@@ -36,6 +36,14 @@ export const ActivityQueries = {
     FROM Activity as a, TCategory as tc
     WHERE UPPER(a.name) = UPPER(?)
     AND a.TCId = tc.TCId
+    AND tc.userId = ?
+    `,
+
+  GetActivityByKeywordUserId: `
+    SELECT *
+    FROM Activity as a, TCategory as tc
+    WHERE UPPER(a.name) LIKE UPPER(?)
+    AND a.TCId = tc.TCId
     AND tc.userId = ?;
     `,
 

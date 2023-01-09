@@ -35,6 +35,29 @@ export const TaskServices = {
     return result;
   },
 
+  getTaskByContentUserIdEnded: async (
+    userId: string,
+    content: string
+  ): Promise<Task> => {
+    const result: Task[] = await execute(
+      TaskQueries.GetTaskByContentUserIdEnded,
+      [content, userId]
+    );
+    return result[0];
+  },
+
+  getTasksByKeywordUserIdEnded: async (
+    userId: string,
+    keyword: string
+  ): Promise<Task[]> => {
+    let keywordSQL = keyword.replace(/ /g, "%");
+    const result: Task[] = await execute(
+      TaskQueries.GetTasksByKeywordUserIdEnded,
+      [userId, keywordSQL]
+    );
+    return result;
+  },
+
   GetTasksAlteredEndedByActivityId: async (
     AId: string
   ): Promise<TaskAltered[]> => {

@@ -1,11 +1,4 @@
-/**
- * This file will be launched by cron job every 1 minute to check if
- * there are any new remind in the queue
- */
-import { Client, GatewayIntentBits } from "discord.js";
-import * as dotenv from "dotenv";
-
-import * as MySQLConnector from "../utils/mysql.connector";
+import { Client } from "discord.js";
 import FireRemindmeQueue from "./fire.remindme.queue";
 import FireRemindusQueue from "./fire.remindus.queue";
 

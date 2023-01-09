@@ -50,6 +50,18 @@ export const ActivityServices = {
     return result[0];
   },
 
+  getActivitiesByKeywordUserId: async (
+    keyword: string,
+    userId: string
+  ): Promise<Activity[]> => {
+    let keywordSQL = keyword.replace(/ /g, "%");
+    const result: Activity[] = await execute(
+      ActivityQueries.GetActivityByKeywordUserId,
+      [keywordSQL, userId]
+    );
+    return result;
+  },
+
   insertActivity: async (name: string, TCId: string): Promise<string> => {
     let AId = await getAvailableIdentifiant(MYSQL_TABLES.Activity);
     await execute(ActivityQueries.InsertActivity, [AId, name, TCId]);
