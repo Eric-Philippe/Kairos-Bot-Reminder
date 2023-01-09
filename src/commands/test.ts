@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from "discord.js";
 import { Command } from "src/CommandTemplate";
 
-import CategoryTypeChartConverter from "../Book/components/plugins/timelogger.chart.conv";
+import CategoryTypeChartConverter from "../Book/components/plugins/d";
 
 import Page from "../Book/components/Page/Page";
 import Book from "../Book/Book";

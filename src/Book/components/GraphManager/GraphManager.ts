@@ -7,20 +7,6 @@ import DonutData from "./donut.data";
 import PolarData from "./polar.data";
 import BodyGuardData from "./bodyguard.data";
 
-const PrettyColors = {
-  RED_PINK: "rgb(255, 99, 132)",
-  LIGHT_BLUE: "rgb(75, 192, 192)",
-  YELLOW: "rgb(255, 205, 86)",
-  BLUE: "rgb(54, 162, 235)",
-  PURPLE: "rgb(153, 102, 255)",
-  GREEN_LIGHT: "rgb(75, 255, 192)",
-  ORANGE: "rgb(255, 159, 64)",
-  RED: "rgb(255, 0, 90)",
-  GREY: "rgb(150, 150, 150)",
-  GREEN: "rgb(100, 255, 100)",
-};
-const OTHER = "rgb(201, 203, 207)";
-
 const GraphTypes = {
   BAR: "bar",
   DOUGHNUT: "doughnut",
