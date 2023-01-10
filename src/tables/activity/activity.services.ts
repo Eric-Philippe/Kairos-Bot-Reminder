@@ -55,6 +55,7 @@ export const ActivityServices = {
     userId: string
   ): Promise<Activity[]> => {
     let keywordSQL = keyword.replace(/ /g, "%");
+    keywordSQL = "%" + keywordSQL + "%";
     const result: Activity[] = await execute(
       ActivityQueries.GetActivityByKeywordUserId,
       [keywordSQL, userId]

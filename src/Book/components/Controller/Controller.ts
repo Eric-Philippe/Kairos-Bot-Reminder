@@ -14,12 +14,12 @@ const NAVIGATION_BUTTONS = {
   NEXT: new ButtonBuilder()
     .setCustomId("next")
     .setLabel("Next")
-    .setStyle(ButtonStyle.Secondary)
+    .setStyle(ButtonStyle.Primary)
     .setEmoji("⏩"),
   PREVIOUS: new ButtonBuilder()
     .setCustomId("previous")
     .setLabel("Previous")
-    .setStyle(ButtonStyle.Secondary)
+    .setStyle(ButtonStyle.Primary)
     .setEmoji("⏪"),
   DOWNLOAD_XLSX: new ButtonBuilder()
     .setCustomId("download_xlsx")

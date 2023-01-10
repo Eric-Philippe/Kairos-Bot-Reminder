@@ -2,6 +2,7 @@ import {
   EmbedBuilder,
   ColorResolvable,
   ChatInputCommandInteraction,
+  User,
 } from "discord.js";
 /** Controller corresponds to the button at the bottom of the embed */
 import Controller from "../Controller/Controller";
@@ -21,19 +22,27 @@ class Page {
   private _title: string;
   private _content: string;
   private _color: string;
+  private _user: User;
   /**
    * Create a new page
    * @param title
    * @param content
+   * @param user
    * @param color
    */
-  constructor(title: string, content: string, color: string = "#5865F2") {
+  constructor(
+    title: string,
+    content: string,
+    user: User,
+    color: string = "#5865F2"
+  ) {
     if (content.length > SIZE_LIMIT)
       throw new Error("Content is too long for a single page");
     if (title.length > TITLE_LIMIT)
       throw new Error("Title is too long for a single page");
     this._title = title;
     this._content = content;
+    this._user = user;
     this._color = color;
   }
   /**
@@ -59,7 +68,7 @@ class Page {
    */
   public static generateFooterSeparator(str: string): string {
     const SEPARATOR = require("../../../utils/separator").default;
-    const MAX_LENGTH = 48;
+    const MAX_LENGTH = 52;
     if (!str.includes("{?}")) return str;
     return str.replace(
       "{?}",
@@ -115,12 +124,19 @@ class Page {
     index: number,
     maxPage: number
   ): Promise<EmbedBuilder | undefined> {
-    let txtFooter = `Provided by Kairos {?} ${index + 1}/${maxPage}`;
+    let txtFooter = `⏳ | Provided by Kairos | Bot Reminder {?} ${
+      index + 1
+    }/${maxPage}`;
     txtFooter = Page.generateFooterSeparator(txtFooter);
     let embed = new EmbedBuilder()
       .setTitle(this._title)
       .setDescription(this._content)
       .setColor(this._color as ColorResolvable)
+      .setAuthor({
+        name: `⚙️ | For ${this._user.username}`,
+        iconURL: this._user.avatarURL() as string,
+      })
+      .setTimestamp()
       .setFooter({
         text: txtFooter,
       })

@@ -3,6 +3,7 @@ import {
   ButtonInteraction,
   ChatInputCommandInteraction,
   EmbedBuilder,
+  User,
 } from "discord.js";
 import Page from "./Page";
 
@@ -27,17 +28,19 @@ class TextPage extends Page {
    * Create a new TextPage
    * @param title
    * @param content
+   * @param user
    * @param loadExcel
    * @param color
    */
   constructor(
     title: string,
     content: string,
+    user: User,
     data: CategoryData,
     loadExcel: boolean = true,
     color: string = "#5865F2"
   ) {
-    super(title, content, color);
+    super(title, content, user, color);
     this._Excel = new ExcelManager();
     this._data = data;
     if (loadExcel) this.fillExcel();

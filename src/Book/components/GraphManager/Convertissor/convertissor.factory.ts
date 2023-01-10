@@ -18,10 +18,10 @@ interface ConvertissorFunctionList {
  * @param {('category' | 'activity' | 'task')} target
  */
 export function ConvertissorFactory(
-  dataType: string,
   range: string,
+  dataType: string,
   target: string
-): ConvertissorFunctionUnit | ConvertissorFunctionList | null {
+): any {
   switch (range) {
     case "unit":
       switch (dataType) {

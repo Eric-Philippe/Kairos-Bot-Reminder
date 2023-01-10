@@ -4,8 +4,14 @@ import { ActivityServices } from "../../../tables/activity/activity.services";
 import { TaskServices } from "../../../tables/task/task.services";
 
 export default class TimeLoggerLoad {
-  static async loadCategories(userId: string): Promise<CategoryData[] | null> {
-    const categories = await TCategoryServices.getTCategoryByUserId(userId);
+  static async loadCategories(
+    userId: string,
+    keyword: string
+  ): Promise<CategoryData[] | null> {
+    const categories = await TCategoryServices.getCategoryByKeywordUserId(
+      keyword,
+      userId
+    );
     if (categories.length === 0) return null;
     const categoriesData: CategoryData[] = [];
     for (const category of categories) {
@@ -47,12 +53,11 @@ export default class TimeLoggerLoad {
   static async loadCategory(
     userId: string,
     categoryName: string
-  ): Promise<CategoryData | null> {
+  ): Promise<CategoryData> {
     const category = await TCategoryServices.getTCategoryByTitleUserId(
       categoryName,
       userId
     );
-    if (!category) return null;
     const categoryData = new CategoryData(category.title);
     const activities = await ActivityServices.getActivitiesByCategoryId(
       category.TCId

@@ -160,10 +160,8 @@ export default class CategoryData {
    */
   getActivitiesTimeArray(): Array<number> {
     let result: Array<number> = [];
-    this.activities.forEach((activity) => {
-      activity.forEach((task) => {
-        result.push(task);
-      });
+    this.activities.forEach((activity, key) => {
+      result.push(this.getTotalElapsedOfActivity(key));
     });
     return result;
   }
@@ -185,6 +183,11 @@ export default class CategoryData {
     this.tasks.forEach((task) => {
       result.push(task);
     });
+    this.activities.forEach((activity) => {
+      activity.forEach((task) => {
+        result.push(task);
+      });
+    });
     return result;
   }
   /**
@@ -194,6 +197,11 @@ export default class CategoryData {
     let result: Array<String> = [];
     this.tasks.forEach((task, key) => {
       result.push(key);
+    });
+    this.activities.forEach((activity, key) => {
+      activity.forEach((task, key) => {
+        result.push(key);
+      });
     });
     return result;
   }
@@ -222,21 +230,31 @@ export default class CategoryData {
    * @override
    */
   toString() {
-    let result = `Category: **${this.title}** - ${DateWorker.timeToReadable(
-      this.getTotalElapsed()
-    )}\n`;
+    let result = `:large_orange_diamond: Category: **${
+      this.title
+    }** - ${DateWorker.timeToReadable(this.getTotalElapsed())}\n`;
     this.activities.forEach((activity, activityName) => {
-      result += `\n⥤ Activity: ${activityName} - ${DateWorker.timeToReadable(
-        this.getTotalElapsedOfActivity(activityName)
-      )}\n`;
+      result +=
+        `\n:small_orange_diamond: Activity : ${activityName} - ` +
+        "``" +
+        `${DateWorker.timeToReadable(
+          this.getTotalElapsedOfActivity(activityName)
+        )}` +
+        "``\n";
       activity.forEach((task, content) => {
-        result += `⩶⥤  Task: *${content}* - ${DateWorker.timeToReadable(
-          task
-        )}\n`;
+        result +=
+          `:small_orange_diamond::small_blue_diamond: Task : *${content}* - ` +
+          "``" +
+          `${DateWorker.timeToReadable(task)}` +
+          "``\n";
       });
     });
     this.tasks.forEach((task, content) => {
-      result += `\n⥤ Task: ${content} - ${DateWorker.timeToReadable(task)}\n`;
+      result +=
+        `\n:small_blue_diamond: Task : ${content} - ` +
+        "``" +
+        `${DateWorker.timeToReadable(task)}` +
+        "``\n";
     });
     return result;
   }

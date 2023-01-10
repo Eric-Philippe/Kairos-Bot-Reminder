@@ -48,6 +48,12 @@ export default class MessageManager {
           this.sendSuccessChannel(msg, target);
         break;
       case MessageType.ERROR:
+        if (target instanceof ChatInputCommandInteraction)
+          this.sendErrorSlash(msg, target);
+        else if (target instanceof ButtonInteraction)
+          this.sendErrorButton(msg, target);
+        else if (target instanceof TextChannel)
+          this.sendErrorChannel(msg, target);
         break;
     }
   }
@@ -68,7 +74,7 @@ export default class MessageManager {
       .setTimestamp();
 
     try {
-      if (slashInteraction.replied)
+      if (slashInteraction.deferred)
         return slashInteraction.editReply({ embeds: [embed] });
       slashInteraction.reply({ embeds: [embed] });
     } catch (err) {
@@ -92,7 +98,7 @@ export default class MessageManager {
       .setTimestamp();
 
     try {
-      if (buttonInteraction.replied)
+      if (buttonInteraction.deferred)
         return buttonInteraction.editReply({ embeds: [embed] });
       buttonInteraction.reply({ embeds: [embed] });
     } catch (err) {
@@ -134,7 +140,7 @@ export default class MessageManager {
       .setTimestamp();
 
     try {
-      if (slashInteraction.replied)
+      if (slashInteraction.deferred)
         return slashInteraction.editReply({ embeds: [embed] });
       slashInteraction.reply({ embeds: [embed] });
     } catch (err) {
@@ -158,7 +164,7 @@ export default class MessageManager {
       .setTimestamp();
 
     try {
-      if (buttonInteraction.replied)
+      if (buttonInteraction.deferred)
         return buttonInteraction.editReply({ embeds: [embed] });
       buttonInteraction.reply({ embeds: [embed] });
     } catch (err) {

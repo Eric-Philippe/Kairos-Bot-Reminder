@@ -80,7 +80,7 @@ export default class CategoryTypeChartConverter {
           label: data.getTitle(),
           data: dataValues,
           backgroundColor: backgroundColor,
-          hoverOffset: 4,
+          borderColor: borderColor,
         },
       ],
     };
@@ -113,7 +113,7 @@ export default class CategoryTypeChartConverter {
           label: "Activities",
           data: dataValues,
           backgroundColor: backgroundColor,
-          hoverOffset: 4,
+          borderColor: borderColor,
         },
       ],
     };
@@ -140,6 +140,7 @@ export default class CategoryTypeChartConverter {
           label: "Categories",
           data: dataValues,
           backgroundColor: backgroundColor,
+          borderColor: borderColor,
         },
       ],
     };
@@ -152,7 +153,7 @@ export default class CategoryTypeChartConverter {
     const dataKeys: String[] = data.getActivitiesNameArray();
     const backgroundColor: string[] = [];
     const borderColor: string[] = [];
-    for (let i = 0; i < dataValues.length; i++) {
+    for (let i = 0; i <= dataValues.length; i++) {
       let color;
       if (i <= Object.values(PrettyColors).length)
         color = Object.values(PrettyColors)[i];
@@ -167,6 +168,7 @@ export default class CategoryTypeChartConverter {
           label: data.getTitle(),
           data: dataValues,
           backgroundColor: backgroundColor,
+          borderColor: borderColor,
         },
       ],
     };

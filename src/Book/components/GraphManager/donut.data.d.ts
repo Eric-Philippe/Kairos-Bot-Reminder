@@ -7,7 +7,7 @@ interface datasets {
   label: String;
   data: Array<number>;
   backgroundColor: Array<String>;
-  hoverOffset: number;
+  borderColor: Array<String>;
 }
 
 export default DonutData;

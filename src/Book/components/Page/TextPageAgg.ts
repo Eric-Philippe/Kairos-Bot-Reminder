@@ -5,6 +5,7 @@ import ColumnType from "../ExcelManager/columnType.enum";
 import CategoryData from "../plugins/timelogger.data";
 
 import DateWorker from "../../../utils/date.worker";
+import { User } from "discord.js";
 /**
  * This class works as a TextPage, but works with not only one but multiple categoryData
  * allowing to aggregate the data of multiple categories
@@ -16,21 +17,23 @@ export default class TextPageAgg extends TextPage {
    * Create a new TextPageAgg
    * @param title
    * @param content
+   * @param user
+   * @param data
    * @param dataSet
    * @param color
    */
   constructor(
     title: string,
     content: string,
+    user: User,
     data: CategoryData,
     dataSet: CategoryData[],
     color: string = "#5865F2"
   ) {
-    super(title, content, data, false, color);
+    super(title, content, user, data, false, color);
     this._dataSet = dataSet;
     this.fillExcel();
   }
-
   /**
    * Override the fillExcel method to aggregate the data
    */
@@ -92,5 +95,37 @@ export default class TextPageAgg extends TextPage {
       totalTime += data.getTotalElapsed();
     }
     return totalTime;
+  }
+  /**
+   * Cut an array of string as much as needed to fit the discord message limit
+   */
+  public static createEnoughTextPageAgg(originalArray: string[]): string[] {
+    const newArray: string[] = [];
+    let currentString = "";
+
+    let i = 0;
+    while (i < originalArray.length) {
+      // check if the current string and the next two elements would still be under the limit
+      if (
+        currentString.length +
+          originalArray[i].length +
+          originalArray[i + 1].length <
+        4096
+      ) {
+        currentString += originalArray[i];
+        currentString += originalArray[i + 1];
+        i += 2;
+      } else {
+        newArray.push(currentString);
+        currentString = "";
+      }
+    }
+
+    // Push the remaining string if there's any
+    if (currentString) {
+      newArray.push(currentString);
+    }
+
+    return newArray;
   }
 }

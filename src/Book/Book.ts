@@ -29,8 +29,6 @@ class Book {
   }
 
   public async loadFirstPage(interaction: ChatInputCommandInteraction) {
-    console.log("Loading first page");
-
     if (this._pages.length === 0) return;
     if (!interaction.channel) return;
     this._currentPage = this._pages[0];

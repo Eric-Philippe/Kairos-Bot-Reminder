@@ -3,6 +3,7 @@ import {
   ButtonInteraction,
   ChatInputCommandInteraction,
   EmbedBuilder,
+  User,
 } from "discord.js";
 const ChartJsImage = require("chartjs-to-image");
 
@@ -13,6 +14,7 @@ import PolarData from "../GraphManager/polar.data";
 import DonutData from "../GraphManager/donut.data";
 import BarData from "../GraphManager/bar.data";
 import BodyGuardData from "../GraphManager/bodyguard.data";
+import Controller from "../Controller/Controller";
 /**
  * A GraphPage of a book
  * @extends Page
@@ -24,22 +26,32 @@ class GraphPage extends Page {
   private _dataSets: BarData | DonutData | PolarData;
   private _graphType: string;
   private _graph: any; // ChartJsImage
+  private _graphTitle: string | null;
   /**
    * @param title
-   * @param content
+   * @param user
+   * @param data
+   * @param dataType {('bar' | 'doughnut' | 'polarArea')}
    * @param color
    */
   constructor(
     title: string,
-    content: string,
+    user: User,
     data: BarData | DonutData | PolarData,
+    dataType: string,
+    graphTitle: string | null = null,
     color: string = "#5865F2"
   ) {
-    super(title, content, color);
+    super(title, "🍩", user, color);
     this._dataSets = data;
-    if (BodyGuardData.isBarData(data)) this._graphType = "bar";
-    else if (BodyGuardData.isDonutData(data)) this._graphType = "doughnut";
-    else if (BodyGuardData.isPolarData(data)) this._graphType = "polarArea";
+    this._graphTitle = graphTitle;
+
+    if (dataType == "bar" && BodyGuardData.isBarData(data))
+      this._graphType = dataType;
+    else if (dataType == "doughnut" && BodyGuardData.isDonutData(data))
+      this._graphType = dataType;
+    else if (dataType == "polarArea" && BodyGuardData.isPolarData(data))
+      this._graphType = dataType;
     else throw new Error("Invalid data");
     this._graph = GraphManager.generateGraph(this._graphType, data);
   }
@@ -65,8 +77,8 @@ class GraphPage extends Page {
     if (!this.graph) return;
     const attachment = await GraphManager.chartToBuffer(this._graph);
     if (interaction.replied)
-      await interaction.followUp({ files: [attachment] });
-    else await interaction.reply({ files: [attachment] });
+      await interaction.followUp({ files: [attachment], ephemeral: true });
+    else await interaction.reply({ files: [attachment], ephemeral: true });
   }
   /**
    * Getter for the graph
@@ -85,6 +97,8 @@ class GraphPage extends Page {
     if (!this._graph) return;
     const embed = await super.generateEmbed(index, maxPage);
     if (!embed) return;
+    embed.setDescription(this._graphTitle);
+    embed.setThumbnail(null);
     embed.setImage("attachment://graph.png");
     return embed;
   }
@@ -106,6 +120,7 @@ class GraphPage extends Page {
     await interaction.editReply({
       embeds: [embed],
       files: [attachment],
+      components: Controller.buildController(this),
     });
   }
 }

@@ -34,6 +34,8 @@ export const TCategoryServices = {
     userId: string
   ): Promise<TCategory[]> => {
     let keywordSQL = keyword.replace(/ /g, "%");
+    keywordSQL = "%" + keywordSQL + "%";
+
     const result: TCategory[] = await execute(
       TCategoryQueries.GetCategoryByKeywordUserId,
       [keywordSQL, userId]

@@ -51,6 +51,7 @@ export const TaskServices = {
     keyword: string
   ): Promise<Task[]> => {
     let keywordSQL = keyword.replace(/ /g, "%");
+    keywordSQL = "%" + keywordSQL + "%";
     const result: Task[] = await execute(
       TaskQueries.GetTasksByKeywordUserIdEnded,
       [userId, keywordSQL]

@@ -4,8 +4,6 @@ import slashCommandCreate from "./events/slashCommandCreate";
 import autoCompleteCreate from "./events/autoCompleteCreate";
 import ready from "./events/ready";
 
-import GraphManager from "./Book/components/GraphManager/GraphManager";
-
 require("dotenv").config();
 
 const client = new Client({

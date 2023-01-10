@@ -41,8 +41,6 @@ interface datasets {
   }
 
   public static isDonutData(data: any): data is DonutData {
-    if (!data.labels) return false;
-    if (!data.datasets) return false;
     if (!Array.isArray(data.labels)) return false;
     if (!Array.isArray(data.datasets)) return false;
     if (data.datasets.length === 0) return false;
@@ -50,17 +48,13 @@ interface datasets {
     if (!data.datasets[0].label) return false;
     if (!data.datasets[0].data) return false;
     if (!data.datasets[0].backgroundColor) return false;
-    if (!data.datasets[0].hoverOffset) return false;
-    if (!Array.isArray(data.datasets[0].label)) return false;
+    if (typeof data.datasets[0].label != "string") return false;
     if (!Array.isArray(data.datasets[0].data)) return false;
     if (!Array.isArray(data.datasets[0].backgroundColor)) return false;
-    if (typeof data.datasets[0].hoverOffset !== "number") return false;
     return true;
   }
 
   public static isPolarData(data: any): data is PolarData {
-    if (!data.labels) return false;
-    if (!data.datasets) return false;
     if (!Array.isArray(data.labels)) return false;
     if (!Array.isArray(data.datasets)) return false;
     if (data.datasets.length === 0) return false;
@@ -68,7 +62,7 @@ interface datasets {
     if (!data.datasets[0].label) return false;
     if (!data.datasets[0].data) return false;
     if (!data.datasets[0].backgroundColor) return false;
-    if (!Array.isArray(data.datasets[0].label)) return false;
+    if (typeof data.datasets[0].label != "string") return false;
     if (!Array.isArray(data.datasets[0].data)) return false;
     if (!Array.isArray(data.datasets[0].backgroundColor)) return false;
     return true;
