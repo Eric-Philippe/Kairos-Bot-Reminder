@@ -1,12 +1,14 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import { Command } from "src/CommandTemplate";
 
+import MessageManager from "../messages/MessageManager";
+
 import { UsersServices } from "../tables/users/users.services";
 import { TCategoryServices } from "../tables/tcategory/tcategory.services";
 import { ActivityServices } from "../tables/activity/activity.services";
 import { TaskServices } from "../tables/task/task.services";
 
-const Test: Command = {
+const DisplayTime: Command = {
   data: new SlashCommandBuilder()
     .setName("displaytime")
     .setDescription("Display the user's information from the time logger")
@@ -108,9 +110,12 @@ const displayTimeCategory = async function (
   const title = interaction.options.getString("title", false);
   const keyword = interaction.options.getString("keyword", false);
   if (!title && !keyword)
-    return interaction.editReply({
-      content: "❌ | You must specify a title or a keyword",
-    });
+    MessageManager.send(
+      MessageManager.getErrorCnst(),
+      "You must specify a title or a keyword",
+      interaction
+    );
+
   let workingTask = title ? title : (keyword as string);
   let workingTaskType = title ? "title" : "keyword";
 
@@ -121,7 +126,11 @@ const displayTimeCategory = async function (
         interaction.user.id
       );
       if (!category)
-        return interaction.editReply({ content: "❌ | Category not found" });
+        return MessageManager.send(
+          MessageManager.getErrorCnst(),
+          "Category not found",
+          interaction
+        );
       break;
     case "keyword":
       const categories = await TCategoryServices.getCategoryByKeywordUserId(
@@ -129,7 +138,11 @@ const displayTimeCategory = async function (
         interaction.user.id
       );
       if (categories.length == 0)
-        return interaction.editReply({ content: "❌ | No category found" });
+        return MessageManager.send(
+          MessageManager.getErrorCnst(),
+          "No category found",
+          interaction
+        );
       break;
   }
 };
@@ -140,9 +153,11 @@ const displayTimeActivity = async function (
   const name = interaction.options.getString("name", false);
   const keyword = interaction.options.getString("keyword", false);
   if (!name && !keyword)
-    return interaction.editReply({
-      content: "❌ | You must specify a name or a keyword",
-    });
+    return MessageManager.send(
+      MessageManager.getErrorCnst(),
+      "You must specify a name or a keyword",
+      interaction
+    );
   let workingTask = name ? name : (keyword as string);
   let workingTaskType = name ? "name" : "keyword";
 
@@ -153,7 +168,11 @@ const displayTimeActivity = async function (
         interaction.user.id
       );
       if (!activity)
-        return interaction.editReply({ content: "❌ | Activity not found" });
+        return MessageManager.send(
+          MessageManager.getErrorCnst(),
+          "Activity not found",
+          interaction
+        );
       break;
     case "keyword":
       const activities = await ActivityServices.getActivitiesByKeywordUserId(
@@ -161,7 +180,12 @@ const displayTimeActivity = async function (
         interaction.user.id
       );
       if (activities.length == 0)
-        return interaction.editReply({ content: "❌ | No activity found" });
+        return MessageManager.send(
+          MessageManager.getErrorCnst(),
+          "No activity found",
+          interaction
+        );
+      break;
       break;
   }
 };
@@ -172,9 +196,11 @@ const displayTimeTask = async function (
   const content = interaction.options.getString("content", false);
   const keyword = interaction.options.getString("keyword", false);
   if (!content && !keyword)
-    return interaction.editReply({
-      content: "❌ | You must specify a content or a keyword",
-    });
+    return MessageManager.send(
+      MessageManager.getErrorCnst(),
+      "You must specify a content or a keyword",
+      interaction
+    );
 
   let workingTask = content ? content : (keyword as string);
   let workingTaskType = content ? "content" : "keyword";
@@ -186,7 +212,11 @@ const displayTimeTask = async function (
         workingTask
       );
       if (!task)
-        return interaction.editReply({ content: "❌ | Task not found" });
+        return MessageManager.send(
+          MessageManager.getErrorCnst(),
+          "Task not found",
+          interaction
+        );
       break;
     case "keyword":
       const tasks = await TaskServices.getTasksByKeywordUserIdEnded(
@@ -194,9 +224,13 @@ const displayTimeTask = async function (
         workingTask
       );
       if (tasks.length == 0)
-        return interaction.editReply({ content: "❌ | No task found" });
+        return MessageManager.send(
+          MessageManager.getErrorCnst(),
+          "No task found",
+          interaction
+        );
       break;
   }
 };
 
-export default Test;
+export default DisplayTime;
