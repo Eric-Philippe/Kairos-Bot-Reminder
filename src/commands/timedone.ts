@@ -56,7 +56,7 @@ const StartWork: Command = {
     let activityCreated = false;
     let userId = interaction.user.id;
     await UsersServices.isADBUser(interaction.user.id);
-    const task = interaction.options.getString("task") || "";
+    const task = interaction.options.getString("task");
     const activity = interaction.options.getString("activity");
     const category = interaction.options.getString("category");
 
@@ -93,6 +93,16 @@ const StartWork: Command = {
         );
         categoryCreated = true;
       }
+    }
+
+    if (!task) {
+      if (categoryCreated)
+        await TCategoryServices.deleteTCategory(myCategory.TCId);
+      return MessageManager.send(
+        MessageManager.getErrorCnst(),
+        "You must specify a task",
+        interaction
+      );
     }
 
     let myActivity: Activity;

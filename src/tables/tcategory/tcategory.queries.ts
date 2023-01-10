@@ -1,5 +1,5 @@
 export const TCategoryQueries = {
-  GetCategoryByUserId: `
+  GetCategoriesByUserId: `
         SELECT * FROM TCategory WHERE userId = ?;`,
 
   GetCategoryById: `

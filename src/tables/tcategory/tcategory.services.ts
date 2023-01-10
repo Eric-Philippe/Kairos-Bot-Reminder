@@ -12,9 +12,9 @@ export const TCategoryServices = {
     );
     return result[0];
   },
-  getTCategoryByUserId: async (userId: string): Promise<TCategory[]> => {
+  getTCategoriesByUserId: async (userId: string): Promise<TCategory[]> => {
     const result: TCategory[] = await execute(
-      TCategoryQueries.GetCategoryByUserId,
+      TCategoryQueries.GetCategoriesByUserId,
       [userId]
     );
     return result;
