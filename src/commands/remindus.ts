@@ -10,6 +10,8 @@ import {
 
 import { Command } from "src/CommandTemplate";
 
+import MessageManager from "../messages/MessageManager";
+
 import { Repetition } from "../utils/repetition.enum";
 import RCategoriesDefault from "../utils/rcategories.enum";
 import { GuildServices } from "../tables/guild/guild.services";
@@ -172,17 +174,18 @@ const Remindus: Command = {
   run: async (client, interaction) => {
     // If the interaction is sent in a DM, return
     if (!interaction.guildId)
-      return interaction.reply({
-        content: "This command is not available in DMs",
-      });
-    0;
+      return MessageManager.send(
+        MessageManager.getErrorCnst(),
+        "This command is not available in DMs",
+        interaction
+      );
     // If the user doesn't have the MANAGE_MESSAGES permission, return
     if (!interaction.memberPermissions?.has(PermissionFlagsBits.ManageMessages))
-      return interaction.reply({
-        content:
-          "You don't have the required permissions \nYou need the `MANAGE_MESSAGES` permission to use this command",
-        ephemeral: true,
-      });
+      return MessageManager.send(
+        MessageManager.getErrorCnst(),
+        "You don't have the required permissions \nYou need the `MANAGE_MESSAGES` permission to use this command",
+        interaction
+      );
 
     const subcommand = interaction.options.getSubcommand();
 
@@ -247,13 +250,21 @@ const createReminder = async (interaction: ChatInputCommandInteraction) => {
 
   // Check if the time is valid (HH:MM)
   if (!/^\d{1,2}:\d{1,2}$/.test(time))
-    return interaction.reply("Invalid time format");
+    return MessageManager.send(
+      MessageManager.getErrorCnst(),
+      "Invalid time format",
+      interaction
+    );
 
   let hours = parseInt(time.split(":")[0]);
   let minutes = parseInt(time.split(":")[1]);
 
   if (hours > 23 || hours < 0 || minutes > 59 || minutes < 0) {
-    return interaction.reply("Invalid time format");
+    return MessageManager.send(
+      MessageManager.getErrorCnst(),
+      "Invalid time format",
+      interaction
+    );
   }
 
   // Check if the date is valid If there is not year, add the current year, if there is not month, add the current month
@@ -280,28 +291,41 @@ const createReminder = async (interaction: ChatInputCommandInteraction) => {
       splittedDate.join("/") // If the date is valid, join the splitted date
     )
   )
-    return interaction.reply("Invalid date format");
-
+    return MessageManager.send(
+      MessageManager.getErrorCnst(),
+      "Invalid date format",
+      interaction
+    );
   let year = parseInt(splittedDate[2]);
   let month = parseInt(splittedDate[1]) - 1;
   let day = parseInt(splittedDate[0]);
 
   if (month > 11 || month < 0 || day > 31 || day < 0) {
-    return interaction.reply("Invalid date format");
+    return MessageManager.send(
+      MessageManager.getErrorCnst(),
+      "Invalid date format",
+      interaction
+    );
   }
 
   let targetDate = new Date(year, month, day, hours, minutes);
 
   if (targetDate < new Date())
-    return interaction.reply("The date is in the past");
-
+    return MessageManager.send(
+      MessageManager.getErrorCnst(),
+      "The date is in the past",
+      interaction
+    );
   // Check if the repetition is inside the enum
   if (
     repetition &&
     !Object.values(Repetition).find((r) => r.value === repetition)
   )
-    return interaction.reply("Invalid repetition");
-
+    return MessageManager.send(
+      MessageManager.getErrorCnst(),
+      "Invalid repetition format",
+      interaction
+    );
   // Check if the category exists
   let idCategory = null;
   if (category) {
@@ -321,13 +345,21 @@ const createReminder = async (interaction: ChatInputCommandInteraction) => {
     if (role.mentionable) {
       idRole = role.id;
     } else {
-      return interaction.reply("The role is not mentionable");
+      return MessageManager.send(
+        MessageManager.getErrorCnst(),
+        "The given role is not mentionable",
+        interaction
+      );
     }
   }
 
   // Check if the channel is a text channel
   if (channel.type != ChannelType.GuildText) {
-    return interaction.reply("The channel is not a text channel");
+    return MessageManager.send(
+      MessageManager.getErrorCnst(),
+      "The given channel is not a text channel",
+      interaction
+    );
   }
 
   if (!description) description = null;
@@ -348,15 +380,11 @@ const createReminder = async (interaction: ChatInputCommandInteraction) => {
     idCategory
   );
 
-  const embed = new EmbedBuilder()
-    .setTitle("Reminder created")
-    .setDescription(
-      "Your reminder has been created successfully with the id " + meId
-    )
-    .setColor("#00ff00")
-    .setTimestamp();
-
-  await interaction.reply({ embeds: [embed] });
+  return MessageManager.send(
+    MessageManager.getSuccessCnst(),
+    "Your reminder has been created successfully with the id " + meId,
+    interaction
+  );
 };
 
 const deleteReminder = async (interaction: ChatInputCommandInteraction) => {
@@ -370,22 +398,28 @@ const deleteReminder = async (interaction: ChatInputCommandInteraction) => {
 
   const remindus = await RemindusServices.getRemindusById(id);
   if (!remindus) {
-    return interaction.reply("The reminder doesn't exist");
+    return MessageManager.send(
+      MessageManager.getErrorCnst(),
+      "The reminder doesn't exist",
+      interaction
+    );
   }
 
   if (remindus[0].usId != guild.id) {
-    return interaction.reply("The reminder doesn't exist");
+    return MessageManager.send(
+      MessageManager.getErrorCnst(),
+      "The reminder doesn't belong to this guild",
+      interaction
+    );
   }
 
   await RemindusServices.removeRemindus(id);
 
-  const embed = new EmbedBuilder()
-    .setTitle("Reminder deleted")
-    .setDescription("Your reminder has been deleted successfully")
-    .setColor("#00ff00")
-    .setTimestamp();
-
-  await interaction.reply({ embeds: [embed] });
+  return MessageManager.send(
+    MessageManager.getSuccessCnst(),
+    "Your reminder has been deleted successfully",
+    interaction
+  );
 };
 
 const breakReminder = async (interaction: ChatInputCommandInteraction) => {
@@ -395,22 +429,28 @@ const breakReminder = async (interaction: ChatInputCommandInteraction) => {
 
   const remindus = await RemindusServices.getRemindusById(id);
   if (!remindus) {
-    return interaction.reply("The reminder doesn't exist");
+    return MessageManager.send(
+      MessageManager.getErrorCnst(),
+      "The reminder doesn't exist",
+      interaction
+    );
   }
 
   if (remindus[0].guildId != guild?.id) {
-    return interaction.reply("The reminder doesn't exist");
+    return MessageManager.send(
+      MessageManager.getErrorCnst(),
+      "The reminder doesn't belong to this guild",
+      interaction
+    );
   }
 
   await RemindusServices.breakRemindus(id, 1);
 
-  const embed = new EmbedBuilder()
-    .setTitle("Reminder broken")
-    .setDescription("Your reminder has been broken successfully")
-    .setColor("#00ff00")
-    .setTimestamp();
-
-  await interaction.reply({ embeds: [embed] });
+  return MessageManager.send(
+    MessageManager.getSuccessCnst(),
+    "Your reminder has been broken successfully",
+    interaction
+  );
 };
 
 const restartReminder = async (interaction: ChatInputCommandInteraction) => {
@@ -420,22 +460,28 @@ const restartReminder = async (interaction: ChatInputCommandInteraction) => {
 
   const remindus = await RemindusServices.getRemindusById(id);
   if (!remindus) {
-    return interaction.reply("The reminder doesn't exist");
+    return MessageManager.send(
+      MessageManager.getErrorCnst(),
+      "The reminder doesn't exist",
+      interaction
+    );
   }
 
   if (remindus[0].guildId != guild?.id) {
-    return interaction.reply("The reminder doesn't exist");
+    return MessageManager.send(
+      MessageManager.getErrorCnst(),
+      "The reminder doesn't belong to this guild",
+      interaction
+    );
   }
 
   await RemindusServices.breakRemindus(id, 0);
 
-  const embed = new EmbedBuilder()
-    .setTitle("Reminder restarted")
-    .setDescription("Your reminder has been restarted successfully")
-    .setColor("#00ff00")
-    .setTimestamp();
-
-  await interaction.reply({ embeds: [embed] });
+  return MessageManager.send(
+    MessageManager.getSuccessCnst(),
+    "Your reminder has been restarted successfully",
+    interaction
+  );
 };
 
 const listReminders = async (interaction: ChatInputCommandInteraction) => {
@@ -480,7 +526,11 @@ const showReminder = async (interaction: ChatInputCommandInteraction) => {
 
   const remindus = await RemindusServices.getRemindusById(id);
   if (!remindus) {
-    return interaction.reply("The reminder doesn't exist");
+    return MessageManager.send(
+      MessageManager.getErrorCnst(),
+      "The reminder doesn't exist",
+      interaction
+    );
   }
 
   const embed = new EmbedBuilder()

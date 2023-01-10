@@ -1,13 +1,9 @@
 import { SlashCommandBuilder } from "discord.js";
 import { Command } from "src/CommandTemplate";
 
-import { UsersServices } from "../tables/users/users.services";
-import { TCategoryServices } from "../tables/tcategory/tcategory.services";
-import { TCategory } from "src/tables/tcategory/tcategory";
-import { ActivityServices } from "../tables/activity/activity.services";
-import { Activity } from "../tables/activity/activity";
+import MessageManager from "../messages/MessageManager";
+
 import { TaskServices } from "../tables/task/task.services";
-import { Task } from "../tables/task/task";
 
 const StartWork: Command = {
   data: new SlashCommandBuilder()
@@ -31,12 +27,20 @@ const StartWork: Command = {
         name
       );
       if (!task) {
-        await interaction.reply("Task not found");
+        await MessageManager.send(
+          MessageManager.getErrorCnst(),
+          "Task not found",
+          interaction
+        );
         return;
       }
       await TaskServices.endTask(task.TId, new Date());
 
-      await interaction.reply("Task stopped");
+      await MessageManager.send(
+        MessageManager.getSuccessCnst(),
+        "Task stopped",
+        interaction
+      );
     }
   },
 };

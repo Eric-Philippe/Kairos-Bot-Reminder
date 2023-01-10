@@ -1,6 +1,8 @@
 import { SlashCommandBuilder } from "discord.js";
 import { Command } from "src/CommandTemplate";
 
+import MessageManager from "../messages/MessageManager";
+
 import { UsersServices } from "../tables/users/users.services";
 import { TCategoryServices } from "../tables/tcategory/tcategory.services";
 import { TCategory } from "src/tables/tcategory/tcategory";
@@ -76,7 +78,11 @@ const StartWork: Command = {
       ) {
         if (categoryCreated)
           await TCategoryServices.deleteTCategory(myCategory.TCId);
-        return interaction.reply("Task already exists in this category");
+        return MessageManager.send(
+          MessageManager.getErrorCnst(),
+          "Task already exists in this category",
+          interaction
+        );
       } else {
         TaskServices.insertTask(task, new Date(), null, myCategory.TCId, null);
       }
@@ -112,12 +118,20 @@ const StartWork: Command = {
           await ActivityServices.deleteActivity(myActivity.AId);
         if (categoryCreated)
           await TCategoryServices.deleteTCategory(myCategory.TCId);
-        return interaction.reply("Task already exists in this activity");
+        return MessageManager.send(
+          MessageManager.getErrorCnst(),
+          "Task already exists in this activity",
+          interaction
+        );
       }
       TaskServices.insertTask(task, new Date(), null, null, myActivity.AId);
     }
 
-    await interaction.reply("Task added");
+    await MessageManager.send(
+      MessageManager.getSuccessCnst(),
+      "Task added",
+      interaction
+    );
   },
 };
 
