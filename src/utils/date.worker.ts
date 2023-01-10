@@ -22,7 +22,7 @@ export default class DateWorker {
   public static getMonths(
     firstDate?: number,
     secondDate?: number
-  ): Array<String> {
+  ): Array<string> {
     if (!firstDate) firstDate = 1;
     if (!secondDate) secondDate = 12;
     let months = [

@@ -5,15 +5,15 @@ import PolarData from "./polar.data";
 class BodyGuardData {
   /**
    * export interface BarData {
-  labels: Array<String>;
+  labels: Array<string>;
   datasets: Array<datasets>;
 }
 
 interface datasets {
-  label: String;
+  label: string;
   data: Array<number>;
-  backgroundColor: Array<String>;
-  borderColor: Array<String>;
+  backgroundColor: Array<string>;
+  borderColor: Array<string>;
   borderWidth: number;
 }
 

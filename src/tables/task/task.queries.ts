@@ -16,23 +16,23 @@ export const TaskQueries = {
             ORDER BY t.entryDate DESC;
       `,
   GetTaskByContentUserIdEnded: `
-            SELECT *
+            SELECT t.TId,t.content,t.entryDate,t.endDate,t.TCId,t.AId
             FROM Task as t, Activity as a, TCategory as tc
             WHERE UPPER(t.content) = UPPER(?)
             AND t.endDate IS NOT NULL
-            AND (t.AId = a.AId AND a.TCId = tc.TCId) OR (t.TCId = tc.TCId)
+            AND ((t.AId = a.AId AND a.TCId = tc.TCId) OR (t.TCId = tc.TCId))
             AND tc.userid = ?
             ORDER BY t.entryDate DESC;
   `,
 
   GetTasksByKeywordUserIdEnded: `
-            SELECT *
+            SELECT DISTINCT t.TId,t.content,timestampdiff(MINUTE, entryDate, endDate) as timeElapsed,t.TCId,t.AId
             FROM Task as t, Activity as a, TCategory as tc
             WHERE UPPER(t.content) LIKE UPPER(?)
             AND t.endDate IS NOT NULL
-            AND (t.AId = a.AId AND a.TCId = tc.TCId) OR (t.TCId = tc.TCId)
+            AND ((t.AId = a.AId AND a.TCId = tc.TCId) OR (t.TCId = tc.TCId))
             AND tc.userid = ?
-            ORDER BY t.entryDate DESC;
+            ORDER BY timeElapsed DESC;
   `,
 
   GetTaskById: `

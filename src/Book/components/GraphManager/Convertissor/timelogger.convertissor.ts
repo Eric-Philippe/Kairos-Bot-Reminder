@@ -26,20 +26,25 @@ const rgbToRgba = function (string: string, alpha: number): string {
 export default class CategoryTypeChartConverter {
   public static convertToBarDataTask(data: CategoryData): BarData {
     const dataValues: number[] = data.getTasksTimeArray();
-    if (dataValues.length > 10) {
-      const otherValues = dataValues.slice(10);
-      const otherValue = otherValues.reduce((a, b) => a + b, 0);
-      dataValues.splice(10, dataValues.length - 10, otherValue);
+    const dataKeys: string[] = data.getTasksNameArray();
+    let map = new Map<string, number>();
+    for (let i = 0; i < dataKeys.length; i++) {
+      map.set(dataKeys[i], dataValues[i]);
     }
-    const dataKeys: String[] = data.getTasksNameArray();
-    if (dataKeys.length > 10) {
-      dataKeys.splice(10, dataKeys.length - 10, "Other");
+    map = new Map([...map.entries()].sort((a, b) => b[1] - a[1]));
+    // If we have more than 10 elements, gather the 10th element and the others lower elements in the "Other" category
+    dataValues.splice(0, dataValues.length, ...map.values());
+    dataKeys.splice(0, dataKeys.length, ...map.keys());
+    if (dataValues.length > 9) {
+      const otherValue = dataValues.slice(9).reduce((a, b) => a + b, 0);
+      dataValues.splice(10, dataValues.length - 9, otherValue);
+      dataKeys.splice(10, dataKeys.length - 9, "Other");
     }
     const backgroundColor: string[] = [];
     const borderColor: string[] = [];
     for (let i = 0; i < dataValues.length; i++) {
       let color;
-      if (i <= Object.values(PrettyColors).length)
+      if (i < Object.values(PrettyColors).length)
         color = Object.values(PrettyColors)[i];
       else color = OTHER;
       borderColor.push(color);
@@ -49,7 +54,7 @@ export default class CategoryTypeChartConverter {
       labels: dataKeys,
       datasets: [
         {
-          label: data.getTitle(),
+          label: "Tasks by keyword",
           data: dataValues,
           backgroundColor: backgroundColor,
           borderColor: borderColor,
@@ -62,7 +67,20 @@ export default class CategoryTypeChartConverter {
 
   public static convertToDonutDataTask(data: CategoryData): DonutData {
     const dataValues: number[] = data.getTasksTimeArray();
-    const dataKeys: String[] = data.getTasksNameArray();
+    const dataKeys: string[] = data.getTasksNameArray();
+    let map = new Map<string, number>();
+    for (let i = 0; i < dataKeys.length; i++) {
+      map.set(dataKeys[i], dataValues[i]);
+    }
+    map = new Map([...map.entries()].sort((a, b) => b[1] - a[1]));
+    // If we have more than 10 elements, gather the 10th element and the others lower elements in the "Other" category
+    dataValues.splice(0, dataValues.length, ...map.values());
+    dataKeys.splice(0, dataKeys.length, ...map.keys());
+    if (dataValues.length > 9) {
+      const otherValue = dataValues.slice(9).reduce((a, b) => a + b, 0);
+      dataValues.splice(10, dataValues.length - 9, otherValue);
+      dataKeys.splice(10, dataKeys.length - 9, "Other");
+    }
     const backgroundColor: string[] = [];
     const borderColor: string[] = [];
     for (let i = 0; i < dataValues.length; i++) {
@@ -90,12 +108,27 @@ export default class CategoryTypeChartConverter {
   public static convertToDonutDataActivties(data: CategoryData[]): DonutData {
     // Add all tge getActivitiesTimeArray in the dataValues
     let dataValues: number[] = [];
-    let dataKeys: String[] = [];
+    let dataKeys: string[] = [];
     for (let i = 0; i < data.length; i++) {
       dataValues = dataValues.concat(data[i].getActivitiesTimeArray());
       dataKeys = dataKeys.concat(data[i].getActivitiesNameArray());
     }
 
+    // Create a map with the dataKeys as keys and the dataValues as values
+    let map = new Map<string, number>();
+    for (let i = 0; i < dataKeys.length; i++) {
+      map.set(dataKeys[i], dataValues[i]);
+    }
+    // Sort the map by values
+    map = new Map([...map.entries()].sort((a, b) => b[1] - a[1]));
+    // If we have more than 10 elements, gather the 10th element and the others lower elements in the "Other" category
+    dataValues.splice(0, dataValues.length, ...map.values());
+    dataKeys.splice(0, dataKeys.length, ...map.keys());
+    if (dataValues.length > 9) {
+      const otherValue = dataValues.slice(9).reduce((a, b) => a + b, 0);
+      dataValues.splice(10, dataValues.length - 9, otherValue);
+      dataKeys.splice(10, dataKeys.length - 9, "Other");
+    }
     const backgroundColor: string[] = [];
     const borderColor: string[] = [];
     for (let i = 0; i < dataValues.length; i++) {
@@ -122,7 +155,22 @@ export default class CategoryTypeChartConverter {
 
   public static convertToPolarDataCategories(data: CategoryData[]): PolarData {
     const dataValues: number[] = data.map((d) => d.getTotalElapsed());
-    const dataKeys: String[] = data.map((d) => d.getTitle());
+    const dataKeys: string[] = data.map((d) => d.getTitle());
+    // Create a map with the dataKeys as keys and the dataValues as values
+    let map = new Map<string, number>();
+    for (let i = 0; i < dataKeys.length; i++) {
+      map.set(dataKeys[i], dataValues[i]);
+    }
+    // Sort the map by values
+    map = new Map([...map.entries()].sort((a, b) => b[1] - a[1]));
+    // If we have more than 10 elements, gather the 10th element and the others lower elements in the "Other" category
+    dataValues.splice(0, dataValues.length, ...map.values());
+    dataKeys.splice(0, dataKeys.length, ...map.keys());
+    if (dataValues.length > 9) {
+      const otherValue = dataValues.slice(9).reduce((a, b) => a + b, 0);
+      dataValues.splice(10, dataValues.length - 9, otherValue);
+      dataKeys.splice(10, dataKeys.length - 9, "Other");
+    }
     const backgroundColor: string[] = [];
     const borderColor: string[] = [];
     for (let i = 0; i < dataValues.length; i++) {
@@ -150,7 +198,22 @@ export default class CategoryTypeChartConverter {
   public static convertToPolarDataActivity(data: CategoryData): PolarData {
     // PolarData of all the activities from the data
     const dataValues: number[] = data.getActivitiesTimeArray();
-    const dataKeys: String[] = data.getActivitiesNameArray();
+    const dataKeys: string[] = data.getActivitiesNameArray();
+    // Create a map with the dataKeys as keys and the dataValues as values
+    let map = new Map<string, number>();
+    for (let i = 0; i < dataKeys.length; i++) {
+      map.set(dataKeys[i], dataValues[i]);
+    }
+    // Sort the map by values
+    map = new Map([...map.entries()].sort((a, b) => b[1] - a[1]));
+    // If we have more than 10 elements, gather the 10th element and the others lower elements in the "Other" category
+    dataValues.splice(0, dataValues.length, ...map.values());
+    dataKeys.splice(0, dataKeys.length, ...map.keys());
+    if (dataValues.length > 9) {
+      const otherValue = dataValues.slice(9).reduce((a, b) => a + b, 0);
+      dataValues.splice(10, dataValues.length - 9, otherValue);
+      dataKeys.splice(10, dataKeys.length - 9, "Other");
+    }
     const backgroundColor: string[] = [];
     const borderColor: string[] = [];
     for (let i = 0; i <= dataValues.length; i++) {

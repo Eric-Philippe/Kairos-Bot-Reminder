@@ -2,6 +2,7 @@ import CategoryData from "./timelogger.data";
 import { TCategoryServices } from "../../../tables/tcategory/tcategory.services";
 import { ActivityServices } from "../../../tables/activity/activity.services";
 import { TaskServices } from "../../../tables/task/task.services";
+import { TaskAltered } from "../../../tables/task/taskAltered";
 
 export default class TimeLoggerLoad {
   static async loadCategories(
@@ -85,5 +86,15 @@ export default class TimeLoggerLoad {
     }
 
     return categoryData;
+  }
+
+  static async loadAlteredTasksToCategory(
+    tasks: TaskAltered[]
+  ): Promise<CategoryData> {
+    const category = new CategoryData("Tasks Founded");
+    for (const task of tasks) {
+      category.addTaskToCategory(task.content, parseInt(task.timeElapsed));
+    }
+    return category;
   }
 }

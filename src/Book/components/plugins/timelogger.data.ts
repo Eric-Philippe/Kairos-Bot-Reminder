@@ -9,8 +9,8 @@ import DateWorker from "../../../utils/date.worker";
  */
 export default class CategoryData {
   title: string;
-  activities: Map<String, Map<String, number>> = new Map();
-  tasks: Map<String, number> = new Map();
+  activities: Map<string, Map<string, number>> = new Map();
+  tasks: Map<string, number> = new Map();
   /**
    * @alias Category
    * @param title
@@ -28,7 +28,7 @@ export default class CategoryData {
   addActivity(
     activityName: string,
     aggregate: boolean = true
-  ): Map<String, number> {
+  ): Map<string, number> {
     if (this.activities.has(activityName) && !aggregate) {
       let i = 1;
       while (this.activities.has(activityName + i)) i++;
@@ -107,7 +107,7 @@ export default class CategoryData {
    * @param activityName
    * @returns
    */
-  getTotalElapsedOfActivity(activityName: String): number {
+  getTotalElapsedOfActivity(activityName: string): number {
     let totalElapsed = 0;
     if (this.activities.has(activityName)) {
       this.activities.get(activityName)!.forEach((task) => {
@@ -119,13 +119,13 @@ export default class CategoryData {
   /**
    * Get the category name and the total elapsed time
    */
-  getSummary(): Array<String> {
+  getSummary(): Array<string> {
     return [this.title, DateWorker.timeToReadable(this.getTotalElapsed())];
   }
   /**
    * Get the activity name and the total elapsed time
    */
-  getSummaryOfActivity(activityName: String): Array<String> {
+  getSummaryOfActivity(activityName: string): Array<string> {
     return [
       activityName,
       DateWorker.timeToReadable(this.getTotalElapsedOfActivity(activityName)),
@@ -135,9 +135,9 @@ export default class CategoryData {
    * Get the task name and the total elapsed time
    */
   getSummaryOfTaskActivity(
-    taskName: String,
-    activityName: String
-  ): Array<String> {
+    taskName: string,
+    activityName: string
+  ): Array<string> {
     if (this.activities.has(activityName)) {
       let activity = this.activities.get(activityName)!;
       if (activity.has(taskName)) {
@@ -149,7 +149,7 @@ export default class CategoryData {
   /**
    * Get the task name and the total elapsed time of the category
    */
-  getSummaryOfTaskCategory(taskName: String): Array<String> {
+  getSummaryOfTaskCategory(taskName: string): Array<string> {
     if (this.tasks.has(taskName)) {
       return [taskName, DateWorker.timeToReadable(this.tasks.get(taskName)!)];
     }
@@ -168,8 +168,8 @@ export default class CategoryData {
   /**
    * Get an array of all the name of the activities
    */
-  getActivitiesNameArray(): Array<String> {
-    let result: Array<String> = [];
+  getActivitiesNameArray(): Array<string> {
+    let result: Array<string> = [];
     this.activities.forEach((activity, key) => {
       result.push(key);
     });
@@ -193,8 +193,8 @@ export default class CategoryData {
   /**
    * Get an array of all the name of the tasks
    */
-  getTasksNameArray(): Array<String> {
-    let result: Array<String> = [];
+  getTasksNameArray(): Array<string> {
+    let result: Array<string> = [];
     this.tasks.forEach((task, key) => {
       result.push(key);
     });
@@ -209,19 +209,19 @@ export default class CategoryData {
   /**
    * Getter of the activities
    */
-  getActivities(): Map<String, Map<String, number>> {
+  getActivities(): Map<string, Map<string, number>> {
     return this.activities;
   }
   /**
    * Getter of the tasks
    */
-  getTasks(): Map<String, number> {
+  getTasks(): Map<string, number> {
     return this.tasks;
   }
   /**
    * Get the name of the category
    */
-  getTitle(): String {
+  getTitle(): string {
     return this.title;
   }
   /**

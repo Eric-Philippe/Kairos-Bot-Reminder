@@ -49,12 +49,12 @@ export const TaskServices = {
   getTasksByKeywordUserIdEnded: async (
     userId: string,
     keyword: string
-  ): Promise<Task[]> => {
+  ): Promise<TaskAltered[]> => {
     let keywordSQL = keyword.replace(/ /g, "%");
     keywordSQL = "%" + keywordSQL + "%";
-    const result: Task[] = await execute(
+    const result: TaskAltered[] = await execute(
       TaskQueries.GetTasksByKeywordUserIdEnded,
-      [userId, keywordSQL]
+      [keywordSQL, userId]
     );
     return result;
   },

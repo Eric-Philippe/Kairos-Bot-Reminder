@@ -1,13 +1,20 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
+import {
+  ChatInputCommandInteraction,
+  EmbedBuilder,
+  SlashCommandBuilder,
+} from "discord.js";
 import { Command } from "src/CommandTemplate";
 
 import MessageManager from "../messages/MessageManager";
+import DateWorker from "../utils/date.worker";
 import { ConvertissorFactory } from "../Book/components/GraphManager/Convertissor/convertissor.factory";
 import * as ComponentsEnum from "../Book/components/book.cmpt.enum";
 const CP = ComponentsEnum.default;
 
 const CommandUtilsEnum = {
   TITLE: "TITLE",
+  NAME: "NAME",
+  CONTENT: "CONTENT",
   KEYWORD: "KEYWORD",
 };
 
@@ -355,11 +362,13 @@ const displayTimeTask = async function (
     );
 
   let workingTask = content ? content : (keyword as string);
-  let workingTaskType = content ? "content" : "keyword";
+  let workingTaskType = content
+    ? CommandUtilsEnum.CONTENT
+    : CommandUtilsEnum.KEYWORD;
 
   switch (workingTaskType) {
-    case "content":
-      const task = await TaskServices.getTaskByNameNotEndend(
+    case CommandUtilsEnum.CONTENT:
+      const task = await TaskServices.getTaskByContentUserIdEnded(
         interaction.user.id,
         workingTask
       );
@@ -369,8 +378,35 @@ const displayTimeTask = async function (
           "Task not found",
           interaction
         );
+
+      console.log(task);
+
+      let embed = new EmbedBuilder()
+        .setTitle(`Task : ${task.content}`)
+        .setColor("#5865F2")
+        .addFields(
+          {
+            name: "🕒 | EntryDate : ",
+            value: DateWorker.dateToReadable(task.entryDate),
+          },
+          {
+            name: "🕛 | EndDate : ",
+            value: DateWorker.dateToReadable(task.endDate as Date),
+          },
+          {
+            name: "🕰️ | Category : ",
+            value: task.TCId ? "✅" : "❌",
+          },
+          {
+            name: "⏰ | Activity : ",
+            value: task.AId ? "✅" : "❌",
+          }
+        )
+        .setFooter({ text: "⏳ | Provided by Kairos | Bot Reminder" });
+
+      interaction.editReply({ embeds: [embed] });
       break;
-    case "keyword":
+    case CommandUtilsEnum.KEYWORD:
       const tasks = await TaskServices.getTasksByKeywordUserIdEnded(
         interaction.user.id,
         workingTask
@@ -381,6 +417,31 @@ const displayTimeTask = async function (
           "No task found",
           interaction
         );
+
+      let convertissorBTasks = await ConvertissorFactory(
+        CP.UNIT,
+        CP.BAR,
+        CP.TASK
+      );
+
+      const categoryDataTasks = await TimeLoggerLoad.loadAlteredTasksToCategory(
+        tasks
+      );
+
+      let tasksDataBar = convertissorBTasks(categoryDataTasks);
+      let title = `📊 | Analysis of the tasks found with "${keyword}"`;
+
+      let pages: Page[] = [
+        new TextPage(
+          title,
+          categoryDataTasks.toString(),
+          interaction.user,
+          categoryDataTasks
+        ),
+        new GraphPage(title, interaction.user, tasksDataBar, CP.BAR),
+      ];
+
+      new Book(pages, interaction, interaction.user);
       break;
   }
 };
