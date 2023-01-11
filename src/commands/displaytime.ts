@@ -1,6 +1,7 @@
 import {
   ChatInputCommandInteraction,
   EmbedBuilder,
+  InteractionResponse,
   SlashCommandBuilder,
 } from "discord.js";
 import { Command } from "src/CommandTemplate";
@@ -122,19 +123,19 @@ const DisplayTime: Command = {
         )
     ),
   run: async (client, interaction) => {
-    await interaction.deferReply();
+    const answerInteraction = await interaction.deferReply();
     await UsersServices.isADBUser(interaction.user.id);
     const subcommand = interaction.options.getSubcommand();
 
     switch (subcommand) {
       case "category":
-        await displayTimeCategory(interaction);
+        await displayTimeCategory(interaction, answerInteraction);
         break;
       case "activity":
-        await displayTimeActivity(interaction);
+        await displayTimeActivity(interaction, answerInteraction);
         break;
       case "task":
-        await displayTimeTask(interaction);
+        await displayTimeTask(interaction, answerInteraction);
         break;
       case "bydate":
         break;
@@ -142,18 +143,22 @@ const DisplayTime: Command = {
   },
 };
 /**
- * Displayer for the displaytime category [title] [keyword] slashCommand
+ * @CATEGORY
+ * Handler for the "/displaytime category"
  * @param interaction
+ * @param answer
+ * @returns
  */
 const displayTimeCategory = async function (
-  interaction: ChatInputCommandInteraction
+  interaction: ChatInputCommandInteraction,
+  answer: InteractionResponse
 ) {
   // We get the options from the command
   const title = interaction.options.getString("title", false);
   const keyword = interaction.options.getString("keyword", false);
   /** If no option has been sent */
   if (!title && !keyword)
-    MessageManager.send(
+    return MessageManager.send(
       MessageManager.getErrorCnst(),
       "You must specify a title or a keyword",
       interaction
@@ -227,7 +232,7 @@ const displayTimeCategory = async function (
             CP.DOUGHNUT
           ),
         ];
-        new Book(pages, interaction, interaction.user);
+        new Book(pages, interaction, answer, interaction.user);
       } catch (err) {
         console.log(err);
       }
@@ -298,16 +303,23 @@ const displayTimeCategory = async function (
             )
           );
         }
-        new Book(pages, interaction, interaction.user);
+        new Book(pages, interaction, answer, interaction.user);
       } catch (err) {
         console.log(err);
       }
       break;
   }
 };
-
+/**
+ * @ACTIVITY
+ * Handler for the "/displaytime activity" command
+ * @param interaction
+ * @param answer
+ * @returns
+ */
 const displayTimeActivity = async function (
-  interaction: ChatInputCommandInteraction
+  interaction: ChatInputCommandInteraction,
+  answer: InteractionResponse
 ) {
   const name = interaction.options.getString("name", false);
   const keyword = interaction.options.getString("keyword", false);
@@ -317,6 +329,13 @@ const displayTimeActivity = async function (
       "You must specify a name or a keyword",
       interaction
     );
+
+  let convertissorDTask = await ConvertissorFactory(
+    CP.UNIT,
+    CP.DOUGHNUT,
+    CP.TASK
+  );
+
   let workingTask = name ? name : (keyword as string);
   let workingTaskType = name ? "name" : "keyword";
 
@@ -332,6 +351,34 @@ const displayTimeActivity = async function (
           "Activity not found",
           interaction
         );
+
+      try {
+        let activityData = await TimeLoggerLoad.loadActivityToCategory(
+          activity
+        );
+
+        let activityDataDount = convertissorDTask(activityData);
+        let title = `📊 | Analysis of the activity "${activity.name}"`;
+
+        let pages: Page[] = [
+          new TextPage(
+            title,
+            activityData.toString(),
+            interaction.user,
+            activityData
+          ),
+          new GraphPage(
+            title,
+            interaction.user,
+            activityDataDount,
+            CP.DOUGHNUT
+          ),
+        ];
+
+        new Book(pages, interaction, answer, interaction.user);
+      } catch (err) {
+        console.error(err);
+      }
       break;
     case "keyword":
       const activities = await ActivityServices.getActivitiesByKeywordUserId(
@@ -344,13 +391,70 @@ const displayTimeActivity = async function (
           "No activity found",
           interaction
         );
-      break;
+
+      try {
+        let activitiesData: CategoryData[] = [];
+        for (let i = 0; i < activities.length; i++) {
+          let activityData = await TimeLoggerLoad.loadActivityToCategory(
+            activities[i],
+            true
+          );
+          activitiesData.push(activityData);
+        }
+
+        let contentArray: string[] = [];
+        activitiesData.forEach((activity) => {
+          contentArray.push(activity.toString());
+        });
+
+        let txtPageContent: string[] = [];
+        if (TextPage.isContentTooLong(contentArray.join("\n\n"))) {
+          txtPageContent = TextPageAgg.createEnoughTextPageAgg(contentArray);
+        } else {
+          txtPageContent = [contentArray.join("\n\n")];
+        }
+        const title = `📊 | Analysis of the activities found with "${keyword}"`;
+
+        let pages: Page[] = [];
+        txtPageContent.forEach((content) => {
+          pages.push(
+            new TextPageAgg(
+              title,
+              content,
+              interaction.user,
+              activitiesData[0],
+              activitiesData
+            )
+          );
+        });
+        for (let i = 0; i < activitiesData.length; i++) {
+          pages.push(
+            new GraphPage(
+              title,
+              interaction.user,
+              convertissorDTask(activitiesData[i]),
+              CP.DOUGHNUT,
+              `Chart for the activity **"${activitiesData[i].getTitle()}"**`
+            )
+          );
+        }
+        new Book(pages, interaction, answer, interaction.user);
+      } catch (err) {
+        console.error(err);
+      }
       break;
   }
 };
-
+/**
+ * Handler of the command "/displaytime task"
+ * @TASK
+ * @param interaction
+ * @param answer
+ * @returns
+ */
 const displayTimeTask = async function (
-  interaction: ChatInputCommandInteraction
+  interaction: ChatInputCommandInteraction,
+  answer: InteractionResponse
 ) {
   const content = interaction.options.getString("content", false);
   const keyword = interaction.options.getString("keyword", false);
@@ -441,7 +545,7 @@ const displayTimeTask = async function (
         new GraphPage(title, interaction.user, tasksDataBar, CP.BAR),
       ];
 
-      new Book(pages, interaction, interaction.user);
+      new Book(pages, interaction, answer, interaction.user);
       break;
   }
 };

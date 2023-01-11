@@ -25,7 +25,7 @@ export const TCategoryServices = {
   ): Promise<TCategory> => {
     const result: TCategory[] = await execute(
       TCategoryQueries.GetCategoryByTitleUserId,
-      [title, userId]
+      [userId, title]
     );
     return result[0];
   },
@@ -38,7 +38,7 @@ export const TCategoryServices = {
 
     const result: TCategory[] = await execute(
       TCategoryQueries.GetCategoryByKeywordUserId,
-      [keywordSQL, userId]
+      [userId, keywordSQL]
     );
     return result;
   },

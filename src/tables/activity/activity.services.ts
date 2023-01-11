@@ -58,7 +58,7 @@ export const ActivityServices = {
     keywordSQL = "%" + keywordSQL + "%";
     const result: Activity[] = await execute(
       ActivityQueries.GetActivityByKeywordUserId,
-      [keywordSQL, userId]
+      [keywordSQL, userId, userId]
     );
     return result;
   },

@@ -1,6 +1,7 @@
 import {
   ButtonInteraction,
   ChatInputCommandInteraction,
+  InteractionResponse,
   User,
 } from "discord.js";
 import Page from "./components/Page/Page";
@@ -14,17 +15,20 @@ class Book {
   _currentPage: Page | TextPage | TextPageAgg | GraphPage | null = null;
   _pages: Page[];
   _interaction: ChatInputCommandInteraction;
+  _interactionReply: InteractionResponse;
   _user: User;
 
   constructor(
     pages: Page[],
     rootInteraction: ChatInputCommandInteraction,
+    interactionReply: InteractionResponse,
     user: User
   ) {
     this._nCurrentPage = 0;
     this._pages = pages;
     this._user = user;
     this._interaction = rootInteraction;
+    this._interactionReply = interactionReply;
     this.loadFirstPage(rootInteraction);
   }
 
@@ -38,7 +42,7 @@ class Book {
 
   public async launchControllerCollector() {
     Controller.controllerListener(
-      this._interaction,
+      this._interactionReply,
       this._user.id,
       this.onInteractionReceived.bind(this)
     );

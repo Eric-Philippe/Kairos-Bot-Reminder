@@ -6,10 +6,25 @@ export const TCategoryQueries = {
         SELECT * FROM TCategory WHERE TCId = ?;`,
 
   GetCategoryByTitleUserId: `
-        SELECT * FROM TCategory WHERE UPPER(title) = UPPER(?) AND userId = ?;`,
-
+      SELECT TCategory.TCId, TCategory.title
+      FROM TCategory
+      LEFT JOIN Activity ON TCategory.TCId = Activity.TCId
+      LEFT JOIN Task ON Activity.AId = Task.AId OR TCategory.TCId = Task.TCId
+      WHERE userid = ?
+      AND UPPER(title) LIKE UPPER(?)
+      GROUP BY TCategory.TCId, TCategory.title
+      HAVING SUM(TIMESTAMPDIFF(MINUTE, entryDate, endDate)) IS NOT NULL AND count(Task.TId) > 0;
+  
+  `,
   GetCategoryByKeywordUserId: `
-      SELECT * FROM TCategory WHERE UPPER(title) LIKE UPPER(?) AND userId = ?;
+      SELECT TCategory.TCId, TCategory.title
+      FROM TCategory
+      LEFT JOIN Activity ON TCategory.TCId = Activity.TCId
+      LEFT JOIN Task ON Activity.AId = Task.AId OR TCategory.TCId = Task.TCId
+      WHERE userid = ?
+      AND UPPER(title) LIKE UPPER(?)
+      GROUP BY TCategory.TCId, TCategory.title
+      HAVING SUM(TIMESTAMPDIFF(MINUTE, entryDate, endDate)) IS NOT NULL AND count(Task.TId) > 0; 
   `,
 
   GetMiscellaneousCategory: `

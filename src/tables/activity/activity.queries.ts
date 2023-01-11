@@ -38,13 +38,20 @@ export const ActivityQueries = {
     AND a.TCId = tc.TCId
     AND tc.userId = ?
     `,
-
+  // And the sum of all his tasks is not 0
   GetActivityByKeywordUserId: `
     SELECT *
     FROM Activity as a, TCategory as tc
     WHERE UPPER(a.name) LIKE UPPER(?)
     AND a.TCId = tc.TCId
-    AND tc.userId = ?;
+    AND tc.userId = ?
+    AND a.AId IN (
+      SELECT AId
+      FROM Task
+      WHERE userId = ?
+      GROUP BY AId
+      HAVING SUM(timestampdiff(MINUTE, entryDate, endDate)) > 0
+    );  
     `,
 
   InsertActivity: `

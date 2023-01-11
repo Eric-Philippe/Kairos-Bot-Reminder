@@ -3,6 +3,7 @@ import { TCategoryServices } from "../../../tables/tcategory/tcategory.services"
 import { ActivityServices } from "../../../tables/activity/activity.services";
 import { TaskServices } from "../../../tables/task/task.services";
 import { TaskAltered } from "../../../tables/task/taskAltered";
+import { Activity } from "../../../tables/activity/activity";
 
 export default class TimeLoggerLoad {
   static async loadCategories(
@@ -91,9 +92,35 @@ export default class TimeLoggerLoad {
   static async loadAlteredTasksToCategory(
     tasks: TaskAltered[]
   ): Promise<CategoryData> {
-    const category = new CategoryData("Tasks Founded");
+    const category = new CategoryData("Tasks Found");
     for (const task of tasks) {
       category.addTaskToCategory(task.content, parseInt(task.timeElapsed));
+    }
+    return category;
+  }
+
+  static async loadActivityToCategory(
+    activity: Activity,
+    isMultipleActivy: boolean = false
+  ): Promise<CategoryData> {
+    let title: string;
+    if (!isMultipleActivy) title = "Activity " + activity.name + "'s analysis";
+    else title = activity.name + "'s recap'";
+    const category = new CategoryData(
+      "Activity " + activity.name + "'s analysis"
+    );
+    const activityData = category.addActivity(activity.name);
+    const tasks = await TaskServices.GetTasksAlteredEndedByActivityId(
+      activity.AId
+    );
+    console.log(tasks);
+
+    for (const task of tasks) {
+      category.addTaskToActivity(
+        activity.name,
+        task.content,
+        parseInt(task.timeElapsed)
+      );
     }
     return category;
   }

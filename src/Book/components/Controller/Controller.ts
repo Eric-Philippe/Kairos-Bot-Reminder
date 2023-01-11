@@ -5,7 +5,7 @@ import {
   ComponentType,
   MessageActionRowComponentBuilder,
   ButtonInteraction,
-  ChatInputCommandInteraction,
+  InteractionResponse,
 } from "discord.js";
 
 import Page from "../Page/Page";
@@ -54,11 +54,11 @@ class Controller {
   }
 
   public static controllerListener(
-    interaction: ChatInputCommandInteraction,
+    interaction: InteractionResponse,
     userId: string,
     callBack: (i: ButtonInteraction) => void
   ): void {
-    const collector = interaction.channel?.createMessageComponentCollector({
+    const collector = interaction.createMessageComponentCollector({
       componentType: ComponentType.Button,
       time: 1000 * 60 * 5,
       filter: (i) =>
