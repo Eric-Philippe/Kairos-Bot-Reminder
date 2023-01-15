@@ -62,7 +62,7 @@ export function ConvertissorFactory(
             case "activity":
               return null;
             case "task":
-              return null;
+              return CategoryTypeChartConverter.convertToBarDataTasks;
           }
         case "doughnut":
           switch (target) {

@@ -4,6 +4,9 @@ import { ActivityServices } from "../../../tables/activity/activity.services";
 import { TaskServices } from "../../../tables/task/task.services";
 import { TaskAltered } from "../../../tables/task/taskAltered";
 import { Activity } from "../../../tables/activity/activity";
+import { TCategory } from "src/tables/tcategory/tcategory";
+import DateWorker from "../../../utils/date.worker";
+import { Task } from "../../../tables/task/task";
 
 export default class TimeLoggerLoad {
   static async loadCategories(
@@ -30,7 +33,7 @@ export default class TimeLoggerLoad {
           categoryData.addTaskToActivity(
             activity.name,
             task.content,
-            parseInt(task.timeElapsed)
+            task.timeElapsed
           );
         }
       }
@@ -41,10 +44,7 @@ export default class TimeLoggerLoad {
       );
 
       for (const task of tasks) {
-        categoryData.addTaskToCategory(
-          task.content,
-          parseInt(task.timeElapsed)
-        );
+        categoryData.addTaskToCategory(task.content, task.timeElapsed);
       }
 
       categoriesData.push(categoryData);
@@ -73,7 +73,7 @@ export default class TimeLoggerLoad {
         categoryData.addTaskToActivity(
           activity.name,
           task.content,
-          parseInt(task.timeElapsed)
+          task.timeElapsed
         );
       }
     }
@@ -83,7 +83,7 @@ export default class TimeLoggerLoad {
     );
 
     for (const task of tasks) {
-      categoryData.addTaskToCategory(task.content, parseInt(task.timeElapsed));
+      categoryData.addTaskToCategory(task.content, task.timeElapsed);
     }
 
     return categoryData;
@@ -94,7 +94,7 @@ export default class TimeLoggerLoad {
   ): Promise<CategoryData> {
     const category = new CategoryData("Tasks Found");
     for (const task of tasks) {
-      category.addTaskToCategory(task.content, parseInt(task.timeElapsed));
+      category.addTaskToCategory(task.content, task.timeElapsed);
     }
     return category;
   }
@@ -116,12 +116,102 @@ export default class TimeLoggerLoad {
     console.log(tasks);
 
     for (const task of tasks) {
-      category.addTaskToActivity(
-        activity.name,
-        task.content,
-        parseInt(task.timeElapsed)
-      );
+      category.addTaskToActivity(activity.name, task.content, task.timeElapsed);
     }
     return category;
   }
+
+  static async loadCategoriesDated(
+    categoriesFounded: TCategory[],
+    minDate: Date,
+    maxDate: Date
+  ): Promise<CategoryData[]> {
+    const categoriesData: CategoryData[] = [];
+    for (const category of categoriesFounded) {
+      const categoryData = new CategoryData(category.title);
+      const activitiesFounded =
+        await ActivityServices.getActivitiesByCategoryId(category.TCId);
+      // A map to store the activities and aggregate the activities with the same name
+      let activities = new Map<string, Activity>();
+      for (const activity of activitiesFounded) {
+        activities.set(activity.AId, activity);
+      }
+
+      for (const AKey of activities.keys()) {
+        let tasks = new Map<string, TaskAltered>();
+        const tasksFromActivity = await TaskServices.getTasksByActivityId(AKey);
+        for (const task of tasksFromActivity) {
+          if (
+            (task.entryDate >= minDate && task.endDate) ||
+            new Date() <= maxDate
+          ) {
+            if (tasks.has(task.TId)) {
+              const taskToModify = tasks.get(task.TId);
+              if (taskToModify) {
+                taskToModify.timeElapsed += DateWorker.getDateDifferentM(
+                  task.entryDate,
+                  task.endDate || task.entryDate
+                );
+                tasks.set(task.TId, taskToModify);
+              }
+            } else {
+              tasks.set(task.TId, TaskToAltered(task));
+            }
+          }
+        }
+        categoryData.addActivity(activities.get(AKey)!.name);
+        for (const TKey of tasks.keys()) {
+          categoryData.addTaskToActivity(
+            activities.get(AKey)!.name,
+            tasks.get(TKey)!.content,
+            tasks.get(TKey)!.timeElapsed
+          );
+        }
+      }
+
+      // Get the tasks that are not linked to an activity
+      const tasks = await TaskServices.getTasksByCategoryId(category.TCId);
+      let tasksCategory = new Map<string, TaskAltered>();
+      for (const task of tasks) {
+        if (
+          (task.entryDate >= minDate && task.endDate) ||
+          new Date() <= maxDate
+        ) {
+          if (tasksCategory.has(task.TId)) {
+            const taskToModify = tasksCategory.get(task.TId);
+            if (taskToModify) {
+              taskToModify.timeElapsed += DateWorker.getDateDifferentM(
+                task.entryDate,
+                task.endDate || task.entryDate
+              );
+              tasksCategory.set(task.TId, taskToModify);
+            }
+          } else {
+            tasksCategory.set(task.TId, TaskToAltered(task));
+          }
+        }
+      }
+      for (const TKey of tasksCategory.keys()) {
+        categoryData.addTaskToCategory(
+          tasksCategory.get(TKey)!.content,
+          tasksCategory.get(TKey)!.timeElapsed
+        );
+      }
+      categoriesData.push(categoryData);
+    }
+    return categoriesData;
+  }
 }
+
+const TaskToAltered = (task: Task): TaskAltered => {
+  return {
+    content: task.content,
+    AId: task.AId,
+    TCId: task.TCId,
+    TId: task.TId,
+    timeElapsed: DateWorker.getDateDifferentM(
+      task.entryDate,
+      task.endDate || task.entryDate
+    ),
+  };
+};

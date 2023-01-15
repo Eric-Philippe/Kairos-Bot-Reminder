@@ -219,6 +219,21 @@ export default class CategoryData {
     return this.tasks;
   }
   /**
+   * Get all the tasks [Inside the category itself and all the tasks of the activities]
+   */
+  getAllTasks(): Map<string, number> {
+    let result = new Map<string, number>();
+    this.tasks.forEach((task, key) => {
+      result.set(key, task);
+    });
+    this.activities.forEach((activity) => {
+      activity.forEach((task, key) => {
+        result.set(key, task);
+      });
+    });
+    return result;
+  }
+  /**
    * Get the name of the category
    */
   getTitle(): string {
@@ -245,7 +260,7 @@ export default class CategoryData {
         result +=
           `:small_orange_diamond::small_blue_diamond: Task : *${content}* - ` +
           "``" +
-          `${DateWorker.timeToReadable(task)}` +
+          `${task > 0 ? DateWorker.timeToReadable(task) : "Not terminated"}` +
           "``\n";
       });
     });
@@ -253,7 +268,7 @@ export default class CategoryData {
       result +=
         `\n:small_blue_diamond: Task : ${content} - ` +
         "``" +
-        `${DateWorker.timeToReadable(task)}` +
+        `${task > 0 ? DateWorker.timeToReadable(task) : "Not terminated"}` +
         "``\n";
     });
     return result;

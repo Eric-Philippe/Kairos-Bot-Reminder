@@ -1,6 +1,6 @@
 export const ActivityQueries = {
   GetActivitiesByUserId: `
-    SELECT * 
+    SELECT a.* 
     FROM Activity as a, TCategory as tc
     WHERE a.TCId = tc.TCId
     AND tc.userid = ?;
@@ -32,7 +32,7 @@ export const ActivityQueries = {
     `,
 
   GetActivityByNameUserId: `
-    SELECT *
+    SELECT a.*
     FROM Activity as a, TCategory as tc
     WHERE UPPER(a.name) = UPPER(?)
     AND a.TCId = tc.TCId
@@ -40,7 +40,7 @@ export const ActivityQueries = {
     `,
   // And the sum of all his tasks is not 0
   GetActivityByKeywordUserId: `
-    SELECT *
+    SELECT a.*
     FROM Activity as a, TCategory as tc
     WHERE UPPER(a.name) LIKE UPPER(?)
     AND a.TCId = tc.TCId

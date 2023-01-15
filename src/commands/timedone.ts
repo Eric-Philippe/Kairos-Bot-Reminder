@@ -1,4 +1,7 @@
-import { SlashCommandBuilder } from "discord.js";
+import {
+  ApplicationCommandOptionChoiceData,
+  SlashCommandBuilder,
+} from "discord.js";
 import { Command } from "src/CommandTemplate";
 
 import MessageManager from "../messages/MessageManager";
@@ -9,6 +12,10 @@ import { TCategory } from "src/tables/tcategory/tcategory";
 import { ActivityServices } from "../tables/activity/activity.services";
 import { Activity } from "../tables/activity/activity";
 import { TaskServices } from "../tables/task/task.services";
+import {
+  autocompleteActivities,
+  autocompleteTCategories,
+} from "../utils/autocomplete.routine";
 
 const StartWork: Command = {
   data: new SlashCommandBuilder()
@@ -41,6 +48,7 @@ const StartWork: Command = {
         .setMaxLength(50)
         .setMinLength(2)
         .setRequired(false)
+        .setAutocomplete(true)
     )
     .addStringOption((option) =>
       option
@@ -49,8 +57,18 @@ const StartWork: Command = {
         .setMaxLength(50)
         .setMinLength(2)
         .setRequired(false)
+        .setAutocomplete(true)
     ),
-
+  autocomplete: async (interaction) => {
+    const focusedOption = interaction.options.getFocused(true);
+    let choices: ApplicationCommandOptionChoiceData[] = [];
+    if (focusedOption.name === "activity") {
+      choices = await autocompleteActivities(interaction, focusedOption.value);
+    } else if (focusedOption.name === "category") {
+      choices = await autocompleteTCategories(interaction, focusedOption.value);
+    }
+    interaction.respond(choices);
+  },
   run: async (client, interaction) => {
     let categoryCreated = false;
     let activityCreated = false;

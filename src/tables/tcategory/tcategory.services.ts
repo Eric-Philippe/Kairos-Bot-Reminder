@@ -42,6 +42,17 @@ export const TCategoryServices = {
     );
     return result;
   },
+  getCategoriesByDate: async (
+    userId: string,
+    datein: string,
+    dateout: string
+  ) => {
+    const result: TCategory[] = await execute(
+      TCategoryQueries.GetCategoriesByDate,
+      [userId, datein, dateout]
+    );
+    return result;
+  },
   getMiscellaneousTCategory: async (userId: string): Promise<TCategory> => {
     const result: TCategory[] = await execute(
       TCategoryQueries.GetMiscellaneousCategory,

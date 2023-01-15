@@ -1,7 +1,8 @@
-export interface TaskAltered {
+export interface TaskWParent {
   TId: string;
   content: string;
-  timeElapsed: number;
   TCId: string;
+  title: string;
   AId: string;
+  name: string;
 }

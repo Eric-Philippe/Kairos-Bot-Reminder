@@ -1,10 +1,17 @@
 import {
+  ApplicationCommandOptionChoiceData,
   ChatInputCommandInteraction,
   EmbedBuilder,
   InteractionResponse,
   SlashCommandBuilder,
 } from "discord.js";
 import { Command } from "src/CommandTemplate";
+
+import {
+  autocompleteActivities,
+  autocompleteTasks,
+  autocompleteTCategories,
+} from "../utils/autocomplete.routine";
 
 import MessageManager from "../messages/MessageManager";
 import DateWorker from "../utils/date.worker";
@@ -59,6 +66,7 @@ const DisplayTime: Command = {
             .setName("title")
             .setDescription("The title of the category")
             .setRequired(false)
+            .setAutocomplete(true)
         )
         .addStringOption((option) =>
           option
@@ -78,6 +86,7 @@ const DisplayTime: Command = {
             .setName("name")
             .setDescription("The name of the activity")
             .setRequired(false)
+            .setAutocomplete(true)
         )
         .addStringOption((option) =>
           option
@@ -97,6 +106,7 @@ const DisplayTime: Command = {
             .setName("content")
             .setDescription("The content of the task")
             .setRequired(false)
+            .setAutocomplete(true)
         )
         .addStringOption((option) =>
           option
@@ -122,6 +132,32 @@ const DisplayTime: Command = {
             .setRequired(false)
         )
     ),
+  autocomplete: async (interaction) => {
+    const subcommand = interaction.options.getSubcommand();
+    const focusedOption = interaction.options.getFocused(true);
+    let choices: ApplicationCommandOptionChoiceData[] = [];
+    switch (subcommand) {
+      case "category":
+        if (focusedOption.name === "title")
+          choices = await autocompleteTCategories(
+            interaction,
+            focusedOption.value
+          );
+        break;
+      case "activity":
+        if (focusedOption.name === "name")
+          choices = await autocompleteActivities(
+            interaction,
+            focusedOption.value
+          );
+        break;
+      case "task":
+        if (focusedOption.name === "content")
+          choices = await autocompleteTasks(interaction, focusedOption.value);
+        break;
+    }
+    interaction.respond(choices);
+  },
   run: async (client, interaction) => {
     const answerInteraction = await interaction.deferReply();
     await UsersServices.isADBUser(interaction.user.id);
@@ -138,6 +174,7 @@ const DisplayTime: Command = {
         await displayTimeTask(interaction, answerInteraction);
         break;
       case "bydate":
+        await displayTimeByDate(interaction, answerInteraction);
         break;
     }
   },
@@ -456,7 +493,7 @@ const displayTimeTask = async function (
   interaction: ChatInputCommandInteraction,
   answer: InteractionResponse
 ) {
-  const content = interaction.options.getString("content", false);
+  let content = interaction.options.getString("content", false);
   const keyword = interaction.options.getString("keyword", false);
   if (!content && !keyword)
     return MessageManager.send(
@@ -465,6 +502,8 @@ const displayTimeTask = async function (
       interaction
     );
 
+  if (content?.includes(">#>")) content = content.split(">#>")[1];
+
   let workingTask = content ? content : (keyword as string);
   let workingTaskType = content
     ? CommandUtilsEnum.CONTENT
@@ -472,9 +511,9 @@ const displayTimeTask = async function (
 
   switch (workingTaskType) {
     case CommandUtilsEnum.CONTENT:
-      const task = await TaskServices.getTaskByContentUserIdEnded(
-        interaction.user.id,
-        workingTask
+      const task = await TaskServices.getTasksByIdUserId(
+        content as string,
+        interaction.user.id
       );
       if (!task)
         return MessageManager.send(
@@ -482,8 +521,6 @@ const displayTimeTask = async function (
           "Task not found",
           interaction
         );
-
-      console.log(task);
 
       let embed = new EmbedBuilder()
         .setTitle(`Task : ${task.content}`)
@@ -548,6 +585,170 @@ const displayTimeTask = async function (
       new Book(pages, interaction, answer, interaction.user);
       break;
   }
+};
+
+/**
+ * Handler of the command "/displaytime task"
+ * @TASK
+ * @param interaction
+ * @param answer
+ * @returns
+ */
+const displayTimeByDate = async function (
+  interaction: ChatInputCommandInteraction,
+  answer: InteractionResponse
+) {
+  const startDate = interaction.options.getString("firstdate", false);
+  const endDate = interaction.options.getString("seconddate", false);
+  if (!startDate)
+    return MessageManager.send(
+      MessageManager.getErrorCnst(),
+      "You must specify a start date",
+      interaction
+    );
+
+  // If the startDate contains at least one '/'
+  // We allow to input a date without a year 13/05
+  let isValidStartDate = false;
+  let errorMessageStartDate = "";
+  switch (true) {
+    case !startDate.includes("/"):
+      errorMessageStartDate =
+        "The start date must be in the format dd/mm/yyyy : No '/'";
+      break;
+    case startDate.split("/").length < 2:
+      errorMessageStartDate =
+        "The start date must be in the format dd/mm/yyyy : Not enough '/'";
+      break;
+    case startDate.split("/").length > 3:
+      errorMessageStartDate =
+        "The start date must be in the format dd/mm/yyyy : Too many '/'";
+      break;
+    case isNaN(parseInt(startDate.split("/")[0])):
+      errorMessageStartDate =
+        "The start date must be in the format dd/mm/yyyy : The day must be a number";
+      break;
+    case isNaN(parseInt(startDate.split("/")[1])):
+      errorMessageStartDate =
+        "The start date must be in the format dd/mm/yyyy : The month must be a number";
+      break;
+    case startDate.split("/").length == 3 &&
+      isNaN(parseInt(startDate.split("/")[2])):
+      errorMessageStartDate =
+        "The start date must be in the format dd/mm/yyyy : The year must be a number";
+      break;
+    default:
+      isValidStartDate = true;
+  }
+
+  if (!isValidStartDate)
+    return MessageManager.send(
+      MessageManager.getErrorCnst(),
+      errorMessageStartDate,
+      interaction
+    );
+
+  const start = DateWorker.stringToDate(startDate);
+  const end = DateWorker.stringToDate(endDate, true);
+  const startMySQL = DateWorker.dateToMySQL(start);
+  const endMySQL = DateWorker.dateToMySQL(end);
+
+  if (start > end)
+    return MessageManager.send(
+      MessageManager.getErrorCnst(),
+      "The start date must be before the end date",
+      interaction
+    );
+
+  const categories = await TCategoryServices.getCategoriesByDate(
+    interaction.user.id,
+    startMySQL,
+    endMySQL
+  );
+  if (categories.length == 0)
+    return MessageManager.send(
+      MessageManager.getErrorCnst(),
+      "No category found",
+      interaction
+    );
+
+  let categoriesData = await TimeLoggerLoad.loadCategoriesDated(
+    categories,
+    start,
+    end
+  );
+
+  if (!categoriesData || categoriesData.length == 0) {
+    return MessageManager.send(
+      MessageManager.getErrorCnst(),
+      "No category found or no activity found",
+      interaction
+    );
+  }
+
+  let title = `📊 | Analysis of the categories between ${DateWorker.dateToReadable(
+    start
+  )} and ${DateWorker.dateToReadable(end)}`;
+
+  let contentArray: string[] = [];
+  categoriesData.forEach((category) => {
+    contentArray.push(category.toString());
+  });
+
+  let txtPageContent: string[] = [];
+  if (TextPage.isContentTooLong(contentArray.join("\n\n"))) {
+    txtPageContent = TextPageAgg.createEnoughTextPageAgg(contentArray);
+  } else {
+    txtPageContent = [contentArray.join("\n\n")];
+  }
+
+  let pages: Page[] = [];
+
+  txtPageContent.forEach((content) => {
+    pages.push(
+      new TextPageAgg(
+        title,
+        content,
+        interaction.user,
+        categoriesData[0],
+        categoriesData
+      )
+    );
+  });
+
+  // Polarchart about the categories
+  // Donut about all the activities even if they're not sharing the same category
+  // Bar about the 10 most used tasks even if they're not sharing the same category
+  let convertissorPolarCategories = await ConvertissorFactory(
+    CP.LIST,
+    CP.POLAR_AREA,
+    CP.CATEGORY
+  );
+  // Donut about all the activities even if they're not sharing the same category
+  let convertissorDoughnutActivities = await ConvertissorFactory(
+    CP.LIST,
+    CP.DOUGHNUT,
+    CP.ACTIVITY
+  );
+
+  // Bar about the 10 most used tasks even if they're not sharing the same category
+  let convertissorBarTasks = await ConvertissorFactory(
+    CP.LIST,
+    CP.BAR,
+    CP.TASK
+  );
+
+  let polarDataCategories = convertissorPolarCategories(categoriesData);
+  let doughnutDataActivities = convertissorDoughnutActivities(categoriesData);
+  let barDataTasks = convertissorBarTasks(categoriesData);
+
+  pages.push(
+    new GraphPage(title, interaction.user, polarDataCategories, CP.POLAR_AREA),
+    new GraphPage(title, interaction.user, doughnutDataActivities, CP.DOUGHNUT),
+    new GraphPage(title, interaction.user, barDataTasks, CP.BAR)
+  );
+
+  new Book(pages, interaction, answer, interaction.user);
 };
 
 export default DisplayTime;

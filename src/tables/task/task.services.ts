@@ -4,6 +4,7 @@ import { Task } from "./task";
 import { TaskAltered } from "./taskAltered";
 import { getAvailableIdentifiant } from "../identifiant/identifiant.services";
 import { MYSQL_TABLES } from "../../utils/mysql_tables.enum";
+import { TaskWParent } from "./taskWParent";
 
 export const TaskServices = {
   getTaskByName: async (userId: string, content: string): Promise<Task> => {
@@ -12,6 +13,12 @@ export const TaskServices = {
       userId,
     ]);
     return result[0];
+  },
+  getTasksByCategoryId: async (TCId: string): Promise<Task[]> => {
+    const result: Task[] = await execute(TaskQueries.GetTasksByCategory, [
+      TCId,
+    ]);
+    return result;
   },
   getTaskByNameNotEndend: async (
     userId: string,
@@ -23,18 +30,66 @@ export const TaskServices = {
     ]);
     return result[0];
   },
+  getTasksByKeywordUserId: async (
+    keyword: string,
+    userId: string
+  ): Promise<TaskWParent[]> => {
+    let keywordSQL = keyword.replace(/ /g, "%");
+    keywordSQL = "%" + keywordSQL + "%";
+    const result: TaskWParent[] = await execute(
+      TaskQueries.GetTasksByKeywordUserId,
+      [keywordSQL, userId, userId]
+    );
+    return result;
+  },
+  getTasksEndedByKeywordUserId: async (
+    keyword: string,
+    userId: string
+  ): Promise<TaskWParent[]> => {
+    let keywordSQL = keyword.replace(/ /g, "%");
+    keywordSQL = "%" + keywordSQL + "%";
+    const result: TaskWParent[] = await execute(
+      TaskQueries.GetTasksByKeywordUserIdEnded,
+      [keywordSQL, userId, userId]
+    );
+    return result;
+  },
+  getTasksNotEndedByKeywordUserId: async (
+    keyword: string,
+    userId: string
+  ): Promise<TaskWParent[]> => {
+    let keywordSQL = keyword.replace(/ /g, "%");
+    keywordSQL = "%" + keywordSQL + "%";
+    const result: TaskWParent[] = await execute(
+      TaskQueries.GetTasksNotEndedByKeywordUserId,
+      [keywordSQL, userId, userId]
+    );
+    return result;
+  },
   getTaskById: async (TId: string): Promise<Task> => {
     const result: Task[] = await execute(TaskQueries.GetTaskById, [TId]);
     return result[0];
   },
-  getTasksByActivityId: async (AId: string): Promise<Task[]> => {
+  getTasksByIdUserId: async (TId: string, userId: string): Promise<Task> => {
+    const result: Task[] = await execute(TaskQueries.GetTaskByIdUserId, [
+      TId,
+      userId,
+    ]);
+    return result[0];
+  },
+  getTasksByActivityIdEnded: async (AId: string): Promise<Task[]> => {
     const result: Task[] = await execute(
       TaskQueries.GetTasksNotEndedByActivityId,
       [AId]
     );
     return result;
   },
-
+  getTasksByActivityId: async (AId: string): Promise<Task[]> => {
+    const result: Task[] = await execute(TaskQueries.GetTasksByActivityId, [
+      AId,
+    ]);
+    return result;
+  },
   getTaskByContentUserIdEnded: async (
     userId: string,
     content: string

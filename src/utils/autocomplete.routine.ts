@@ -2,8 +2,12 @@ import {
   ApplicationCommandOptionChoiceData,
   AutocompleteInteraction,
 } from "discord.js";
+import { TCategoryServices } from "../tables/tcategory/tcategory.services";
 import { RCategoryServices } from "../tables/rcategory/rcategory.services";
 import RCategoriesDefault from "./rcategories.enum";
+import { ActivityServices } from "../tables/activity/activity.services";
+import { TaskServices } from "../tables/task/task.services";
+import { TaskWParent } from "../tables/task/taskWParent";
 
 export const autoCompleteTime = async (
   interaction: AutocompleteInteraction
@@ -192,6 +196,128 @@ export const autocompleteCategories = async (
         };
       })
     );
+  }
+
+  if (choices.length > 25) choices = choices.slice(0, 25);
+  return choices;
+};
+
+export const autocompleteTCategories = async (
+  interaction: AutocompleteInteraction,
+  written: string,
+  newAllowed = false
+): Promise<ApplicationCommandOptionChoiceData[]> => {
+  // If we have started writing a category, we will only show the categories that contains the written string
+  let choices: ApplicationCommandOptionChoiceData[] = [];
+  const userCategories = await TCategoryServices.getCategoryByKeywordUserId(
+    written,
+    interaction.user.id
+  );
+  if (userCategories.length != 0) {
+    choices = userCategories.map((choice) => {
+      return {
+        name: choice.title,
+        value: choice.title,
+      };
+    });
+  }
+
+  if (choices.length > 25) choices = choices.slice(0, 25);
+  if (newAllowed && choices.length < 3) {
+    choices.push({
+      name: "New category : " + written,
+      value: written,
+    });
+  }
+
+  return choices;
+};
+
+export const autocompleteActivities = async (
+  interaction: AutocompleteInteraction,
+  written: string,
+  newAllowed = false
+): Promise<ApplicationCommandOptionChoiceData[]> => {
+  // If we have started writing a category, we will only show the categories that contains the written string
+  let choices: ApplicationCommandOptionChoiceData[] = [];
+  const userActivities = await ActivityServices.getActivitiesByKeywordUserId(
+    written,
+    interaction.user.id
+  );
+  if (userActivities.length != 0) {
+    choices = userActivities.map((choice) => {
+      return {
+        name: choice.name,
+        value: choice.name,
+      };
+    });
+  }
+
+  if (choices.length > 25) choices = choices.slice(0, 25);
+  if (newAllowed && choices.length < 3) {
+    choices.push({
+      name: "New activity : " + written,
+      value: written,
+    });
+  }
+  return choices;
+};
+
+export const autocompleteTasks = async (
+  interaction: AutocompleteInteraction,
+  written: string
+): Promise<ApplicationCommandOptionChoiceData[]> => {
+  // If we have started writing a category, we will only show the categories that contains the written string
+  let choices: ApplicationCommandOptionChoiceData[] = [];
+  const userTasks: TaskWParent[] = await TaskServices.getTasksByKeywordUserId(
+    written,
+    interaction.user.id
+  );
+  if (userTasks.length != 0) {
+    choices = userTasks.map((choice) => {
+      let name = choice.content;
+      // If the task has a TCategory [TCId not null] we put a "[C]" + the 6 first letters of the TCategory title + ... at the end of the task name
+      if (choice.TCId != null) {
+        name += ` [C] ${choice.title}`;
+      } else if (choice.AId != null) {
+        name += ` [A] ${choice.name}`;
+      }
+      return {
+        name: name,
+        value: choice.TId + ">#>" + choice.content,
+      };
+    });
+  }
+
+  if (choices.length > 25) choices = choices.slice(0, 25);
+  return choices;
+};
+
+export const autocompleteTasksToEnd = async (
+  interaction: AutocompleteInteraction,
+  written: string
+): Promise<ApplicationCommandOptionChoiceData[]> => {
+  // If we have started writing a category, we will only show the categories that contains the written string
+  let choices: ApplicationCommandOptionChoiceData[] = [];
+  const userTasks: TaskWParent[] =
+    await TaskServices.getTasksNotEndedByKeywordUserId(
+      written,
+      interaction.user.id
+    );
+  if (userTasks.length != 0) {
+    choices = userTasks.map((choice) => {
+      let name = choice.content;
+      // If the task has a TCategory [TCId not null] we put a "[C]" + the 6 first letters of the TCategory title + ... at the end of the task name
+      if (choice.TCId != null) {
+        name += ` [C] ${choice.title}`;
+      } else if (choice.AId != null) {
+        name += ` [A] ${choice.name}`;
+      }
+      return {
+        name: name,
+        value: choice.TId + ">#>" + choice.content,
+      };
+    });
   }
 
   if (choices.length > 25) choices = choices.slice(0, 25);

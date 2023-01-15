@@ -19,7 +19,7 @@ import {
   autoCompleteTime,
   autoCompleteDate,
   autocompleteCategories,
-} from "../utils/autocomplete.recurrent";
+} from "../utils/autocomplete.routine";
 
 import { IMG } from "../assets/LOGOS.json";
 import { Remindme } from "src/tables/remindme/remindme";

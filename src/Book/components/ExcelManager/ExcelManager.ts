@@ -26,12 +26,12 @@ class ExcelManager {
       {
         header: "Category",
         key: "category",
-        width: 32,
+        width: 28,
       },
       {
         header: "Activity",
         key: "activity",
-        width: 24,
+        width: 28,
       },
       {
         header: "Task",
@@ -48,51 +48,24 @@ class ExcelManager {
     this._activity = this._sheet.getColumn("activity");
     this._task = this._sheet.getColumn("task");
     this._time = this._sheet.getColumn("time");
-    this._category.header = "Category";
-    this._sheet.getRow(1).getCell(1).style = {
-      font: {
-        bold: true,
-      },
-      border: {
-        top: { style: "thin" },
-        left: { style: "thin" },
-        bottom: { style: "thin" },
-        right: { style: "thin" },
-      },
-    };
-    this._sheet.getRow(1).getCell(2).style = {
-      font: {
-        bold: true,
-      },
-      border: {
-        top: { style: "thin" },
-        left: { style: "thin" },
-        bottom: { style: "thin" },
-        right: { style: "thin" },
-      },
-    };
-    this._sheet.getRow(1).getCell(3).style = {
-      font: {
-        bold: true,
-      },
-      border: {
-        top: { style: "thin" },
-        left: { style: "thin" },
-        bottom: { style: "thin" },
-        right: { style: "thin" },
-      },
-    };
-    this._sheet.getRow(1).getCell(4).style = {
-      font: {
-        bold: true,
-      },
-      border: {
-        top: { style: "thin" },
-        left: { style: "thin" },
-        bottom: { style: "thin" },
-        right: { style: "thin" },
-      },
-    };
+    for (let i = 1; i < 5; i++) {
+      this._sheet.getRow(1).getCell(i).style = {
+        font: {
+          bold: true,
+        },
+        border: {
+          top: { style: "thin" },
+          left: { style: "thin" },
+          bottom: { style: "thin" },
+          right: { style: "thin" },
+        },
+        alignment: {
+          vertical: "middle",
+          horizontal: "center",
+        },
+      };
+    }
+    this._category.header = "Category / Label";
     this._activity.header = "Activity";
     this._task.header = "Task";
     this._time.header = "Total Time";
@@ -115,57 +88,14 @@ class ExcelManager {
    */
   public async addSeparatorLine() {
     this.newLine();
-    this._currentRow.getCell(1).value =
-      "----------------------------------------------------";
-    this._currentRow.getCell(1).style = {
-      font: {
-        bold: true,
-      },
-      border: {
-        top: { style: "thin" },
-        left: { style: "thin" },
-        bottom: { style: "thin" },
-        right: { style: "thin" },
-      },
-    };
-    this._currentRow.getCell(2).value =
-      "----------------------------------------";
-    this._currentRow.getCell(2).style = {
-      font: {
-        bold: true,
-      },
-      border: {
-        top: { style: "thin" },
-        left: { style: "thin" },
-        bottom: { style: "thin" },
-        right: { style: "thin" },
-      },
-    };
-    this._currentRow.getCell(3).value =
-      "---------------------------------------------";
-    this._currentRow.getCell(3).style = {
-      font: {
-        bold: true,
-      },
-      border: {
-        top: { style: "thin" },
-        left: { style: "thin" },
-        bottom: { style: "thin" },
-        right: { style: "thin" },
-      },
-    };
-    this._currentRow.getCell(4).value = "------------------";
-    this._currentRow.getCell(4).style = {
-      font: {
-        bold: true,
-      },
-      border: {
-        top: { style: "thin" },
-        left: { style: "thin" },
-        bottom: { style: "thin" },
-        right: { style: "thin" },
-      },
-    };
+    this._currentRow.height = 5;
+    for (let i = 1; i <= 4; i++) {
+      this._currentRow.getCell(i).style.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "000000" },
+      };
+    }
   }
   /**
    * getter for the current row
@@ -178,6 +108,9 @@ class ExcelManager {
   }
   public get ITALIC_STYLE() {
     return "ITALIC";
+  }
+  public get BOLD_VALUE_STYLE() {
+    return "BOLD_VALUE";
   }
   /**
    * Choose the style
@@ -216,6 +149,14 @@ class ExcelManager {
           border: {},
         };
         break;
+      case "BOLD_VALUE":
+        style = {
+          font: {
+            bold: true,
+          },
+          border: {},
+        };
+        break;
     }
     return style;
   }
@@ -236,7 +177,9 @@ class ExcelManager {
     switch (type) {
       case ColumnType.CATEGORY:
         this._currentRow.getCell(1).value = label;
-        this._currentRow.getCell(1).style = valueStyle;
+        this._currentRow.getCell(1).style = this.chooseStyle(
+          this.BOLD_VALUE_STYLE
+        );
         break;
       case ColumnType.ACTIVITY:
         this._currentRow.getCell(2).value = label;

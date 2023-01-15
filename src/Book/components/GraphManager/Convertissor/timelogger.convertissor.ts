@@ -14,6 +14,8 @@ const PrettyColors = {
   ORANGE: "rgb(255, 159, 64)",
   RED: "rgb(255, 0, 90)",
   GREEN: "rgb(100, 255, 100)",
+  PINK: "rgb(255, 0, 255)",
+  BLUE_LIGHT: "rgb(0, 255, 255)",
 };
 const OTHER = "rgb(201, 203, 207)";
 
@@ -236,5 +238,57 @@ export default class CategoryTypeChartConverter {
       ],
     };
     return polarData;
+  }
+
+  public static convertToBarDataTasks(data: CategoryData[]): BarData {
+    const dataMap: Map<string, number> = new Map();
+    for (let i = 0; i < data.length; i++) {
+      const currentCategory = data[i];
+      const currentCategoryTasks = currentCategory.getAllTasks();
+      currentCategoryTasks.forEach((task, name) => {
+        if (dataMap.has(name))
+          dataMap.set(`${name} (${currentCategory.getTitle()})`, task);
+        else dataMap.set(name, task);
+      });
+    }
+    // Get only the 10 element that have the highest value
+    const dataValues: number[] = [];
+    const dataKeys: string[] = [];
+    const sortedMap = new Map(
+      [...dataMap.entries()].sort((a, b) => b[1] - a[1])
+    );
+    sortedMap.forEach((value, key) => {
+      dataValues.push(value);
+      dataKeys.push(key);
+    });
+
+    // We don't want to display more than 10 elements so we just cut the array
+    if (dataValues.length > 10) {
+      dataValues.splice(10, dataValues.length - 10);
+      dataKeys.splice(10, dataKeys.length - 10);
+    }
+    const backgroundColor: string[] = [];
+    const borderColor: string[] = [];
+    for (let i = 0; i < dataValues.length; i++) {
+      let color;
+      if (i <= Object.values(PrettyColors).length)
+        color = Object.values(PrettyColors)[i];
+      else color = OTHER;
+      borderColor.push(color);
+      backgroundColor.push(rgbToRgba(color, 0.2));
+    }
+    const barData: BarData = {
+      labels: dataKeys,
+      datasets: [
+        {
+          label: "Tasks",
+          data: dataValues,
+          backgroundColor: backgroundColor,
+          borderColor: borderColor,
+          borderWidth: 1,
+        },
+      ],
+    };
+    return barData;
   }
 }

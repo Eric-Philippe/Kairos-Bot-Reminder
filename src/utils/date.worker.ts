@@ -52,13 +52,66 @@ export default class DateWorker {
    * Ex: 10 -> 10m
    * @param time
    */
-  public static timeToReadable(time: number): string {
+  public static timeToReadable(time: number | null): string {
     if (!time || time == null || time < 0) return "0m";
     let hours = Math.floor(time / 60);
     let minutes = time % 60;
     let finalTime = "";
     if (hours > 0) finalTime += hours + "h ";
     if (minutes > 0) finalTime += minutes + "m";
+    if (finalTime.endsWith("h "))
+      finalTime = finalTime.substring(0, finalTime.length - 1);
     return finalTime;
+  }
+  public static stringToDate(
+    date: string | null,
+    endOfDay: boolean = false
+  ): Date {
+    if (!date || date.split("/").length == 0) return new Date();
+
+    // Invert the date and the month
+    if (date.split("/").length == 2) {
+      date =
+        date.split("/")[0] +
+        "/" +
+        date.split("/")[1] +
+        "/" +
+        new Date().getFullYear();
+    }
+
+    if (!endOfDay)
+      date =
+        date.split("/")[1] +
+        "/" +
+        date.split("/")[0] +
+        "/" +
+        date.split("/")[2];
+    else
+      date =
+        date.split("/")[1] +
+        "/" +
+        date.split("/")[0] +
+        "/" +
+        date.split("/")[2] +
+        " 23:59:59";
+    return new Date(date);
+  }
+  public static getDateDifferentM(inDate: Date, ouDate: Date): number {
+    // Get the difference in minute between the two given date
+    let diff = ouDate.getTime() - inDate.getTime();
+    let diffM = Math.floor(diff / 1000 / 60);
+    return diffM;
+  }
+
+  public static dateToMySQL(date: Date): string {
+    // We want a JS date to be like 2021-01-01 00:00:00
+    let year = date.getFullYear();
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    let seconds = date.getSeconds();
+    let finalDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    return finalDate;
   }
 }

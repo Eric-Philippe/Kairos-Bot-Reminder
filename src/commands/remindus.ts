@@ -21,7 +21,7 @@ import {
   autoCompleteTime,
   autoCompleteDate,
   autocompleteCategories,
-} from "../utils/autocomplete.recurrent";
+} from "../utils/autocomplete.routine";
 
 import { IMG } from "../assets/LOGOS.json";
 import { Remindus } from "src/tables/remindus/remindus";

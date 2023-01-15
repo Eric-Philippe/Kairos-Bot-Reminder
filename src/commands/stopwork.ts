@@ -1,5 +1,9 @@
-import { SlashCommandBuilder } from "discord.js";
+import {
+  ApplicationCommandOptionChoiceData,
+  SlashCommandBuilder,
+} from "discord.js";
 import { Command } from "src/CommandTemplate";
+import { autocompleteTasksToEnd } from "../utils/autocomplete.routine";
 
 import MessageManager from "../messages/MessageManager";
 
@@ -16,32 +20,39 @@ const StartWork: Command = {
         .setMaxLength(50)
         .setMinLength(2)
         .setRequired(true)
+        .setAutocomplete(true)
     ),
+  autocomplete: async (interaction) => {
+    const focusedOption = interaction.options.getFocused(true);
+    let choices: ApplicationCommandOptionChoiceData[] = [];
+    if (focusedOption.name === "task") {
+      choices = await autocompleteTasksToEnd(interaction, focusedOption.value);
+    }
+    interaction.respond(choices);
+  },
   run: async (client, interaction) => {
-    let subcommand = interaction.options.getSubcommand();
     let name = interaction.options.getString("task") || "";
 
-    if (subcommand === "task") {
-      let task = await TaskServices.getTaskByNameNotEndend(
-        interaction.user.id,
-        name
-      );
-      if (!task) {
-        await MessageManager.send(
-          MessageManager.getErrorCnst(),
-          "Task not found",
-          interaction
-        );
-        return;
-      }
-      await TaskServices.endTask(task.TId, new Date());
-
+    if (name.includes(">#>")) name = name.split(">#>")[1];
+    let task = await TaskServices.getTaskByNameNotEndend(
+      interaction.user.id,
+      name
+    );
+    if (!task) {
       await MessageManager.send(
-        MessageManager.getSuccessCnst(),
-        "Task stopped",
+        MessageManager.getErrorCnst(),
+        "Task not found",
         interaction
       );
+      return;
     }
+    await TaskServices.endTask(task.TId, new Date());
+
+    await MessageManager.send(
+      MessageManager.getSuccessCnst(),
+      "Task stopped",
+      interaction
+    );
   },
 };
 
