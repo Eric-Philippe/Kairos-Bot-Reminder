@@ -1,8 +1,8 @@
 import { ActivityQueries } from "./activity.queries";
-import { execute } from "../../utils/mysql.connector";
+import { execute } from "../../database/mysql.connector";
 import { Activity } from "./activity";
 import { getAvailableIdentifiant } from "../identifiant/identifiant.services";
-import { MYSQL_TABLES } from "../../utils/mysql_tables.enum";
+import { MYSQL_TABLES } from "../../database/mysql_tables.enum";
 
 export const ActivityServices = {
   getActivitiesByUserId: async (userId: string): Promise<Activity[]> => {

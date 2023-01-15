@@ -1,5 +1,5 @@
 import { GuildQueries } from "./guild.queries";
-import { execute } from "../../utils/mysql.connector";
+import { execute } from "../../database/mysql.connector";
 import { Guild } from "./guild";
 import { DEFAULT } from "src/utils/default.enum";
 

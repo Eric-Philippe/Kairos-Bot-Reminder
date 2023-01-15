@@ -1,7 +1,7 @@
 import { Client } from "discord.js";
 import fireListener from "../Listener/Listener";
 import Commands from "../Commands";
-import * as MySQLConnector from "../utils/mysql.connector";
+import * as MySQLConnector from "../database/mysql.connector";
 
 export default (client: Client): void => {
   let date = new Date();

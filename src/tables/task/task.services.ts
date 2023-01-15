@@ -1,9 +1,9 @@
 import { TaskQueries } from "./task.queries";
-import { execute } from "../../utils/mysql.connector";
+import { execute } from "../../database/mysql.connector";
 import { Task } from "./task";
 import { TaskAltered } from "./taskAltered";
 import { getAvailableIdentifiant } from "../identifiant/identifiant.services";
-import { MYSQL_TABLES } from "../../utils/mysql_tables.enum";
+import { MYSQL_TABLES } from "../../database/mysql_tables.enum";
 import { TaskWParent } from "./taskWParent";
 
 export const TaskServices = {

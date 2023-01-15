@@ -1,8 +1,8 @@
 import { RCategoryQueries } from "./rcategory.queries";
-import { execute } from "../../utils/mysql.connector";
+import { execute } from "../../database/mysql.connector";
 import { RCategory } from "./rcategory";
 import { getAvailableIdentifiant } from "../identifiant/identifiant.services";
-import { MYSQL_TABLES } from "src/utils/mysql_tables.enum";
+import { MYSQL_TABLES } from "src/database/mysql_tables.enum";
 
 export const RCategoryServices = {
   getRCategoryById: async (RCId: string): Promise<RCategory> => {

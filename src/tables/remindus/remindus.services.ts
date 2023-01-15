@@ -1,8 +1,8 @@
 import { RemindusQueries } from "./remindus.queries";
-import { execute } from "../../utils/mysql.connector";
+import { execute } from "../../database/mysql.connector";
 import { Remindus } from "./remindus";
 import { getAvailableIdentifiant } from "../identifiant/identifiant.services";
-import { MYSQL_TABLES } from "src/utils/mysql_tables.enum";
+import { MYSQL_TABLES } from "src/database/mysql_tables.enum";
 
 export const RemindusServices = {
   getRemindusById: async (usId: string): Promise<Remindus[]> => {

@@ -1,6 +1,6 @@
 import { UserQueries } from "./users.queries";
 import { TCategoryServices } from "../tcategory/tcategory.services";
-import { execute } from "../../utils/mysql.connector";
+import { execute } from "../../database/mysql.connector";
 import { Utilisateur } from "./utilisateur";
 import { DEFAULT } from "src/utils/default.enum";
 

@@ -1,6 +1,6 @@
 import RandExp from "@fusionstrings/randexp";
 
-import { execute } from "../../utils/mysql.connector";
+import { execute } from "../../database/mysql.connector";
 import { IdentifiantRegex } from "./identifiant_regex.enum";
 import { IdentifiantQueries } from "./identifiant.queries";
 

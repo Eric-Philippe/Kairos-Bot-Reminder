@@ -1,7 +1,7 @@
 import { TCategoryQueries } from "./tcategory.queries";
-import { execute } from "../../utils/mysql.connector";
+import { execute } from "../../database/mysql.connector";
 import { TCategory } from "./tcategory";
-import { MYSQL_TABLES } from "../../utils/mysql_tables.enum";
+import { MYSQL_TABLES } from "../../database/mysql_tables.enum";
 import { getAvailableIdentifiant } from "../identifiant/identifiant.services";
 
 export const TCategoryServices = {
