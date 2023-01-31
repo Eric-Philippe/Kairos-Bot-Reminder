@@ -1,11 +1,19 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { Command } from "src/CommandTemplate";
+import { CommandCategories } from "../commands_/categories";
 
 import { UsersServices } from "../tables/users/users.services";
 import { CountryServices } from "../tables/country/country.services";
 import { Country } from "src/tables/country/country";
 
 const CountryList: Command = {
+  description: {
+    name: "Country List",
+    shortDescription: "List all countries",
+    fullDescription: "List all countries",
+    emoji: "🌎",
+    categoryName: CommandCategories.GENERAL.name,
+  },
   data: new SlashCommandBuilder()
     .setName("countrylist")
     .setDescription("List all countries"),

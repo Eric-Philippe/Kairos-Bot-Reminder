@@ -6,6 +6,7 @@ import {
   SlashCommandBuilder,
 } from "discord.js";
 import { Command } from "src/CommandTemplate";
+import { CommandCategories } from "../commands_/categories";
 
 import {
   autocompleteActivities,
@@ -54,6 +55,14 @@ import CategoryData from "src/Book/components/plugins/timelogger.data";
  *                        |-> keyword => [TextPage, GraphPage{BarData}]
  */
 const DisplayTime: Command = {
+  description: {
+    name: "Display Time",
+    shortDescription: "Display the user's information from the time logger",
+    fullDescription:
+      "Display the user's information from the time logger with different format and options [category, activity, task] with Charts & Excel",
+    emoji: "📊",
+    categoryName: CommandCategories.TIMETRACKER.name,
+  },
   data: new SlashCommandBuilder()
     .setName("displaytime")
     .setDescription("Display the user's information from the time logger")

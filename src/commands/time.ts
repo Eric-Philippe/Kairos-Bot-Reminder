@@ -1,7 +1,15 @@
 import { SlashCommandBuilder } from "discord.js";
 import { Command } from "src/CommandTemplate";
+import { CommandCategories } from "../commands_/categories";
 
 const Time: Command = {
+  description: {
+    name: "Time",
+    shortDescription: "Give the current time for many locations",
+    fullDescription: "Give the current time for many locations",
+    emoji: "⏲️",
+    categoryName: CommandCategories.GENERAL.name,
+  },
   data: new SlashCommandBuilder()
     .setName("time")
     .setDescription("Give the current time for many locations"),

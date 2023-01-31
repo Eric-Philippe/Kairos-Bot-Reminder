@@ -3,6 +3,7 @@ import {
   SlashCommandBuilder,
 } from "discord.js";
 import { Command } from "src/CommandTemplate";
+import { CommandCategories } from "../commands_/categories";
 
 import MessageManager from "../messages/MessageManager";
 
@@ -18,6 +19,13 @@ import {
 } from "../utils/autocomplete.routine";
 
 const StartWork: Command = {
+  description: {
+    name: "Start Work",
+    shortDescription: "Start a work session",
+    fullDescription: "Start a work session",
+    emoji: "✅",
+    categoryName: CommandCategories.TIMETRACKER.name,
+  },
   data: new SlashCommandBuilder()
     .setName("timedone")
     .setDescription("Insert a completed task")

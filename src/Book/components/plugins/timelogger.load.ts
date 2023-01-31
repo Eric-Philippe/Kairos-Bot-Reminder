@@ -7,7 +7,9 @@ import { Activity } from "../../../tables/activity/activity";
 import { TCategory } from "src/tables/tcategory/tcategory";
 import DateWorker from "../../../utils/date.worker";
 import { Task } from "../../../tables/task/task";
-
+/**
+ * This class is used to load the data from the database to the timelogger
+ */
 export default class TimeLoggerLoad {
   static async loadCategories(
     userId: string,

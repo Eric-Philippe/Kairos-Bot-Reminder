@@ -1,5 +1,6 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { Command } from "src/CommandTemplate";
+import { CommandCategories } from "../commands_/categories";
 
 import MessageManager from "../messages/MessageManager";
 
@@ -9,6 +10,13 @@ import { RemindmeServices } from "../tables/remindme/remindme.services";
 import { IMG } from "../assets/LOGOS.json";
 
 const Rm: Command = {
+  description: {
+    name: "Rm",
+    shortDescription: "Create a new reminder with a quick row of text",
+    fullDescription: "Create a new reminder with a quick row of text",
+    emoji: "⏰",
+    categoryName: CommandCategories.REMINDME.name,
+  },
   data: new SlashCommandBuilder()
     .setName("rm")
     .setDescription("Create a new reminder with a quick row of text")

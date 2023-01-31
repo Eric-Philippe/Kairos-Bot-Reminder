@@ -13,6 +13,13 @@ import TextPageAgg from "../Book/components/Page/TextPageAgg";
 import GraphPage from "../Book/components/Page/GraphPage";
 
 const Test: Command = {
+  description: {
+    name: "Test",
+    shortDescription: "Test command",
+    fullDescription: "Test command",
+    emoji: "🧪",
+    categoryName: "Test",
+  },
   data: new SlashCommandBuilder()
     .setName("test")
     .setDescription("Test command"),

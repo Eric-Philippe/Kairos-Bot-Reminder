@@ -76,6 +76,21 @@ class Controller {
       callBack(i);
     });
   }
+  public static get NEXT() {
+    return "next";
+  }
+
+  public static get PREVIOUS() {
+    return "previous";
+  }
+
+  public static get DOWNLOAD_XLSX() {
+    return "download_xlsx";
+  }
+
+  public static get DOWNLOAD_PNG() {
+    return "download_png";
+  }
 }
 
 export default Controller;

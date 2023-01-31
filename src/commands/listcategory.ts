@@ -1,10 +1,18 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { Command } from "src/CommandTemplate";
+import { CommandCategories } from "../commands_/categories";
 
 import { UsersServices } from "../tables/users/users.services";
 import { TCategoryServices } from "../tables/tcategory/tcategory.services";
 
 const Test: Command = {
+  description: {
+    name: "List Category",
+    shortDescription: "Display all the categories of the user",
+    fullDescription: "Display all the categories of the user",
+    emoji: "📝",
+    categoryName: CommandCategories.TIMETRACKER.name,
+  },
   data: new SlashCommandBuilder()
     .setName("listcategory")
     .setDescription("Display all the categories of the user"),

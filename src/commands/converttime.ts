@@ -1,9 +1,17 @@
 import { SlashCommandBuilder } from "discord.js";
 import { Command } from "src/CommandTemplate";
+import { CommandCategories } from "../commands_/categories";
 import DateWorker from "../utils/date.worker";
 import MessageManager from "../messages/MessageManager";
 
 const Test: Command = {
+  description: {
+    name: "Convert Time",
+    shortDescription: "Convert minutes to hours and minutes",
+    fullDescription: "Convert minutes to hours and minutes",
+    emoji: "🕑",
+    categoryName: CommandCategories.GENERAL.name,
+  },
   data: new SlashCommandBuilder()
     .setName("converttime")
     .setDescription("Convert minutes to hours and minutes")

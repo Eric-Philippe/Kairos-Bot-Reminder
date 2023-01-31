@@ -4,21 +4,9 @@ import PolarData from "./polar.data";
 
 class BodyGuardData {
   /**
-   * export interface BarData {
-  labels: Array<string>;
-  datasets: Array<datasets>;
-}
-
-interface datasets {
-  label: string;
-  data: Array<number>;
-  backgroundColor: Array<string>;
-  borderColor: Array<string>;
-  borderWidth: number;
-}
-
-   * @param data 
-   * @returns 
+   * Correct bar data
+   * @param data
+   * @returns
    */
   public static isBarData(data: any): data is BarData {
     if (!data.labels) return false;
@@ -39,7 +27,11 @@ interface datasets {
     if (typeof data.datasets[0].borderWidth !== "number") return false;
     return true;
   }
-
+  /**
+   * Correct donut data
+   * @param data
+   * @returns
+   */
   public static isDonutData(data: any): data is DonutData {
     if (!Array.isArray(data.labels)) return false;
     if (!Array.isArray(data.datasets)) return false;
@@ -53,7 +45,11 @@ interface datasets {
     if (!Array.isArray(data.datasets[0].backgroundColor)) return false;
     return true;
   }
-
+  /**
+   * Correct polar data
+   * @param data
+   * @returns
+   */
   public static isPolarData(data: any): data is PolarData {
     if (!Array.isArray(data.labels)) return false;
     if (!Array.isArray(data.datasets)) return false;

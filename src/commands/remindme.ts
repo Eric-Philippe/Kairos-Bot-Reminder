@@ -7,6 +7,7 @@ import {
 } from "discord.js";
 
 import { Command } from "src/CommandTemplate";
+import { CommandCategories } from "../commands_/categories";
 
 import MessageManager from "../messages/MessageManager";
 
@@ -25,6 +26,13 @@ import { IMG } from "../assets/LOGOS.json";
 import { Remindme } from "src/tables/remindme/remindme";
 
 const Remindme: Command = {
+  description: {
+    name: "Remindme",
+    shortDescription: "Self Reminders",
+    fullDescription: "Self Reminders",
+    emoji: "📝",
+    categoryName: CommandCategories.REMINDME.name,
+  },
   data: new SlashCommandBuilder()
     .setName("remindme")
     .setDescription("Self Reminders")

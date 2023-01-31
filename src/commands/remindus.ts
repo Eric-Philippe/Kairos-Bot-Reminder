@@ -9,6 +9,7 @@ import {
 } from "discord.js";
 
 import { Command } from "src/CommandTemplate";
+import { CommandCategories } from "../commands_/categories";
 
 import MessageManager from "../messages/MessageManager";
 
@@ -27,6 +28,13 @@ import { IMG } from "../assets/LOGOS.json";
 import { Remindus } from "src/tables/remindus/remindus";
 
 const Remindus: Command = {
+  description: {
+    name: "RemindUs",
+    shortDescription: "Group Reminders",
+    fullDescription: "Group Reminders",
+    emoji: "📅",
+    categoryName: CommandCategories.REMINDUS.name,
+  },
   data: new SlashCommandBuilder()
     .setName("remindus")
     .setDescription("Group Reminders")
