@@ -26,7 +26,7 @@
       "type": "node",
       "request": "launch",
       "name": "Compile Program",
-      "program": "${workspaceFolder}/Bot.js",
+      "program": "${workspaceFolder}/src/Bot.ts",
       "preLaunchTask": "tsc: build - tsconfig.json",
       "outFiles": ["${workspaceFolder}/dist/**/*.js"]
     }

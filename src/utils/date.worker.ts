@@ -103,6 +103,47 @@ export default class DateWorker {
     return diffM;
   }
 
+  public static calculTime(
+    hours: number,
+    minutes: number,
+    operation: string,
+    hoursB: number,
+    minutesB: number,
+    format: string // If hm, basic addition, if m, result in minutes, if 24, result in 24h format if necessary count days
+  ) {
+    let total_minutesA = hours * 60 + minutes;
+    let total_minutesB = hoursB * 60 + minutesB;
+    let result: number;
+    switch (operation) {
+      case "sum":
+        result = total_minutesA + total_minutesB;
+        break;
+      case "diff":
+        result = total_minutesA - total_minutesB;
+        break;
+      default:
+        result = total_minutesA + total_minutesB;
+    }
+    let resultString = "";
+    switch (format) {
+      case "hm":
+        let hours = Math.floor(result / 60);
+        let minutes = result % 60;
+        resultString = hours + "h " + minutes + "m";
+        break;
+      case "m":
+        resultString = result + "m";
+        break;
+      case "24":
+        let days = Math.floor(result / 60 / 24);
+        let hoursBis = Math.floor(result / 60) - days * 24;
+        let minutesBis = result % 60;
+        resultString = days + "d " + hoursBis + "h " + minutesBis + "m";
+        break;
+    }
+    return resultString;
+  }
+
   public static dateToMySQL(date: Date): string {
     // We want a JS date to be like 2021-01-01 00:00:00
     let year = date.getFullYear();
