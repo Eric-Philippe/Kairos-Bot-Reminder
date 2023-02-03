@@ -1,11 +1,12 @@
 import canvas from "canvas";
-import { Attachment, AttachmentBuilder } from "discord.js";
+import { AttachmentBuilder } from "discord.js";
 import DateWorker from "../utils/date.worker";
+import { IMG } from "../assets/LOGOS.json";
 
-import { Remindme } from "../tables/remindme/remindme";
+import { Remindus } from "src/tables/remindus/remindus";
 
-const RemindmeDisplay = async (
-  remindme: Remindme
+const RemindusDisplay = async (
+  remindme: Remindus
 ): Promise<AttachmentBuilder> => {
   const width = 6912;
   const height = 3456;
@@ -13,9 +14,7 @@ const RemindmeDisplay = async (
   const canva = canvas.createCanvas(width, height);
   const ctx = canva.getContext("2d");
 
-  const background = await canvas.loadImage(
-    "https://cdn.discordapp.com/attachments/579303130886569984/1051952800231333908/New_Reminder.png"
-  );
+  const background = await canvas.loadImage(IMG.BACKGROUND_US);
   ctx.drawImage(background, 0, 0, canva.width, canva.height);
 
   //ctx.strokeStyle = "#74037b";
@@ -87,4 +86,4 @@ const RemindmeDisplay = async (
   return attachment;
 };
 
-export default RemindmeDisplay;
+export default RemindusDisplay;

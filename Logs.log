@@ -11,4 +11,5 @@
       FROM
       Utilisateur
       WHERE
-      userId = ?; with params: 649323786612637727. Error: Error: Pool was not created. Ensure pool is created when running the app. - AT C:\Users\ericp\Desktop\Kairos-Bot-Reminder\dist\utils\mysql.connector.js
+      userId = ?; with params: 649323786612637727. Error: Error: Pool was not created. Ensure pool is created when running the app. - AT C:\Users\ericp\Desktop\Kairos-Bot-Reminder\dist\utils\mysql.connector.js[INFO] 2023-02-01T20:33:17.180Z - Found 1 remindus to send
+[INFO] 2023-02-02T17:17:04.795Z - Found 1 remindus to send

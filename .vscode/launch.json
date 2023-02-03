@@ -4,22 +4,29 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
+    // Compile the ts and run Bot.js
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Compile & Launch Program",
+      "program": "${workspaceFolder}/dist/Bot.js",
+      "preLaunchTask": "tsc: build - tsconfig.json",
+      "outFiles": ["${workspaceFolder}/dist/**/*.js"]
+    },
+    // Run the compiled js
     {
       "type": "node",
       "request": "launch",
       "name": "Launch Program",
-      "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}\\src\\Bot.ts",
-      "preLaunchTask": "tsc: build - tsconfig.json",
+      "program": "${workspaceFolder}/dist/Bot.js",
       "outFiles": ["${workspaceFolder}/dist/**/*.js"]
     },
-    // Launch the Handler.ts cron
+    // Compile the ts
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch Cron",
-      "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}\\src\\Controller\\Controller.ts",
+      "name": "Compile Program",
+      "program": "${workspaceFolder}/Bot.js",
       "preLaunchTask": "tsc: build - tsconfig.json",
       "outFiles": ["${workspaceFolder}/dist/**/*.js"]
     }

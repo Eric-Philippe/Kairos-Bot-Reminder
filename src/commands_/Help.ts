@@ -50,6 +50,7 @@ export class Help {
   _currentSubCategory: string | null = null;
   _thirdLevelResponse: Message<boolean> | null = null;
   _currentCommand: string | null = null;
+  collector: any; // Simple storage for the collector
 
   constructor(interaction: ChatInputCommandInteraction, client: Client) {
     this._interaction = interaction;
@@ -207,14 +208,14 @@ export class Help {
   }
 
   launchControllerThirdLevel(): void {
+    this.stopCollector();
     const collector =
       this._secondLevelResponse?.createMessageComponentCollector({
         time: 60000,
       });
+    this.collector = collector;
 
     collector?.on("collect", async (interaction: ButtonInteraction) => {
-      console.log("LOAN");
-
       if (interaction.user.id !== this._interaction.user.id) {
         await interaction.reply({
           content: "You can't use this button!",
@@ -243,6 +244,12 @@ export class Help {
     });
   }
 
+  private async stopCollector(): Promise<void> {
+    if (!this.collector) return;
+    this.collector.stop();
+    this.collector = null;
+  }
+
   async sendCommand(command: Command): Promise<void> {
     if (this._currentCommand == command.description.name) {
       if (this._thirdLevelResponse) this._thirdLevelResponse.delete();
@@ -257,7 +264,7 @@ export class Help {
       .setFooter({
         text:
           `Asked by ${this._interaction.user.username} - ` +
-          `Page ${this._commandsTree.size - 1}/${this._commandsTree.size}`,
+          `Page ${this._commandsTree.size}/${this._commandsTree.size}`,
       });
     let description = "";
     description += `**${command.description.emoji} ・ ${command.description.name}**\n`;

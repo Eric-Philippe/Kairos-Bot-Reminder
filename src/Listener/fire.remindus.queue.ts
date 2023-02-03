@@ -9,6 +9,7 @@ import { Remindus } from "../tables/remindus/remindus";
 import { Repetition } from "../utils/repetition.enum";
 
 import FireQueue from "./fire.model";
+import RemindusDisplay from "./build.remindusDisplay";
 
 export default class FireRemindusQueue extends FireQueue {
   private RemindusQueue: Remindus[] = [];
@@ -90,12 +91,14 @@ export default class FireRemindusQueue extends FireQueue {
     return new Promise(async (res, rej) => {
       if (target instanceof TextChannel) {
         try {
+          let attachement = await RemindusDisplay(reminder);
           let embed = new EmbedBuilder()
-            .setTitle("Remindus")
-            .setDescription(reminder.content)
-            .setColor("Aqua");
+            .setTitle("⌛ | You have a new reminder ! ⌛")
+            .setColor("#5865F2");
 
           await target.send({ embeds: [embed] });
+          await new Promise((res) => setTimeout(res, 2000));
+          await target.send({ files: [attachement] });
 
           res(0);
         } catch (error) {

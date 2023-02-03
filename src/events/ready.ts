@@ -13,16 +13,18 @@ export default (client: Client): void => {
     "%c🕒 Launch date : " + dateStr,
     "color: #5D6D7E ; font-size: 20px"
   );
+
+  console.time("⏳ Time elapsed ");
+
+  console.log(
+    "%c⏳ Kairos is starting up...",
+    "color: #00ff00; font-size: 20px"
+  );
   client.on("ready", async () => {
     if (!client.user || !client.application) return;
 
     let CommandsData = Commands.map((cmd) => cmd.data.toJSON());
     await client.application.commands.set(CommandsData);
-
-    console.log(
-      "%c⏳ Kairos is starting up...",
-      "color: #00ff00; font-size: 20px"
-    );
 
     MySQLConnector.init();
 
@@ -42,5 +44,7 @@ export default (client: Client): void => {
     );
 
     console.log(`🏷️ Logged in as ${client.user.tag}`);
+
+    console.timeEnd("⏳ Time elapsed ");
   });
 };

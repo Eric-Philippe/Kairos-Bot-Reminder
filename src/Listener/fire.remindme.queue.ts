@@ -9,7 +9,7 @@ import { Remindme } from "../tables/remindme/remindme";
 import { Repetition } from "../utils/repetition.enum";
 
 import FireQueue from "./fire.model";
-import RemindmeDisplay from "./build.reminderDisplay";
+import RemindmeDisplay from "./build.remindmeDisplay";
 
 export default class FireRemindmeQueue implements FireQueue {
   private RemindmeQueue: Remindme[] = [];
@@ -104,8 +104,6 @@ export default class FireRemindmeQueue implements FireQueue {
 
           res(0);
         } catch (error) {
-          console.log(error);
-
           rej(-3);
         }
       }
