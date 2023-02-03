@@ -1,8 +1,9 @@
 {
   "IMG": {
-    "REMINDER_LOGO": "https://media.discordapp.net/attachments/739553949199106158/976008630329552907/remind2.png?width=661&height=661",
-    "CLOCK_LOGO": "https://media.discordapp.net/attachments/739553949199106158/976008630086295592/remind.png?width=661&height=661",
-    "BIRTH_LOGO": "https://media.discordapp.net/attachments/739553949199106158/976008629700427816/anniv.png?width=661&height=661",
-    "CHAT_LOGO": "https://media.discordapp.net/attachments/739553949199106158/976008630556049479/reunion.png?width=661&height=661"
+    "BACKGROUND_ME": "https://i.imgur.com/91B6fP3.png",
+    "BACKGROUND_US": "https://i.imgur.com/HQefqkr.png",
+    "CLOCK_LOGO": "https://i.imgur.com/CKtatdB.png",
+    "BELL_LOGO": "https://i.imgur.com/HC4V1f8.png",
+    "CHAT_LOGO": "https://i.imgur.com/cCxpc5n.png"
   }
 }

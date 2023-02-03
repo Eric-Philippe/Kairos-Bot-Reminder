@@ -7,6 +7,9 @@ import {
 } from "discord.js";
 
 import { Command } from "src/CommandTemplate";
+import { CommandCategories } from "../commands_/categories";
+
+import MessageManager from "../messages/MessageManager";
 
 import { Repetition } from "../utils/repetition.enum";
 import RCategoriesDefault from "../utils/rcategories.enum";
@@ -17,12 +20,19 @@ import {
   autoCompleteTime,
   autoCompleteDate,
   autocompleteCategories,
-} from "../utils/autocomplete.recurrent";
+} from "../utils/autocomplete.routine";
 
 import { IMG } from "../assets/LOGOS.json";
 import { Remindme } from "src/tables/remindme/remindme";
 
 const Remindme: Command = {
+  description: {
+    name: "Remindme",
+    shortDescription: "Self Reminders",
+    fullDescription: "Self Reminders",
+    emoji: "📝",
+    categoryName: CommandCategories.REMINDME.name,
+  },
   data: new SlashCommandBuilder()
     .setName("remindme")
     .setDescription("Self Reminders")
@@ -217,13 +227,21 @@ const createReminder = async (interaction: ChatInputCommandInteraction) => {
 
   // Check if the time is valid (HH:MM)
   if (!/^\d{1,2}:\d{1,2}$/.test(time))
-    return interaction.reply("Invalid time format");
+    return MessageManager.send(
+      MessageManager.getErrorCnst(),
+      "Invalid time format",
+      interaction
+    );
 
   let hours = parseInt(time.split(":")[0]);
   let minutes = parseInt(time.split(":")[1]);
 
   if (hours > 23 || hours < 0 || minutes > 59 || minutes < 0) {
-    return interaction.reply("Invalid time format");
+    return MessageManager.send(
+      MessageManager.getErrorCnst(),
+      "Invalid time format",
+      interaction
+    );
   }
 
   // Check if the date is valid If there is not year, add the current year, if there is not month, add the current month
@@ -250,27 +268,42 @@ const createReminder = async (interaction: ChatInputCommandInteraction) => {
       splittedDate.join("/") // If the date is valid, join the splitted date
     )
   )
-    return interaction.reply("Invalid date format");
-
+    return MessageManager.send(
+      MessageManager.getErrorCnst(),
+      "Invalid date format",
+      interaction
+    );
   let year = parseInt(splittedDate[2]);
   let month = parseInt(splittedDate[1]) - 1;
   let day = parseInt(splittedDate[0]);
 
   if (month > 11 || month < 0 || day > 31 || day < 0) {
-    return interaction.reply("Invalid date format");
+    return MessageManager.send(
+      MessageManager.getErrorCnst(),
+      "Invalid date format",
+      interaction
+    );
   }
 
   let targetDate = new Date(year, month, day, hours, minutes);
 
   if (targetDate < new Date())
-    return interaction.reply("The date is in the past");
+    return MessageManager.send(
+      MessageManager.getErrorCnst(),
+      "The date is in the past",
+      interaction
+    );
 
   // Check if the repetition is inside the enum
   if (
     repetition &&
     !Object.values(Repetition).find((r) => r.value === repetition)
   )
-    return interaction.reply("Invalid repetition");
+    return MessageManager.send(
+      MessageManager.getErrorCnst(),
+      "Invalid repetition",
+      interaction
+    );
 
   // Check if the category exists
   let idCategory = null;
@@ -299,15 +332,11 @@ const createReminder = async (interaction: ChatInputCommandInteraction) => {
     user.id
   );
 
-  const embed = new EmbedBuilder()
-    .setTitle("Reminder created")
-    .setDescription(
-      "Your reminder has been created successfully with the id " + meId
-    )
-    .setColor("#00ff00")
-    .setTimestamp();
-
-  await interaction.reply({ embeds: [embed] });
+  return MessageManager.send(
+    MessageManager.getSuccessCnst(),
+    "Your reminder has been created successfully with the id " + meId,
+    interaction
+  );
 };
 
 const deleteReminder = async (interaction: ChatInputCommandInteraction) => {
@@ -358,7 +387,7 @@ const listReminders = async (interaction: ChatInputCommandInteraction) => {
     .setTitle("List of your reminders")
     .setDescription(content)
     .setColor("#ff0000")
-    .setThumbnail(IMG.REMINDER_LOGO)
+    .setThumbnail(IMG.BACKGROUND_ME)
     .setTimestamp();
 
   await interaction.reply({ embeds: [embed] });

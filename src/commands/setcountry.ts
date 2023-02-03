@@ -1,10 +1,18 @@
 import { SlashCommandBuilder } from "discord.js";
 import { Command } from "src/CommandTemplate";
+import { CommandCategories } from "../commands_/categories";
 
 import { UsersServices } from "../tables/users/users.services";
 import { CountryServices } from "../tables/country/country.services";
 
 const SetCountry: Command = {
+  description: {
+    name: "Set Country",
+    shortDescription: "Set your country",
+    fullDescription: "Set your country",
+    emoji: "🗺️",
+    categoryName: CommandCategories.GENERAL.name,
+  },
   data: new SlashCommandBuilder()
     .setName("setcountry")
     .setDescription("Set your country")

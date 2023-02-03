@@ -1,6 +1,6 @@
 import RandExp from "@fusionstrings/randexp";
 
-import { execute } from "../../utils/mysql.connector";
+import { execute } from "../../database/mysql.connector";
 import { IdentifiantRegex } from "./identifiant_regex.enum";
 import { IdentifiantQueries } from "./identifiant.queries";
 
@@ -9,11 +9,11 @@ export const getAvailableIdentifiant = async (
 ): Promise<string> => {
   let query, regex;
   switch (table) {
-    case "ACategories":
-      query = IdentifiantQueries.GetACategories;
-      regex = IdentifiantRegex.CATEGORIES;
+    case "TCategory":
+      query = IdentifiantQueries.GetTCategories;
+      regex = IdentifiantRegex.TCATEGORIES;
       break;
-    case "Activities":
+    case "Activity":
       query = IdentifiantQueries.GetActivities;
       regex = IdentifiantRegex.ACTIVITIES;
       break;

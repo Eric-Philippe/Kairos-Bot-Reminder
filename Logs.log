@@ -2,3 +2,14 @@
 [INFO] 2022-12-06T23:03:09.156Z - Found 1 remindus to send
 [INFO] 2022-12-06T23:03:12.903Z - Found 1 remindus to send
 [INFO] 2022-12-06T23:03:14.122Z - Found 1 remindus to send
+[INFO] 2023-01-04T23:00:13.897Z - Found 1 remindus to send
+[ERROR] 2023-01-04T23:00:13.960Z - Channel not found - #GN25
+[INFO] 2023-01-05T18:23:04.702Z - Found 1 remindus to send
+[ERROR] 2023-01-10T11:49:52.251Z - Error executing query: 
+      SELECT
+      *
+      FROM
+      Utilisateur
+      WHERE
+      userId = ?; with params: 649323786612637727. Error: Error: Pool was not created. Ensure pool is created when running the app. - AT C:\Users\ericp\Desktop\Kairos-Bot-Reminder\dist\utils\mysql.connector.js[INFO] 2023-02-01T20:33:17.180Z - Found 1 remindus to send
+[INFO] 2023-02-02T17:17:04.795Z - Found 1 remindus to send

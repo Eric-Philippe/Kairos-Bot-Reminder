@@ -1,5 +1,6 @@
 import { UserQueries } from "./users.queries";
-import { execute } from "../../utils/mysql.connector";
+import { TCategoryServices } from "../tcategory/tcategory.services";
+import { execute } from "../../database/mysql.connector";
 import { Utilisateur } from "./utilisateur";
 import { DEFAULT } from "src/utils/default.enum";
 
@@ -16,6 +17,7 @@ export const UsersServices = {
   },
   addUser: async (userId: string): Promise<number> => {
     await execute(UserQueries.AddUser, [userId, 0, DEFAULT.TimeZoneId]);
+    await TCategoryServices.insertTCategory("Miscellaneous", userId);
     return 0;
   },
 

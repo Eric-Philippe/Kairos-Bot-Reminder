@@ -1,8 +1,8 @@
 import { RemindmeQueries } from "./remindme.queries";
-import { execute } from "../../utils/mysql.connector";
+import { execute } from "../../database/mysql.connector";
 import { Remindme } from "./remindme";
 import { getAvailableIdentifiant } from "../identifiant/identifiant.services";
-import { MYSQL_TABLES } from "src/utils/mysql_tables.enum";
+import { MYSQL_TABLES } from "src/database/mysql_tables.enum";
 
 export const RemindmeServices = {
   getRemindmesById: async (meId: string): Promise<Remindme[]> => {

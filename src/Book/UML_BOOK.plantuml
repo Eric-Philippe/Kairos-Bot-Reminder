@@ -1,0 +1,89 @@
+@startuml Book
+title __UML Class Diagram for BOOK__ 
+header UML
+footer EricP | Kairos 2023
+
+class Book {
+    -Number _nCurrentPage
+    -Page _nCurrentPage
+    -Page[] _pages
+    -Interaction _interaction
+    -user _user
+    +Book()
+    +loadFirstPage()
+    +launchControllerCollector()
+    +onInteractionReceived(Interaction interaction)
+    +get currentPage() : Number
+    +get currentPage() : Page
+    +get totalPages() : Number
+    +nextPage()
+    +previousPage()
+    +updatePage()
+}
+
+class Page {
+    #String _type
+    -String _title
+    -String _content
+    -String _color
+    +Page(String type, String title, String content, String color)
+    +{static} isContentTooLong(String content) : Boolean
+    +{static} isTitleTooLong(String title) : Boolean
+    +generateFooterSeparator() : String
+    +display(Interaction interaction, number index, number maxPage)
+    +send(Interaction interaction, number index, number maxPage)
+    +generateEmbed(number index, number maxPage) : Discord.EmbedBuilder
+    +get type() : String
+    +get title() : String
+    +get content() : String
+    +get color() : String
+}
+
+class TextPage {
+    -CategoryData _data
+    -ExcelManager _Excel
+    +TextPage(String title, String content, CategoryData data, Boolean loadExcel, String color)
+    +fillExcel()
+    +generateFile() : Discord.AttachementBuilder
+    +sendFile(Interaction interaction) : Boolean
+    +addRow(String label, String type, String time)
+    +@override generateEmbed(number index, number maxPage) : Discord.EmbedBuilder
+}
+
+class GraphPage {
+    -CategoryData _data
+    -ChartJsImage _graph
+    +GraphPage(String title, String content, CategoryData data, String color)
+    +setGraph(String type, data: BarData | DonutData | PolarData)
+    +generateFile() : Discord.AttachementBuilder
+    +sendFile(Interaction interaction) : Boolean
+    +get graph() : ChartJsImage
+    +@override generateEmbed(number index, number maxPage) : Discord.EmbedBuilder
+    +@override display(Interaction interaction, number index, number maxPage)
+}
+
+class TextPageAgg {
+    -CategoryData[] _dataSet
+    +TextPageAgg(String title, String content, CategoryData data, CategoryData[] dataSet, String color)
+    +@override fillExcel()
+    +getTotalTime() : Number
+}
+
+class Controller {
+    +{static} buildController(Page page) : Discord.ActionRowBuilder
+    +{static} controllerListener(Interaction interaction, String userId, Function callback(Interaction i))
+}
+
+TextPage <|-- TextPageAgg
+ExcelManager --> TextPage
+Page <|-- TextPage
+Page <|-- GraphPage
+GraphManager --> GraphPage
+Controller --> Page
+
+Book "1" -- "1" Controller
+Book "0..*" -- "n" Page
+
+
+
+@enduml

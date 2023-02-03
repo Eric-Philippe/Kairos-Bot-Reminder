@@ -1,5 +1,8 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { Command } from "src/CommandTemplate";
+import { CommandCategories } from "../commands_/categories";
+
+import MessageManager from "../messages/MessageManager";
 
 import { UsersServices } from "../tables/users/users.services";
 import { RemindmeServices } from "../tables/remindme/remindme.services";
@@ -7,6 +10,13 @@ import { RemindmeServices } from "../tables/remindme/remindme.services";
 import { IMG } from "../assets/LOGOS.json";
 
 const Rm: Command = {
+  description: {
+    name: "Rm",
+    shortDescription: "Create a new reminder with a quick row of text",
+    fullDescription: "Create a new reminder with a quick row of text",
+    emoji: "⏰",
+    categoryName: CommandCategories.REMINDME.name,
+  },
   data: new SlashCommandBuilder()
     .setName("rm")
     .setDescription("Create a new reminder with a quick row of text")
@@ -56,7 +66,11 @@ const Rm: Command = {
     // Check if the time is valid
     // IsValid : 8:00 or 08:00 or 8:0 or 08:0
     if (!/^\d{1,2}:\d{1,2}$/.test(time))
-      return interaction.reply("Invalid time format");
+      MessageManager.send(
+        MessageManager.getErrorCnst(),
+        "Invalid time format",
+        interaction
+      );
 
     let date: string = interaction.options
       .get("quick-reminder-date")
@@ -88,13 +102,21 @@ const Rm: Command = {
       let todayYear = today.getFullYear();
       date = todayYear + "-" + todayMonth + "-" + todayDate;
     } else {
-      return interaction.reply("Invalid date format");
+      MessageManager.send(
+        MessageManager.getErrorCnst(),
+        "Invalid date format",
+        interaction
+      );
     }
 
     let targetDate = new Date(date + " " + time);
 
     if (new Date() > targetDate) {
-      return interaction.reply("Enter a date in the future");
+      MessageManager.send(
+        MessageManager.getErrorCnst(),
+        "Entered date is in the past",
+        interaction
+      );
     }
 
     let content: string = interaction.options
@@ -118,7 +140,7 @@ const Rm: Command = {
       .setTitle("📅 | Reminder created")
       .setDescription(`Reminder has been created !`)
       .setColor("Aqua")
-      .setThumbnail(IMG.REMINDER_LOGO)
+      .setThumbnail(IMG.BELL_LOGO)
       .setTimestamp();
     await interaction.reply({
       embeds: [embed],

@@ -1,5 +1,5 @@
 import { CountryQueries } from "./country.queries";
-import { execute } from "../../utils/mysql.connector";
+import { execute } from "../../database/mysql.connector";
 import { Country } from "./country";
 
 export const CountryServices = {

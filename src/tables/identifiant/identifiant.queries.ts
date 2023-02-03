@@ -1,15 +1,15 @@
 export const IdentifiantQueries = {
-  GetACategories: `
+  GetTCategories: `
     SELECT
-    ACId
+    TCId
     FROM
-    ACategories;
+    TCategory;
     `,
   GetActivities: `
     SELECT
     AId
     FROM
-    Activities;
+    Activity;
     `,
   GetCountry: `
     SELECT

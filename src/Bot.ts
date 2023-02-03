@@ -1,13 +1,19 @@
-import { Client } from "discord.js";
+import { Client, GatewayIntentBits } from "discord.js";
 
-import slashCommandCreate from "./listeners/slashCommandCreate";
-import autoCompleteCreate from "./listeners/autoCompleteCreate";
-import ready from "./listeners/ready";
+import slashCommandCreate from "./events/slashCommandCreate";
+import autoCompleteCreate from "./events/autoCompleteCreate";
+import ready from "./events/ready";
 
 require("dotenv").config();
 
 const client = new Client({
-  intents: [],
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.DirectMessages,
+    GatewayIntentBits.GuildPresences,
+    GatewayIntentBits.MessageContent,
+  ],
 });
 
 ready(client);

@@ -1,5 +1,6 @@
 #!/bin/bash
 
+@Deprecated # This script is deprecated, the script is launched by the bot itself at startup
 if [ ! -d "dist" ]; then
     echo "No dist folder found, cancelling"
     exit 1
