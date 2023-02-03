@@ -281,7 +281,7 @@ const createReminder = async (interaction: ChatInputCommandInteraction) => {
   if (splittedDate.length === 1) {
     splittedDate = [
       splittedDate[0],
-      new Date().getMonth().toString(),
+      (new Date().getMonth() + 1).toString(),
       new Date().getFullYear().toString(),
     ];
   } else if (splittedDate.length === 2) {
