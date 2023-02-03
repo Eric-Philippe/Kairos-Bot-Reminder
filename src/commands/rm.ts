@@ -73,7 +73,7 @@ const Rm: Command = {
       );
 
     let date: string = interaction.options
-      .get("quick-reminder-date")
+      .get("quick-date")
       ?.value?.toString()!;
 
     // Check if the date is valid and not in the past
