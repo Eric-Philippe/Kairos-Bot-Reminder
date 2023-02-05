@@ -57,6 +57,8 @@ Find the help command typing `/help` in a channel where the bot is present ! You
 
 Find more examples documentation just here [Excel](DisplayTime_2023-1-15.ex.xlsx) and [PNG Graph](PolarAreaGraph.ex.png)
 
+_The bot will still receive some minor updates, but the main features are already implemented !_ 🎉
+
 ---
 
 <div id='add_bot' />
