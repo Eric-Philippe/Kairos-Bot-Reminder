@@ -2,9 +2,12 @@
 
 ![Kairos Reminder Queue](https://cronitor.io/badges/LANCiO/production/WTSdX94w7sLiKi5JaPMJ0djQtYI.svg)
 
-**This bot is your personal time assistant !
-Make it remind you, your friends, your guild of something at a specific time !
-Kairos also provide a time tracking feature, so you can track your work !**
+\*\*This bot is your personal time assistant !
+Make it remind you, your friends, your guild of something at a specific time !-
+
+- put some repetition parameters, target a channel and way more !**
+  The bot also supports all the timezones in the world !!!
+  Kairos also provide a time tracking feature, so you can track your work !**
 
 <img src="img/profile.png"
 style="border-radius:20px; width: 30%; margin-left: 5%; box-shadow: 7px 5px 5px rgb(0, 0, 255, .2);"
