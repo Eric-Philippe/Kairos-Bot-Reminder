@@ -43,7 +43,7 @@ So feel free to navigate through the [Wiki]() to get more information about the 
 
 > - `⌚` Timetrack your work !
 
-Find more examples documentation just here [Excel](DisplayTime_2023-1-15.ex.xlsx) and [PNG Graph](PolarAreaGrapg.ex.png)
+Find more examples documentation just here [Excel](DisplayTime_2023-1-15.ex.xlsx) and [PNG Graph](PolarAreaGraph.ex.png)
 
 ---
 
