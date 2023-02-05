@@ -2,6 +2,10 @@
 
 ![Kairos Reminder Queue](https://cronitor.io/badges/LANCiO/production/WTSdX94w7sLiKi5JaPMJ0djQtYI.svg)
 
+**This bot is your personal time assistant !
+Make it remind you, your friends, your guild of something at a specific time !
+Kairos also provide a time tracking feature, so you can track your work !**
+
 <img src="img/profile.png"
 style="border-radius:20px; width: 30%; margin-left: 5%; box-shadow: 7px 5px 5px rgb(0, 0, 255, .2);"
 alt="Main Display of the Bot" />
@@ -35,13 +39,13 @@ So feel free to navigate through the [Wiki]() to get more information about the 
 
 ## Glance to the main features
 
-<img src="img/notification.png" width="50%">
+<img src="img/notification.png" width="50%" style="border-radius: 20px;">
 
 > - `🔔` Remind you of something at a specific time for yourself
->   <img src="img/remindme.png" width="80%">
+>   <img src="img/remindme.png" width="80%" style="border-radius: 20px;" >
 
 > - `📅` Remind the guild of something at a specific time
->   <img src="img/remindus.png" width="76%">
+>   <img src="img/remindus.png" width="76%" style="border-radius: 20px;">
 
 > - `⌚` Timetrack your work !
 

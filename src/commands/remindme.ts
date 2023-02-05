@@ -7,7 +7,7 @@ import {
 } from "discord.js";
 
 import { Command } from "src/CommandTemplate";
-import { CommandCategories } from "../commands_/categories";
+import { CommandCategories } from "../plugins/categories";
 
 import MessageManager from "../messages/MessageManager";
 

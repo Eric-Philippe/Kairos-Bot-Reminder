@@ -1,6 +1,6 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { Command } from "src/CommandTemplate";
-import { CommandCategories } from "../commands_/categories";
+import { CommandCategories } from "../plugins/categories";
 
 import { UsersServices } from "../tables/users/users.services";
 import { TCategoryServices } from "../tables/tcategory/tcategory.services";

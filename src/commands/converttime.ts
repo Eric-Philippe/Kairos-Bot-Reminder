@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from "discord.js";
 import { Command } from "src/CommandTemplate";
-import { CommandCategories } from "../commands_/categories";
+import { CommandCategories } from "../plugins/categories";
 import DateWorker from "../utils/date.worker";
 import MessageManager from "../messages/MessageManager";
 

@@ -1,8 +1,8 @@
 import { SlashCommandBuilder } from "discord.js";
 import { Command } from "src/CommandTemplate";
-import { CommandCategories } from "../commands_/categories";
+import { CommandCategories } from "../plugins/categories";
 
-import { Help } from "../commands_/Help";
+import { Help } from "../plugins/Help";
 
 const Test: Command = {
   description: {

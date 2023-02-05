@@ -4,7 +4,9 @@ import FireRemindusQueue from "./fire.remindus.queue";
 
 require("dotenv").config();
 
-//const monitor = new cronitor.Monitor("important-heartbeat-monitor");
+const cron = require("cronitor")(process.env.CRONTAB_KEY || "");
+
+const monitor = new cron.Monitor("important-heartbeat-monitor");
 
 const fireListener = async (client: Client) => {
   setInterval(async () => {
@@ -16,9 +18,10 @@ const fireListener = async (client: Client) => {
         remindmeQueue.fire(client),
         remindusQueue.fire(client),
       ]);
-      //monitor.ping({ message: "Alive" });
+
+      monitor.ping({ message: "Alive" });
     } catch (error) {
-      //monitor.ping({ count: 2, error_count: 2 });
+      monitor.ping({ count: 2, error_count: 2 });
     }
   }, 1000 * 20);
 };

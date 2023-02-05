@@ -8,7 +8,7 @@ import {
   ChatInputCommandInteraction,
 } from "discord.js";
 
-import { CommandCategories } from "./commands_/categories";
+import { CommandCategories } from "./plugins/categories";
 
 export interface Command {
   description: {
