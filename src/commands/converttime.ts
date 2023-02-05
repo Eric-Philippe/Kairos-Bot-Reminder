@@ -11,6 +11,8 @@ const Test: Command = {
     fullDescription: "Convert minutes to hours and minutes",
     emoji: "🕑",
     categoryName: CommandCategories.GENERAL.name,
+    usage: "/converttime <minutes>",
+    example: "/converttime 90",
   },
   data: new SlashCommandBuilder()
     .setName("converttime")

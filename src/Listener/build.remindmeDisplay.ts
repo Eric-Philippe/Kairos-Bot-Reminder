@@ -83,6 +83,8 @@ const RemindmeDisplay = async (
 
   const attachment = new AttachmentBuilder(canva.toBuffer());
 
+  attachment.setName("YouHaveANewRemindme.png");
+
   return attachment;
 };
 

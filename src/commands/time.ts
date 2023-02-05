@@ -9,6 +9,8 @@ const Time: Command = {
     fullDescription: "Give the current time for many locations",
     emoji: "⏲️",
     categoryName: CommandCategories.GENERAL.name,
+    usage: "/time",
+    example: "/time",
   },
   data: new SlashCommandBuilder()
     .setName("time")

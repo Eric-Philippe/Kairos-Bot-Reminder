@@ -9,9 +9,12 @@ const SetCountry: Command = {
   description: {
     name: "Set Country",
     shortDescription: "Set your country",
-    fullDescription: "Set your country",
+    fullDescription:
+      "Set your country. Use /countrylist to get the list of all the countries",
     emoji: "🗺️",
     categoryName: CommandCategories.GENERAL.name,
+    usage: "/setcountry <country>",
+    example: "/setcountry #14",
   },
   data: new SlashCommandBuilder()
     .setName("setcountry")

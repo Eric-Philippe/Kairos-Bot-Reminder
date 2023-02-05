@@ -8,9 +8,12 @@ const Test: Command = {
   description: {
     name: "Help",
     shortDescription: "Help command",
-    fullDescription: "Help command",
+    fullDescription:
+      "Display all the commands with their description, usage and example",
     emoji: "🧪",
     categoryName: CommandCategories.GENERAL.name,
+    usage: "/help",
+    example: "/help",
   },
   data: new SlashCommandBuilder()
     .setName("help")

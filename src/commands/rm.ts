@@ -13,9 +13,12 @@ const Rm: Command = {
   description: {
     name: "Rm",
     shortDescription: "Create a new reminder with a quick row of text",
-    fullDescription: "Create a new reminder with a quick row of text",
+    fullDescription:
+      "Create a new reminder with a quick row of text. You can use the quick dates 'today' and 'tomorrow' to set the date.",
     emoji: "⏰",
     categoryName: CommandCategories.REMINDME.name,
+    usage: "/rm <time> <quick-date> <text>",
+    example: "/rm 8:00 Today Go to the gym",
   },
   data: new SlashCommandBuilder()
     .setName("rm")

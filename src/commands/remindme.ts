@@ -29,9 +29,13 @@ const Remindme: Command = {
   description: {
     name: "Remindme",
     shortDescription: "Self Reminders",
-    fullDescription: "Self Reminders",
+    fullDescription:
+      "Send a reminder to yourself. You'll get a DM when the time comes.",
     emoji: "📝",
     categoryName: CommandCategories.REMINDME.name,
+    usage:
+      "/remindme <list|delete|break> <id|category> | /remindme set <time> <date> <message> <category> <repetition>",
+    example: '/remindme set 10:00 2021-10-10 "My message" "My category" WEEKLY',
   },
   data: new SlashCommandBuilder()
     .setName("remindme")

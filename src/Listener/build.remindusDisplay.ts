@@ -83,6 +83,8 @@ const RemindusDisplay = async (
 
   const attachment = new AttachmentBuilder(canva.toBuffer());
 
+  attachment.setName("YouHaveANewRemindus.png");
+
   return attachment;
 };
 

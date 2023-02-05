@@ -21,10 +21,12 @@ import {
 const StartWork: Command = {
   description: {
     name: "Start Work",
-    shortDescription: "Start a work session",
-    fullDescription: "Start a work session",
+    shortDescription: "Start a work session and track your time",
+    fullDescription: "Start a work session and track your time",
     emoji: "👨‍💻",
     categoryName: CommandCategories.TIMETRACKER.name,
+    usage: "/startwork [task] [activity] [category]",
+    example: '/startwork "Create a new command" "Coding" "Kairos"',
   },
   data: new SlashCommandBuilder()
     .setName("startwork")

@@ -13,6 +13,8 @@ const CountryList: Command = {
     fullDescription: "List all countries",
     emoji: "🌎",
     categoryName: CommandCategories.GENERAL.name,
+    usage: "/countrylist",
+    example: "/countrylist",
   },
   data: new SlashCommandBuilder()
     .setName("countrylist")

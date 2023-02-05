@@ -17,6 +17,8 @@ export interface Command {
     categoryName: string;
     shortDescription: string;
     fullDescription: string;
+    usage: string;
+    example: string;
   };
   data:
     | Omiy<SlashCommandBuilder, "addSubCommandGroup" | "addSubcommand">

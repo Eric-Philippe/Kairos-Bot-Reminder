@@ -8,10 +8,12 @@ import { TCategoryServices } from "../tables/tcategory/tcategory.services";
 const Test: Command = {
   description: {
     name: "List Category",
-    shortDescription: "Display all the categories of the user",
-    fullDescription: "Display all the categories of the user",
+    shortDescription: "Display all the user's categories",
+    fullDescription: "Display all the user's categories",
     emoji: "📝",
     categoryName: CommandCategories.TIMETRACKER.name,
+    usage: "/listcategory",
+    example: "/listcategory",
   },
   data: new SlashCommandBuilder()
     .setName("listcategory")

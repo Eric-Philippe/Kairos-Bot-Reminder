@@ -31,9 +31,12 @@ const Remindus: Command = {
   description: {
     name: "RemindUs",
     shortDescription: "Group Reminders",
-    fullDescription: "Group Reminders",
+    fullDescription:
+      "Commands to manage your Group Reminders. You can set, list, break and show your reminders.",
     emoji: "📅",
     categoryName: CommandCategories.REMINDUS.name,
+    usage: "/remindus <set|list|break|show> <...>",
+    example: "/remindus set 12:00 2021-10-10 #general",
   },
   data: new SlashCommandBuilder()
     .setName("remindus")

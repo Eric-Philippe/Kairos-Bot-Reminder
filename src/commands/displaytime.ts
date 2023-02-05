@@ -62,6 +62,8 @@ const DisplayTime: Command = {
       "Display the user's information from the time logger with different format and options [category, activity, task] with Charts & Excel",
     emoji: "📊",
     categoryName: CommandCategories.TIMETRACKER.name,
+    usage: "/displaytime <category|activity|task> <title|name|content|keyword>",
+    example: "/displaytime category title",
   },
   data: new SlashCommandBuilder()
     .setName("displaytime")

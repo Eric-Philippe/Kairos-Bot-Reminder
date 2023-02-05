@@ -269,7 +269,8 @@ export class Help {
     let description = "";
     description += `**${command.description.emoji} ・ ${command.description.name}**\n`;
     description += `**Description:** ${command.description.fullDescription}\n`;
-    // description += `**Usage:** ${command.description.usage}\n`;
+    description += "**Usage :** ``" + command.description.usage + "``\n";
+    description += "**Example :** ``" + command.description.example + "``\n";
     if (command.data.options) {
       command.data.options.forEach(
         (option: { name: string; description: string; type: number }) => {

@@ -15,9 +15,11 @@ const StartWork: Command = {
   description: {
     name: "Stop Work",
     shortDescription: "Stop a work session",
-    fullDescription: "Stop a work session",
+    fullDescription: "Stop a work session with the time tracked",
     emoji: "🛑",
     categoryName: CommandCategories.TIMETRACKER.name,
+    usage: "/stopwork [task]",
+    example: "/stopwork Coding",
   },
   data: new SlashCommandBuilder()
     .setName("stopwork")

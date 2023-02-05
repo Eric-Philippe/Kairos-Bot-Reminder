@@ -20,11 +20,13 @@ import {
 
 const StartWork: Command = {
   description: {
-    name: "Start Work",
-    shortDescription: "Start a work session",
-    fullDescription: "Start a work session",
+    name: "Time Done",
+    shortDescription: "Start a finished work session",
+    fullDescription: "Start a finished work session",
     emoji: "✅",
     categoryName: CommandCategories.TIMETRACKER.name,
+    usage: "/timedone [task] [hours] [minutes] [activity] [category]",
+    example: '/timedone "Create a new command" 1 30 "Coding" "Kairos"',
   },
   data: new SlashCommandBuilder()
     .setName("timedone")

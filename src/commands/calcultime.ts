@@ -11,6 +11,9 @@ const Test: Command = {
     fullDescription: "Calcul difference and sum of time",
     emoji: "⌚",
     categoryName: CommandCategories.GENERAL.name,
+    usage:
+      "/calcultime <ahours> <aminutes> <operation> <bhours> <bminutes> <format>",
+    example: "/calcultime 1 30 sum 2 30 hm",
   },
   data: new SlashCommandBuilder()
     .setName("calcultime")

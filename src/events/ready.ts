@@ -20,7 +20,7 @@ export default (client: Client): void => {
     "%c⏳ Kairos is starting up...",
     "color: #00ff00; font-size: 20px"
   );
-  client.on("ready", async () => {
+  client.once("ready", async () => {
     if (!client.user || !client.application) return;
 
     let CommandsData = Commands.map((cmd) => cmd.data.toJSON());
