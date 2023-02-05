@@ -1,1 +1,2 @@
 *.md linguist-detectable=true
+*.plantuml linguist-detectable=true
