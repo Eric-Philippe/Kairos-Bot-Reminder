@@ -35,11 +35,13 @@ So feel free to navigate through the [Wiki]() to get more information about the 
 
 ## Glance to the main features
 
+<img src="img/notification.png" width="50%">
+
 > - `🔔` Remind you of something at a specific time for yourself
->   <img src="img/remindme.png">
+>   <img src="img/remindme.png" width="80%">
 
 > - `📅` Remind the guild of something at a specific time
->   <img src="img/remindus.png">
+>   <img src="img/remindus.png" width="76%">
 
 > - `⌚` Timetrack your work !
 
