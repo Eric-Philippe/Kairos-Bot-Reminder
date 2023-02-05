@@ -1,4 +1,4 @@
-# Reminder Discord Bot | Kairos#9720
+# ⏳ Reminder Discord Bot | Kairos#9720 ⌛
 
 ![Kairos Reminder Queue](https://cronitor.io/badges/LANCiO/production/WTSdX94w7sLiKi5JaPMJ0djQtYI.svg)
 
@@ -18,9 +18,9 @@ This project is a Reminder Discord bot. It is coded in Node TypeScript and also 
 
 ## Introduction
 
-> I'll try for this **Readme** to be as consise as possible, and use **instead** the [GitHub Wiki]() to explain more in depth the different features of the bot !
+> I'll try for this **Readme** to be as consise as possible, and use **instead** the [GitHub Wiki](https://github.com/Eric-Philippe/Kairos-Bot-Reminder/wiki) to explain more in depth the different features of the bot !
 
-So feel free to navigate through the [Wiki]() to get more information about the bot !
+So feel free to navigate through the [Wiki](https://github.com/Eric-Philippe/Kairos-Bot-Reminder/wiki) to get more information about the bot !
 
 ---
 
@@ -39,7 +39,13 @@ So feel free to navigate through the [Wiki]() to get more information about the 
 
 ## Glance to the main features
 
+---
+
 <img src="img/notification.png" width="50%" style="border-radius: 20px;">
+
+---
+
+Find the help command typing `/help` in a channel where the bot is present ! You can find a first glance at the commands here : [First Page of the Help Command](img/help.png)
 
 > - `🔔` Remind you of something at a specific time for yourself
 >   <img src="img/remindme.png" width="80%" style="border-radius: 20px;" >
