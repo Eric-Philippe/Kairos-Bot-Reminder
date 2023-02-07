@@ -34,10 +34,11 @@ export const TaskQueries = {
   GetTaskByNameNotEnded: `
         SELECT t.*
         FROM Task as t, Activity as a, TCategory as tc
-        WHERE UPPER(t.content) = UPPER(?)
-        AND t.endDate IS NULL
-        AND (t.AId = a.AId AND a.TCId = tc.TCId) OR (t.TCId = tc.TCId)
+        WHERE ((t.AId IS NOT NULL AND t.AId = a.AId AND a.TCId = tc.TCId) OR (t.TCId IS NOT NULL AND t.TCId = tc.TCId))
+        AND (t.AId IS NOT NULL OR t.TCId IS NOT NULL)
         AND tc.userid = ?
+        AND UPPER(t.content) = UPPER(?)
+        AND t.endDate IS NULL
         ORDER BY t.entryDate DESC;
     `,
   GetTaskByContentUserIdEnded: `

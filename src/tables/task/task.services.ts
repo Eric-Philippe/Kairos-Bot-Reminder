@@ -25,9 +25,11 @@ export const TaskServices = {
     content: string
   ): Promise<Task> => {
     const result: Task[] = await execute(TaskQueries.GetTaskByNameNotEnded, [
-      content,
       userId,
+      content,
     ]);
+    console.log(result);
+
     return result[0];
   },
   getTasksByKeywordUserId: async (

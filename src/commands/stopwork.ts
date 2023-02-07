@@ -57,11 +57,12 @@ const StartWork: Command = {
       );
       return;
     }
+
     await TaskServices.endTask(task.TId, new Date());
 
     await MessageManager.send(
       MessageManager.getSuccessCnst(),
-      "Task stopped",
+      `Task \`\`${task.content}\`\` ended`,
       interaction
     );
   },
