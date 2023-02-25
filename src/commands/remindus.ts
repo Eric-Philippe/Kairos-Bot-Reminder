@@ -509,6 +509,11 @@ const listReminders = async (interaction: ChatInputCommandInteraction) => {
     );
   }
 
+  // Erase all the double
+  reminduss = reminduss.filter(
+    (r, i, a) => a.findIndex((t) => t.usId === r.usId) === i
+  );
+
   let content;
   if (reminduss.length > 0) {
     content = reminduss
