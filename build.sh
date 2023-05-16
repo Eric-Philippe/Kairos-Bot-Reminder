@@ -14,7 +14,7 @@ cp .env dist/.env
 echo "Restarting pm2 process..."
 
 # Restart the pm2 process
-pm2 restart Bot
+pm2 restart Kairos
 
 echo "Done!"
 

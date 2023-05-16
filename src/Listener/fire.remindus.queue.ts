@@ -102,7 +102,7 @@ export default class FireRemindusQueue extends FireQueue {
 
           res(0);
         } catch (error) {
-          rej(-3);
+          rej(error);
         }
       }
     });

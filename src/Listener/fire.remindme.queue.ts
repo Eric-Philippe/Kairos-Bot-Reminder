@@ -104,7 +104,7 @@ export default class FireRemindmeQueue implements FireQueue {
 
           res(0);
         } catch (error) {
-          rej(-3);
+          rej(error);
         }
       }
     });
