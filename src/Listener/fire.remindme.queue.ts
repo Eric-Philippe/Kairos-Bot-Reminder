@@ -75,7 +75,7 @@ export default class FireRemindmeQueue implements FireQueue {
           }
         } catch (error) {
           await this.Logger.log(
-            `Error sending remindus to ${remindus.meId}`,
+            `Error sending remindus to ${remindus.meId} | Error: ${error}`,
             LogType.ERROR,
             __filename
           );
