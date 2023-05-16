@@ -14,7 +14,7 @@ const RemindusDisplay = async (
   const canva = canvas.createCanvas(width, height);
   const ctx = canva.getContext("2d");
 
-  const background = await canvas.loadImage("./res/background_us.png");
+  const background = await canvas.loadImage(IMG.BACKGROUND_US);
   ctx.drawImage(background, 0, 0, canva.width, canva.height);
 
   //ctx.strokeStyle = "#74037b";

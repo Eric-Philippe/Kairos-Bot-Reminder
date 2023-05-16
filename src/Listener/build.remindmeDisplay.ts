@@ -16,7 +16,7 @@ const RemindmeDisplay = async (
 
   //const background = await canvas.loadImage(IMG.BACKGROUND_ME);
   // Get the background from the file in the res folder at the root of the project
-  const background = await canvas.loadImage("./res/background_me.png");
+  const background = await canvas.loadImage(IMG.BACKGROUND_ME);
   ctx.drawImage(background, 0, 0, canva.width, canva.height);
 
   //ctx.strokeStyle = "#74037b";
