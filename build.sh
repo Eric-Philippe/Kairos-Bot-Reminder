@@ -11,6 +11,10 @@ echo "Installing dependencies..."
 npm run build
 cp .env dist/.env
 
+# Clear the logs
+rm Logs.log
+touch Logs.log
+
 echo "Restarting pm2 process..."
 
 # Restart the pm2 process
