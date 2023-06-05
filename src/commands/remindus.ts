@@ -504,6 +504,8 @@ const listReminders = async (interaction: ChatInputCommandInteraction) => {
       category
     );
   } else {
+    let guildId = interaction.guildId;
+    if (guildId == null) return;
     reminduss = await RemindusServices.getRemindusByGuildId(
       interaction.guildId?.toString() || ""
     );
