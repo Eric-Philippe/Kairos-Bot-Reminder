@@ -23,7 +23,8 @@ export const RemindusQueries = {
         SELECT
        *
         FROM
-        Remindus as R, Guild as G
+        Remindus as R
+        WHERE R.guildId = ?;
         `,
   BreakRemindus: `
             UPDATE Remindus SET isPaused = ? WHERE usId = ?;
