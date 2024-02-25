@@ -1,7 +1,6 @@
 import canvas from "canvas";
 import { AttachmentBuilder } from "discord.js";
 import DateWorker from "../utils/date.worker";
-import { IMG } from "../assets/LOGOS.json";
 
 import { Remindus } from "src/tables/remindus/remindus";
 
@@ -14,7 +13,8 @@ const RemindusDisplay = async (
   const canva = canvas.createCanvas(width, height);
   const ctx = canva.getContext("2d");
 
-  const background = await canvas.loadImage(IMG.BACKGROUND_US);
+  const background_path = "./assets/img/New_Remindus.png";
+  const background = await canvas.loadImage(background_path);
   ctx.drawImage(background, 0, 0, canva.width, canva.height);
 
   //ctx.strokeStyle = "#74037b";

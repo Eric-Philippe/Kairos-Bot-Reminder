@@ -1,7 +1,7 @@
 import canvas from "canvas";
 import { AttachmentBuilder } from "discord.js";
 import DateWorker from "../utils/date.worker";
-import { IMG } from "../assets/LOGOS.json";
+import fs from "fs";
 
 import { Remindme } from "../tables/remindme/remindme";
 
@@ -16,7 +16,12 @@ const RemindmeDisplay = async (
 
   //const background = await canvas.loadImage(IMG.BACKGROUND_ME);
   // Get the background from the file in the res folder at the root of the project
-  const background = await canvas.loadImage(IMG.BACKGROUND_ME);
+
+  // Display all the images in the current folder
+  //console.log(fs.readdirSync("./"));
+
+  const background_path = "./assets/img/New_Reminder.png";
+  const background = await canvas.loadImage(background_path);
   ctx.drawImage(background, 0, 0, canva.width, canva.height);
 
   //ctx.strokeStyle = "#74037b";
