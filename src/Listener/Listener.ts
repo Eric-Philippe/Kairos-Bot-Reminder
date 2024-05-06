@@ -1,7 +1,7 @@
 import { Client } from "discord.js";
 import FireRemindmeQueue from "./fire.remindme.queue";
 import FireRemindusQueue from "./fire.remindus.queue";
-import Logger from "src/logs/Logger";
+import Logger from "../logs/Logger";
 
 require("dotenv").config();
 
