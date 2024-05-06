@@ -1,12 +1,9 @@
 import { Client } from "discord.js";
 import FireRemindmeQueue from "./fire.remindme.queue";
 import FireRemindusQueue from "./fire.remindus.queue";
+import Logger from "src/logs/Logger";
 
 require("dotenv").config();
-
-const cron = require("cronitor")(process.env.CRONTAB_KEY || "");
-
-const monitor = new cron.Monitor("important-heartbeat-monitor");
 
 const fireListener = async (client: Client) => {
   setInterval(async () => {
@@ -14,14 +11,13 @@ const fireListener = async (client: Client) => {
     const remindusQueue = new FireRemindusQueue();
 
     try {
-      const backValues = await Promise.all([
+      await Promise.all([
         remindmeQueue.fire(client),
         remindusQueue.fire(client),
       ]);
-
-      monitor.ping({ message: "Alive" });
     } catch (error) {
-      monitor.ping({ count: 2, error_count: 2 });
+      console.log(error);
+      Logger.getInstance().log("ERROR IN FIRE LISTENER", "error");
     }
   }, 1000 * 20);
 };
