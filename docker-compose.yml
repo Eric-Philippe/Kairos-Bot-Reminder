@@ -3,7 +3,7 @@ version: "3.8"
 services:
   discord-bot-kairos:
     build: .
-    container_name: discord-bot
+    container_name: discord-bot-kairos
     env_file:
       - .env
     depends_on:
@@ -14,7 +14,7 @@ services:
 
   mysql-kairos:
     image: mysql:latest
-    container_name: mysql
+    container_name: database-kairos
     env_file:
       - .env
     environment:
