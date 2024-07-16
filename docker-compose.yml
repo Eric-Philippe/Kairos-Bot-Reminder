@@ -1,18 +1,18 @@
 version: "3.8"
 
 services:
-  discord-bot:
+  discord-bot-kairos:
     build: .
     container_name: discord-bot
     env_file:
       - .env
     depends_on:
-      - mysql
+      - mysql-kairos
     networks:
       - kairos-bot
     restart: always
 
-  mysql:
+  mysql-kairos:
     image: mysql:latest
     container_name: mysql
     env_file:
