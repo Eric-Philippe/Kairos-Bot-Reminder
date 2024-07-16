@@ -13,7 +13,7 @@ import {
   User,
 } from "discord.js";
 
-import Logger from "../logs/Logger";
+// import Logger from "../logs/Logger";
 import { LogType } from "../logs/type.enum";
 
 import { RemindmeServices } from "../tables/remindme/remindme.services";
@@ -26,7 +26,7 @@ import RemindmeDisplay from "./build.remindmeDisplay";
 
 export default class FireRemindmeQueue implements FireQueue {
   private RemindmeQueue: Remindme[] = [];
-  private Logger: Logger = Logger.getInstance();
+  // private Logger: Logger = Logger.getInstance();
 
   public async fetchForQueue(): Promise<Remindme[]> {
     return new Promise(async (res, rej) => {
@@ -41,17 +41,11 @@ export default class FireRemindmeQueue implements FireQueue {
     if (process.env.DEBUG_MODE == "true")
       console.log("Loading queue for remindme");
 
-    this.Logger = Logger.getInstance();
     try {
       this.RemindmeQueue = await this.fetchForQueue();
     } catch (error) {
       console.log(error);
     }
-    if (this.RemindmeQueue.length != 0)
-      await this.Logger.log(
-        `Found ${this.RemindmeQueue.length} remindus to send`,
-        LogType.INFO
-      );
 
     return 0;
   }
@@ -64,10 +58,6 @@ export default class FireRemindmeQueue implements FireQueue {
           let target = await client.users.cache.get(remindus.userId);
           if (!target) {
             await RemindmeServices.removeRemindMe(remindus.meId);
-            this.Logger.log(
-              `Channel not found - ${remindus.meId}`,
-              LogType.ERROR
-            );
             continue;
           } else {
             await this.sendMsg(target as User, remindus);
@@ -77,8 +67,7 @@ export default class FireRemindmeQueue implements FireQueue {
               let currentRepetition = Object.values(Repetition).find(
                 (rep) => rep.value == remindus.repetition
               );
-              if (!currentRepetition)
-                return this.Logger.log("Repetition not found");
+              if (!currentRepetition) return;
 
               let nextDate = await currentRepetition.nextDate(
                 remindus.targetDate
@@ -87,11 +76,7 @@ export default class FireRemindmeQueue implements FireQueue {
             }
           }
         } catch (error) {
-          await this.Logger.log(
-            `Error sending remindus to ${remindus.meId} | Error: ${error}`,
-            LogType.ERROR,
-            __filename
-          );
+          console.log(error);
         }
       }
       res();

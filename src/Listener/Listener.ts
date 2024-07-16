@@ -1,25 +1,26 @@
 import { Client } from "discord.js";
 import FireRemindmeQueue from "./fire.remindme.queue";
 import FireRemindusQueue from "./fire.remindus.queue";
-import Logger from "../logs/Logger";
+// import Logger from "../logs/Logger";
 
 require("dotenv").config();
 
 const fireListener = async (client: Client) => {
   setInterval(async () => {
-    const remindmeQueue = new FireRemindmeQueue();
-    const remindusQueue = new FireRemindusQueue();
-
     try {
-      await Promise.all([
-        remindmeQueue.fire(client),
-        remindusQueue.fire(client),
-      ]);
+      const remindmeQueue = new FireRemindmeQueue();
+      remindmeQueue.fire(client);
     } catch (error) {
       console.log(error);
-      Logger.getInstance().log("ERROR IN FIRE LISTENER", "error");
     }
-  }, 1000 * 20);
+
+    try {
+      const remindusQueue = new FireRemindusQueue();
+      remindusQueue.fire(client);
+    } catch (error) {
+      console.log(error);
+    }
+  }, 1000 * 60); // 1 minute;
 };
 
 export default fireListener;
