@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "ts-node src/Bot.ts",
+    "start-prod": "node dist/Bot.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm i && tsc",
+    "build": "tsc",
     "clear-distW": "rd /s /q dist",
     "clearW": "rd /s /q dist && rd /s /q node_modules",
     "clear": "rm -rf dist && rm -rf node_modules",

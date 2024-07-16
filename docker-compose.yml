@@ -1,0 +1,41 @@
+version: "3.8"
+
+services:
+  discord-bot:
+    build: .
+    container_name: discord-bot
+    env_file:
+      - .env
+    depends_on:
+      - mysql
+    networks:
+      - kairos-bot
+    restart: always
+
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    env_file:
+      - .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_PORT: ${MYSQL_PORT}
+      MYSQL_HOST: ${MYSQL_HOST}
+    volumes:
+      - kairos-bot-mysql:/var/lib/mysql
+      - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
+    networks:
+      - kairos-bot
+    restart: always
+
+volumes:
+  kairos-bot-mysql:
+
+networks:
+  kairos-bot:
+    external: true

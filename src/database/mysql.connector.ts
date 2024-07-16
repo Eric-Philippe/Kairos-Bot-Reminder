@@ -1,8 +1,13 @@
 import { createConnection, Connection } from "mysql2";
-import data from "../config/mysql.json";
 import Logger from "../logs/Logger";
 import { LogType } from "../logs/type.enum";
-const dataSource = data.SQL_Option;
+import {
+  MYSQL_DATABASE,
+  MYSQL_HOST,
+  MYSQL_PASSWORD,
+  MYSQL_PORT,
+  MYSQL_USER,
+} from "../config/config.database";
 
 const logger = Logger.getInstance();
 let connection: Connection;
@@ -13,11 +18,11 @@ let connection: Connection;
 export const init = () => {
   try {
     connection = createConnection({
-      host: dataSource.host,
-      user: dataSource.user,
-      password: dataSource.password,
-      database: dataSource.database,
-      port: Number(dataSource.port),
+      host: MYSQL_HOST,
+      user: MYSQL_USER,
+      password: MYSQL_PASSWORD,
+      database: MYSQL_DATABASE,
+      port: Number(MYSQL_PORT),
     });
 
     console.debug("%c💿 Connected to MySQL database", "color: #00ff00");
