@@ -48,14 +48,11 @@ export default class FireRemindusQueue extends FireQueue {
       if (this.RemindusQueue.length == 0) return res();
       console.log(`` + this.RemindusQueue.length + ` remindus to send`);
       for (let remindus of this.RemindusQueue) {
+        console.log(`Sedinging remindus to ${remindus.usId}`);
         try {
           let target = await client.channels.cache.get(remindus.channelId);
           if (!target) {
             await RemindusServices.removeRemindus(remindus.usId);
-            this.Logger.log(
-              `Channel not found - ${remindus.usId}`,
-              LogType.ERROR
-            );
             continue;
           } else {
             await this.sendMsg(target as TextChannel, remindus);
@@ -75,11 +72,12 @@ export default class FireRemindusQueue extends FireQueue {
             }
           }
         } catch (error) {
-          await this.Logger.log(
-            `Error sending remindus to ${remindus.usId}`,
-            LogType.ERROR,
-            __filename
-          );
+          // await this.Logger.log(
+          //   `Error sending remindus to ${remindus.usId}`,
+          //   LogType.ERROR,
+          //   __filename
+          // );
+          await RemindusServices.removeRemindus(remindus.usId);
         }
       }
       res();
