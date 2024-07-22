@@ -53,6 +53,7 @@ export default class FireRemindmeQueue implements FireQueue {
     return new Promise(async (res, rej) => {
       await this.load();
       if (this.RemindmeQueue.length == 0) return res();
+      console.log(`` + this.RemindmeQueue.length + ` remindme to send`);
       for (let remindus of this.RemindmeQueue) {
         try {
           let target = await client.users.cache.get(remindus.userId);
@@ -208,6 +209,7 @@ export default class FireRemindmeQueue implements FireQueue {
 
                     await msg.edit({
                       components: [],
+                      embeds: [snoozeEmbed],
                     });
                   }
                 }
