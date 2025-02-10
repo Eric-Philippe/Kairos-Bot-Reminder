@@ -14,7 +14,7 @@ jobs:
         run: |
           # Remplacez cette commande par vos tests réels
           echo "Running tests..."
-          exit 1  # Simule une erreur pour tester le webhook
+          exit 1  # Simule une erreur pour tester le webhookkj
 
       - name: Send Discord notification on failure
         if: failure()
