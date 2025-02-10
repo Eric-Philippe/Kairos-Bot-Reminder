@@ -1,0 +1,24 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run tests
+        run: |
+          # Remplacez cette commande par vos tests réels
+          echo "Running tests..."
+          exit 1  # Simule une erreur pour tester le webhook
+
+      - name: Send Discord notification on failure
+        if: failure()
+        run: |
+          JOKE=$(curl -s https://official-joke-api.appspot.com/random_joke | jq -r '"\(.setup) \(.punchline)"')
+          PAYLOAD=$(jq -n --arg content "CI/CD pipeline failed! Blague: $JOKE" '{content: $content}')
+          curl -X POST -H "Content-Type: application/json" -d "$PAYLOAD" ${{ secrets.DISCORD_WEBHOOK_URL }}
