@@ -19,5 +19,5 @@ jobs:
         if: failure()
         run: |
           JOKE=$(curl -s https://official-joke-api.appspot.com/random_joke | jq -r '"\(.setup) \(.punchline)"')
-          PAYLOAD=$(jq -n --arg content "CI/CD pipeline failed! Éric - Blague: $JOKE" '{content: $content}')
+          PAYLOAD=$(jq -n --arg content "1V1 Luca https://link.chess.com/play/RnGt9E)
           curl -X POST -H "Content-Type: application/json" -d "$PAYLOAD" ${{ secrets.DISCORD_WEBHOOK_URL }}
