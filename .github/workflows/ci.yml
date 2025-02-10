@@ -18,5 +18,5 @@ jobs:
       - name: Send Discord notification on failure
         if: failure()
         run: |
-          PAYLOAD=$(jq -n --arg content "1V1 Luca https://link.chess.com/play/RnGt9E)
+          PAYLOAD=$(jq -n --arg content "1V1 Luca https://link.chess.com/play/RnGt9E")
           curl -X POST -H "Content-Type: application/json" -d "$PAYLOAD" ${{ secrets.DISCORD_WEBHOOK_URL }}
