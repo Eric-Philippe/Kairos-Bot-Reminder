@@ -12,6 +12,4 @@ const client = new Client({
   ],
 });
 
-console.log("Client initialized");
-
 export default client;

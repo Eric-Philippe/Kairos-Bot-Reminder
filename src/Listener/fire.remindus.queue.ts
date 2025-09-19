@@ -46,9 +46,9 @@ export default class FireRemindusQueue extends FireQueue {
     return new Promise(async (res, rej) => {
       await this.load();
       if (this.RemindusQueue.length == 0) return res();
-      console.log(`` + this.RemindusQueue.length + ` remindus to send`);
+      // console.log(`` + this.RemindusQueue.length + ` remindus to send`);
       for (let remindus of this.RemindusQueue) {
-        console.log(`Sedinging remindus to ${remindus.usId}`);
+        // console.log(`Sending remindus to ${remindus.usId}`);
         try {
           let target = await client.channels.cache.get(remindus.channelId);
           if (!target) {

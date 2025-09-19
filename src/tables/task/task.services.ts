@@ -28,7 +28,6 @@ export const TaskServices = {
       userId,
       content,
     ]);
-    console.log(result);
 
     return result[0];
   },

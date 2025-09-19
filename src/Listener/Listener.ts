@@ -128,9 +128,14 @@ class ReminderListener {
 
     const nextReminder = this.reminderQueue[0];
     const now = new Date();
-    const delay = Math.max(0, nextReminder.date.getTime() - now.getTime());
 
-    console.log(delay);
+    // console.log(
+    //   `Scheduling next reminder for ${nextReminder.date.toISOString()} (in ${
+    //     (nextReminder.date.getTime() - now.getTime()) / 1000
+    //   } seconds)`
+    // );
+
+    const delay = Math.max(0, nextReminder.date.getTime() - now.getTime());
 
     this.currentTimeout = setTimeout(async () => {
       await this.fireReminder(nextReminder);

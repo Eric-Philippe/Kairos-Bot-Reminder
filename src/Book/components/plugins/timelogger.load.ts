@@ -115,7 +115,6 @@ export default class TimeLoggerLoad {
     const tasks = await TaskServices.GetTasksAlteredEndedByActivityId(
       activity.AId
     );
-    console.log(tasks);
 
     for (const task of tasks) {
       category.addTaskToActivity(activity.name, task.content, task.timeElapsed);
