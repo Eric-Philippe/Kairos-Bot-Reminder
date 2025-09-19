@@ -61,4 +61,15 @@ export const RemindmeQueries = {
             RCId = ? AND
             userId = ?;
             `,
+
+  GetNextRemindMe: `
+            SELECT
+            *
+            FROM
+            Remindme
+            WHERE
+            isPaused = 0
+            ORDER BY targetDate ASC
+            LIMIT 1;
+            `,
 };

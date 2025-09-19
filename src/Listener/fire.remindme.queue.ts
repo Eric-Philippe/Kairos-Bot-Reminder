@@ -1,7 +1,5 @@
 import {
-  ActionRow,
   ActionRowBuilder,
-  ActionRowData,
   ButtonBuilder,
   ButtonInteraction,
   ButtonStyle,
@@ -13,7 +11,6 @@ import {
   User,
 } from "discord.js";
 
-// import Logger from "../logs/Logger";
 import { LogType } from "../logs/type.enum";
 
 import { RemindmeServices } from "../tables/remindme/remindme.services";
@@ -23,10 +20,11 @@ import { Repetition } from "../utils/repetition.enum";
 
 import FireQueue from "./fire.model";
 import RemindmeDisplay from "./build.remindmeDisplay";
+import Logger from "../logs/Logger";
 
 export default class FireRemindmeQueue implements FireQueue {
   private RemindmeQueue: Remindme[] = [];
-  // private Logger: Logger = Logger.getInstance();
+  private Logger: Logger = Logger.getInstance();
 
   public async fetchForQueue(): Promise<Remindme[]> {
     return new Promise(async (res, rej) => {
@@ -77,7 +75,11 @@ export default class FireRemindmeQueue implements FireQueue {
             }
           }
         } catch (error) {
-          console.log(error);
+          Logger.getInstance().log(
+            "Error while sending remindme to user " + remindus.userId,
+            LogType.ERROR
+          );
+          continue;
         }
       }
       res();
@@ -219,7 +221,10 @@ export default class FireRemindmeQueue implements FireQueue {
             console.log(error);
           }
         } catch (error) {
-          rej(error);
+          // Delete the remindme if we can't send the message
+          await RemindmeServices.removeRemindMe(reminder.meId);
+          console.log("Can't send message to user " + target.id);
+          return rej(error);
         }
       }
     });

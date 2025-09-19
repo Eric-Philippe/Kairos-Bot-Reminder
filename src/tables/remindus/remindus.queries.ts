@@ -56,4 +56,14 @@ export const RemindusQueries = {
             SET targetDate = ?
             WHERE usId = ?;
             `,
+
+  GetNextRemindus: `
+            SELECT
+            *
+            FROM
+            Remindus
+            WHERE isPaused = 0
+            ORDER BY targetDate ASC
+            LIMIT 1;
+            `,
 };

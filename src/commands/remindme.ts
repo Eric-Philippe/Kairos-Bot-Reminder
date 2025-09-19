@@ -24,6 +24,7 @@ import {
 
 import { IMG } from "../assets/LOGOS.json";
 import { Remindme } from "src/tables/remindme/remindme";
+import { ReminderListener } from "../Listener/Listener";
 
 const Remindme: Command = {
   description: {
@@ -336,6 +337,13 @@ const createReminder = async (interaction: ChatInputCommandInteraction) => {
     user.id
   );
 
+  // Add to listener queue
+  const newReminder = await RemindmeServices.getRemindmesById(meId);
+  if (newReminder && newReminder[0]) {
+    const listener = ReminderListener.getInstance();
+    await listener.addReminder(newReminder[0]);
+  }
+
   return MessageManager.send(
     MessageManager.getSuccessCnst(),
     "Your reminder has been created successfully with the id " + meId,
@@ -349,6 +357,11 @@ const deleteReminder = async (interaction: ChatInputCommandInteraction) => {
   if (!remindme) return interaction.reply("This reminder doesn't exist");
   if (remindme[0].userId !== interaction.user.id)
     return interaction.reply("This reminder doesn't exist");
+
+  // Remove from listener queue
+  const listener = ReminderListener.getInstance();
+  await listener.removeReminder(id, "remindme");
+
   await RemindmeServices.removeRemindMe(id);
 
   const embed = new EmbedBuilder()
@@ -403,6 +416,11 @@ const breakReminder = async (interaction: ChatInputCommandInteraction) => {
   if (!remindme) return interaction.reply("This reminder doesn't exist");
   if (remindme[0].userId !== interaction.user.id)
     return interaction.reply("This reminder doesn't exist");
+
+  // Remove from listener queue when paused
+  const listener = ReminderListener.getInstance();
+  await listener.removeReminder(id, "remindme");
+
   await RemindmeServices.pauseRemindme(id, 1);
 
   const embed = new EmbedBuilder()
@@ -420,7 +438,12 @@ const restartReminder = async (interaction: ChatInputCommandInteraction) => {
   if (!remindme) return interaction.reply("This reminder doesn't exist");
   if (remindme[0].userId !== interaction.user.id)
     return interaction.reply("This reminder doesn't exist");
+
   await RemindmeServices.pauseRemindme(id, 0);
+
+  // Add back to listener queue when restarted
+  const listener = ReminderListener.getInstance();
+  await listener.addReminder(remindme[0]);
 
   const embed = new EmbedBuilder()
     .setTitle("Reminder started")

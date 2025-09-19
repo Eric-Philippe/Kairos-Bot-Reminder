@@ -87,4 +87,13 @@ export const RemindmeServices = {
     );
     return result;
   },
+
+  getNextRemindMe: async (): Promise<Remindme | null> => {
+    const result: Remindme[] = await execute(
+      RemindmeQueries.GetNextRemindMe,
+      []
+    );
+    if (result.length == 0) return null;
+    return result[0];
+  },
 };

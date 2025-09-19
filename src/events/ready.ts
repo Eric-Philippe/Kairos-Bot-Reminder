@@ -28,7 +28,7 @@ export default (client: Client): void => {
 
     MySQLConnector.init();
 
-    fireListener(client);
+    fireListener();
 
     console.info(
       `%c💾 CPU: ${process.cpuUsage().user / 1000}ms`,

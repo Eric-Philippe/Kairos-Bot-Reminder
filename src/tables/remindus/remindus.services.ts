@@ -88,4 +88,13 @@ export const RemindusServices = {
     ]);
     return 0;
   },
+
+  getNextRemindus: async (): Promise<Remindus | null> => {
+    const result: Remindus[] = await execute(
+      RemindusQueries.GetNextRemindus,
+      []
+    );
+    if (result.length == 0) return null;
+    return result[0];
+  },
 };

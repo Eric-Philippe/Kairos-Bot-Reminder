@@ -26,6 +26,7 @@ import {
 
 import { IMG } from "../assets/LOGOS.json";
 import { Remindus } from "src/tables/remindus/remindus";
+import { ReminderListener } from "../Listener/Listener";
 
 const Remindus: Command = {
   description: {
@@ -391,6 +392,13 @@ const createReminder = async (interaction: ChatInputCommandInteraction) => {
     idCategory
   );
 
+  // Add to listener queue
+  const newReminder = await RemindusServices.getRemindusById(meId);
+  if (newReminder && newReminder[0]) {
+    const listener = ReminderListener.getInstance();
+    await listener.addReminder(newReminder[0]);
+  }
+
   return MessageManager.send(
     MessageManager.getSuccessCnst(),
     "Your reminder has been created successfully with the id " + meId,
@@ -424,6 +432,10 @@ const deleteReminder = async (interaction: ChatInputCommandInteraction) => {
     );
   }
 
+  // Remove from listener queue
+  const listener = ReminderListener.getInstance();
+  await listener.removeReminder(id, "remindus");
+
   await RemindusServices.removeRemindus(id);
 
   return MessageManager.send(
@@ -454,6 +466,10 @@ const breakReminder = async (interaction: ChatInputCommandInteraction) => {
       interaction
     );
   }
+
+  // Remove from listener queue when paused
+  const listener = ReminderListener.getInstance();
+  await listener.removeReminder(id, "remindus");
 
   await RemindusServices.breakRemindus(id, 1);
 
@@ -487,6 +503,10 @@ const restartReminder = async (interaction: ChatInputCommandInteraction) => {
   }
 
   await RemindusServices.breakRemindus(id, 0);
+
+  // Add back to listener queue when restarted
+  const listener = ReminderListener.getInstance();
+  await listener.addReminder(remindus[0]);
 
   return MessageManager.send(
     MessageManager.getSuccessCnst(),

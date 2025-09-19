@@ -7,6 +7,7 @@ const {
   MYSQL_PASSWORD,
   MYSQL_PORT,
   MYSQL_HOST,
+  DEV,
 } = process.env;
 
 if (
@@ -15,7 +16,8 @@ if (
   !MYSQL_USER ||
   !MYSQL_PASSWORD ||
   !MYSQL_PORT ||
-  !MYSQL_HOST
+  !MYSQL_HOST ||
+  !DEV
 ) {
   throw new Error("Missing environment variables");
 }
@@ -27,4 +29,5 @@ export {
   MYSQL_PASSWORD,
   MYSQL_PORT,
   MYSQL_HOST,
+  DEV,
 };
