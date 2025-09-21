@@ -36,9 +36,6 @@ export default class FireRemindmeQueue implements FireQueue {
     });
   }
   public async load(): Promise<number> {
-    if (process.env.DEBUG_MODE == "true")
-      console.log("Loading queue for remindme");
-
     try {
       this.RemindmeQueue = await this.fetchForQueue();
     } catch (error) {
@@ -51,7 +48,6 @@ export default class FireRemindmeQueue implements FireQueue {
     return new Promise(async (res, rej) => {
       await this.load();
       if (this.RemindmeQueue.length == 0) return res();
-      console.log(`` + this.RemindmeQueue.length + ` remindme to send`);
       for (let remindus of this.RemindmeQueue) {
         try {
           let target = await client.users.cache.get(remindus.userId);

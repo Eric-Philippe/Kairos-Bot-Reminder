@@ -25,9 +25,6 @@ export default class FireRemindusQueue extends FireQueue {
     });
   }
   public async load(): Promise<number> {
-    if (process.env.DEBUG_MODE == "true")
-      console.log("Loading queue for remindus");
-
     this.Logger = Logger.getInstance();
     try {
       this.RemindusQueue = await this.fetchForQueue();
