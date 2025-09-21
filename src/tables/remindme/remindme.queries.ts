@@ -63,13 +63,13 @@ export const RemindmeQueries = {
             `,
 
   GetNextRemindMe: `
-            SELECT
-            *
-            FROM
-            Remindme
-            WHERE
-            isPaused = 0
-            ORDER BY targetDate ASC
-            LIMIT 1;
+      SELECT r.*,
+            r.targetDate + INTERVAL c.gmtOffset HOUR AS targetDateUser
+      FROM Remindme r
+      JOIN Utilisateur u ON u.userId = r.userId
+      JOIN Country c ON c.CId = u.CId
+      WHERE r.targetDate + INTERVAL c.gmtOffset HOUR > NOW()
+      ORDER BY r.targetDate + INTERVAL c.gmtOffset HOUR
+      LIMIT 1;
             `,
 };

@@ -58,12 +58,13 @@ export const RemindusQueries = {
             `,
 
   GetNextRemindus: `
-            SELECT
-            *
-            FROM
-            Remindus
-            WHERE isPaused = 0
-            ORDER BY targetDate ASC
-            LIMIT 1;
+      SELECT r.*,
+            r.targetDate + INTERVAL c.gmtOffset HOUR AS targetDateUser
+      FROM Remindus r
+      JOIN Guild g ON g.guildId = r.guildId
+      JOIN Country c ON c.CId = g.CId
+      WHERE r.targetDate + INTERVAL c.gmtOffset HOUR > NOW()
+      ORDER BY r.targetDate + INTERVAL c.gmtOffset HOUR
+      LIMIT 1;
             `,
 };
