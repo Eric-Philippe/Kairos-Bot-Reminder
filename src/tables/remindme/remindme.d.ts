@@ -8,4 +8,5 @@ export interface Remindme {
   isPaused: number;
   RCId: string;
   userId: string;
+  targetDateUser?: Date;
 }

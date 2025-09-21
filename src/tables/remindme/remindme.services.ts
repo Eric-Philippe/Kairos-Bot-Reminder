@@ -88,12 +88,12 @@ export const RemindmeServices = {
     return result;
   },
 
-  getNextRemindMe: async (): Promise<Remindme | null> => {
+  getNextRemindMe: async (): Promise<Remindme[]> => {
     const result: Remindme[] = await execute(
       RemindmeQueries.GetNextRemindMe,
       []
     );
-    if (result.length == 0) return null;
-    return result[0];
+    if (result.length == 0) return [];
+    return result;
   },
 };

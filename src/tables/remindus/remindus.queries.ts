@@ -58,13 +58,18 @@ export const RemindusQueries = {
             `,
 
   GetNextRemindus: `
-      SELECT r.*,
-            r.targetDate + INTERVAL c.gmtOffset HOUR AS targetDateUser
+      WITH NextDate AS (
+      SELECT MIN(r.targetDate) AS nextTargetDate
       FROM Remindus r
       JOIN Guild g ON g.guildId = r.guildId
       JOIN Country c ON c.CId = g.CId
-      WHERE r.targetDate + INTERVAL c.gmtOffset HOUR > NOW()
-      ORDER BY r.targetDate + INTERVAL c.gmtOffset HOUR
-      LIMIT 1;
+      WHERE r.targetDate > (NOW() + INTERVAL c.gmtOffset HOUR)
+      )
+      SELECT r.*,
+            r.targetDate AS targetDateUser
+      FROM Remindus r
+      JOIN Guild g ON g.guildId = r.guildId
+      JOIN Country c ON c.CId = g.CId
+      JOIN NextDate nd ON r.targetDate = nd.nextTargetDate;
             `,
 };

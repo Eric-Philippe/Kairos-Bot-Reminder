@@ -10,4 +10,5 @@ export interface Remindus {
   mentionId: string;
   isPaused: number;
   RId: string;
+  targetDateUser?: Date;
 }

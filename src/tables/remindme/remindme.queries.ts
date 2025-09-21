@@ -63,13 +63,18 @@ export const RemindmeQueries = {
             `,
 
   GetNextRemindMe: `
-      SELECT r.*,
-            r.targetDate + INTERVAL c.gmtOffset HOUR AS targetDateUser
-      FROM Remindme r
-      JOIN Utilisateur u ON u.userId = r.userId
-      JOIN Country c ON c.CId = u.CId
-      WHERE r.targetDate + INTERVAL c.gmtOffset HOUR > NOW()
-      ORDER BY r.targetDate + INTERVAL c.gmtOffset HOUR
-      LIMIT 1;
+            WITH NextDate AS (
+            SELECT MIN(r.targetDate) AS nextTargetDate
+            FROM Remindme r
+            JOIN Utilisateur u ON u.userId = r.userId
+            JOIN Country c ON c.CId = u.CId
+            WHERE r.targetDate > (NOW() + INTERVAL c.gmtOffset HOUR)
+            )
+            SELECT r.*,
+                  r.targetDate AS targetDateUser
+            FROM Remindme r
+            JOIN Utilisateur u ON u.userId = r.userId
+            JOIN Country c ON c.CId = u.CId
+            JOIN NextDate nd ON r.targetDate = nd.nextTargetDate;
             `,
 };

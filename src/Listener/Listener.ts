@@ -1,5 +1,3 @@
-import { Client } from "discord.js";
-
 import FireRemindmeQueue from "./fire.remindme.queue";
 import FireRemindusQueue from "./fire.remindus.queue";
 import { RemindmeServices } from "../tables/remindme/remindme.services";
@@ -96,26 +94,35 @@ class ReminderListener {
       RemindusServices.getNextRemindus(),
     ]);
 
-    console.log("Next Remindme:", remindmeList);
-    console.log("Next Remindus:", remindusList);
-
     this.reminderQueue = [];
 
-    if (remindmeList) {
-      this.reminderQueue.push({
-        reminder: remindmeList,
-        date: remindmeList.targetDate,
-      });
-    }
-    if (remindusList) {
-      this.reminderQueue.push({
-        reminder: remindusList,
-        date: remindusList.targetDate,
-      });
+    if (remindmeList.length > 0) {
+      for (const remindme of remindmeList) {
+        this.reminderQueue.push({
+          reminder: remindme,
+          date: remindme.targetDate,
+        });
+      }
     }
 
+    if (remindusList.length > 0) {
+      for (const remindus of remindusList) {
+        this.reminderQueue.push({
+          reminder: remindus,
+          date: remindus.targetDate,
+        });
+      }
+    }
     // Sort by date
     this.reminderQueue.sort((a, b) => a.date.getTime() - b.date.getTime());
+
+    // Filter to keep only the very next reminder(s)
+    if (this.reminderQueue.length > 0) {
+      const nextDate = this.reminderQueue[0].date;
+      this.reminderQueue = this.reminderQueue.filter(
+        (r) => r.date.getTime() === nextDate.getTime()
+      );
+    }
   }
 
   private reschedule(): void {
@@ -129,21 +136,24 @@ class ReminderListener {
   private scheduleNext(): void {
     if (!this.isRunning || this.reminderQueue.length === 0) return;
 
-    const nextReminder = this.reminderQueue[0];
+    const nextReminders = this.reminderQueue.filter(
+      (r) => r.date.getTime() === this.reminderQueue[0].date.getTime()
+    );
     const now = new Date();
 
-    // console.log(
-    //   `Scheduling next reminder for ${nextReminder.date.toISOString()} (in ${
-    //     (nextReminder.date.getTime() - now.getTime()) / 1000
-    //   } seconds)`
-    // );
-
-    const delay = Math.max(0, nextReminder.date.getTime() - now.getTime());
+    const delay = Math.max(nextReminders[0].date.getTime() - now.getTime(), 0);
 
     this.currentTimeout = setTimeout(async () => {
-      await this.fireReminder(nextReminder);
-      this.reminderQueue.shift(); // Remove the fired reminder
-      this.scheduleNext(); // Schedule the next one
+      for (const reminder of nextReminders) {
+        await this.fireReminder(reminder);
+      }
+      // Remove fired reminders from the queue
+      this.reminderQueue = this.reminderQueue.filter(
+        (r) => r.date.getTime() !== nextReminders[0].date.getTime()
+      );
+      // Load next reminders from DB in case there are new ones
+      await this.loadReminders();
+      this.scheduleNext();
     }, delay);
   }
 
