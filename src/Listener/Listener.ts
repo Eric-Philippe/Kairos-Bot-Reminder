@@ -96,6 +96,9 @@ class ReminderListener {
       RemindusServices.getNextRemindus(),
     ]);
 
+    console.log("Next Remindme:", remindmeList);
+    console.log("Next Remindus:", remindusList);
+
     this.reminderQueue = [];
 
     if (remindmeList) {
