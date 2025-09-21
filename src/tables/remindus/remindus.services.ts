@@ -37,9 +37,47 @@ export const RemindusServices = {
       guildId,
       RCId,
     ]);
+
+    // Add to scheduler if not paused
+    if (isPaused === 0) {
+      try {
+        const { getReminderScheduler } = await import(
+          "../../Listener/Listener"
+        );
+        const scheduler = getReminderScheduler();
+        if (scheduler) {
+          // Get guild's timezone offset
+          const guildQuery = `
+            SELECT C.gmtOffset
+            FROM Guild G
+            JOIN Country C ON G.CId = C.CId
+            WHERE G.guildId = ?
+          `;
+          const guildResult = (await execute(guildQuery, [guildId])) as any[];
+          const gmtOffset =
+            guildResult.length > 0 ? guildResult[0].gmtOffset : 0;
+
+          await scheduler.addReminder(usId, targetDate, "remindus", gmtOffset);
+        }
+      } catch (error) {
+        console.error("Error adding reminder to scheduler:", error);
+      }
+    }
+
     return usId;
   },
   removeRemindus: async (usId: string): Promise<number> => {
+    // Remove from scheduler first
+    try {
+      const { getReminderScheduler } = await import("../../Listener/Listener");
+      const scheduler = getReminderScheduler();
+      if (scheduler) {
+        scheduler.removeReminder(usId);
+      }
+    } catch (error) {
+      console.error("Error removing reminder from scheduler:", error);
+    }
+
     await execute(RemindusQueries.DeleteRemindus, [usId]);
     return 0;
   },
@@ -59,6 +97,46 @@ export const RemindusServices = {
   },
   breakRemindus: async (usId: string, isPaused: number): Promise<number> => {
     await execute(RemindusQueries.BreakRemindus, [isPaused, usId]);
+
+    // Handle scheduler integration
+    try {
+      const { getReminderScheduler } = await import("../../Listener/Listener");
+      const scheduler = getReminderScheduler();
+      if (scheduler) {
+        if (isPaused === 1) {
+          // Pausing - remove from scheduler
+          scheduler.removeReminder(usId);
+        } else {
+          // Unpausing - add back to scheduler
+          const reminders = await RemindusServices.getRemindusById(usId);
+          if (reminders.length > 0) {
+            const reminder = reminders[0];
+            // Get guild's timezone offset
+            const guildQuery = `
+              SELECT C.gmtOffset
+              FROM Guild G
+              JOIN Country C ON G.CId = C.CId
+              WHERE G.guildId = ?
+            `;
+            const guildResult = (await execute(guildQuery, [
+              reminder.guildId,
+            ])) as any[];
+            const gmtOffset =
+              guildResult.length > 0 ? guildResult[0].gmtOffset : 0;
+
+            await scheduler.addReminder(
+              usId,
+              reminder.targetDate,
+              "remindus",
+              gmtOffset
+            );
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error updating scheduler for pause/resume:", error);
+    }
+
     return 0;
   },
   getRemindusByCategoryAndGuildId: async (

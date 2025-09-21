@@ -13,7 +13,8 @@
     "clear": "rm -rf dist && rm -rf node_modules",
     "clear-dist": "rm -rf dist",
     "pull": "git pull origin master",
-    "handler": "tsc && node dist/Controller/Controller.js"
+    "handler": "tsc && node dist/Controller/Controller.js",
+    "performance-demo": "ts-node performance_demo.ts"
   },
   "repository": {
     "type": "git",
@@ -39,7 +40,6 @@
     "exceljs": "^4.3.0",
     "fs": "^0.0.1-security",
     "mysql2": "^2.3.3",
-    "node-cron": "^3.0.3",
     "path": "^0.12.7",
     "typescript": "^5.3.3"
   },

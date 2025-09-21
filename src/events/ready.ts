@@ -2,6 +2,7 @@ import { Client } from "discord.js";
 import fireListener from "../Listener/Listener";
 import Commands from "../Commands";
 import * as MySQLConnector from "../database/mysql.connector";
+import { ReminderMigrationUtil } from "../utils/ReminderMigrationUtil";
 
 export default (client: Client): void => {
   let date = new Date();
@@ -28,7 +29,14 @@ export default (client: Client): void => {
 
     MySQLConnector.init();
 
-    fireListener(client);
+    // Initialize the new scheduler
+    await fireListener(client);
+
+    // Migrate existing reminders to the new scheduler
+    // This ensures any existing reminders are properly scheduled
+    setTimeout(async () => {
+      await ReminderMigrationUtil.migrateExistingReminders();
+    }, 2000); // Wait 2 seconds for scheduler to be fully initialized
 
     console.info(
       `%c💾 CPU: ${process.cpuUsage().user / 1000}ms`,

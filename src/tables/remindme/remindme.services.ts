@@ -33,9 +33,46 @@ export const RemindmeServices = {
       RCId,
       userId,
     ]);
+
+    // Add to scheduler if not paused
+    if (isPaused === 0) {
+      try {
+        const { getReminderScheduler } = await import(
+          "../../Listener/Listener"
+        );
+        const scheduler = getReminderScheduler();
+        if (scheduler) {
+          // Get user's timezone offset
+          const userQuery = `
+            SELECT C.gmtOffset
+            FROM Utilisateur U
+            JOIN Country C ON U.CId = C.CId
+            WHERE U.userId = ?
+          `;
+          const userResult = (await execute(userQuery, [userId])) as any[];
+          const gmtOffset = userResult.length > 0 ? userResult[0].gmtOffset : 0;
+
+          await scheduler.addReminder(meId, targetDate, "remindme", gmtOffset);
+        }
+      } catch (error) {
+        console.error("Error adding reminder to scheduler:", error);
+      }
+    }
+
     return meId;
   },
   removeRemindMe: async (meId: string): Promise<number> => {
+    // Remove from scheduler first
+    try {
+      const { getReminderScheduler } = await import("../../Listener/Listener");
+      const scheduler = getReminderScheduler();
+      if (scheduler) {
+        scheduler.removeReminder(meId);
+      }
+    } catch (error) {
+      console.error("Error removing reminder from scheduler:", error);
+    }
+
     await execute(RemindmeQueries.DeleteRemindme, [meId]);
     return 0;
   },
@@ -55,6 +92,46 @@ export const RemindmeServices = {
   },
   pauseRemindme: async (meId: string, value: number): Promise<number> => {
     await execute(RemindmeQueries.PauseRemindme, [value, meId]);
+
+    // Handle scheduler integration
+    try {
+      const { getReminderScheduler } = await import("../../Listener/Listener");
+      const scheduler = getReminderScheduler();
+      if (scheduler) {
+        if (value === 1) {
+          // Pausing - remove from scheduler
+          scheduler.removeReminder(meId);
+        } else {
+          // Unpausing - add back to scheduler
+          const reminders = await RemindmeServices.getRemindmesById(meId);
+          if (reminders.length > 0) {
+            const reminder = reminders[0];
+            // Get user's timezone offset
+            const userQuery = `
+              SELECT C.gmtOffset
+              FROM Utilisateur U
+              JOIN Country C ON U.CId = C.CId
+              WHERE U.userId = ?
+            `;
+            const userResult = (await execute(userQuery, [
+              reminder.userId,
+            ])) as any[];
+            const gmtOffset =
+              userResult.length > 0 ? userResult[0].gmtOffset : 0;
+
+            await scheduler.addReminder(
+              meId,
+              reminder.targetDate,
+              "remindme",
+              gmtOffset
+            );
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error updating scheduler for pause/resume:", error);
+    }
+
     return 0;
   },
 
